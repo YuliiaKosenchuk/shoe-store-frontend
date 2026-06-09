@@ -21,6 +21,12 @@ Next.js 16 App Router project (`src/app/`). All routes, layouts, and pages live 
 
 **Styling**: Tailwind CSS v4 via PostCSS. No CSS Modules or styled-components.
 
-**Backend**: A separate backend API is expected at `NEXT_PUBLIC_API_URL` (defaults to `http://localhost:8080` via `.env.local`). Server Components fetch from this URL directly; expose it to the client only when needed via `NEXT_PUBLIC_` prefix.
+**Backend**: A separate backend API is expected at `NEXT_PUBLIC_API_URL` (set in `.env.local`, defaults to `http://localhost:8080`). Server Components can fetch from this URL directly at request time; expose it to the client only when needed via the `NEXT_PUBLIC_` prefix. The registration endpoint is `POST /api/auth/register`.
+
+**Available libraries** (installed, not yet wired up): `axios` for HTTP, `react-hook-form` + `zod` for forms and validation, `zustand` for global state. Prefer these over ad-hoc patterns as the app grows.
+
+**Fonts**: Geist Sans (`--font-geist-sans`) and Geist Mono (`--font-geist-mono`) loaded via `next/font/google` in the root layout. Use these CSS variables when specifying fonts.
+
+**Design tokens**: Background color is `#F2EDE6` (warm beige). UI follows a minimal luxury aesthetic — serif headings, uppercase tracking-widest labels, black/gray palette.
 
 **TypeScript**: strict mode enabled. Use the `@/*` alias for imports instead of relative paths that cross directory boundaries.
