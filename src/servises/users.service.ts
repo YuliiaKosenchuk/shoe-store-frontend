@@ -7,6 +7,7 @@ export interface UserProfile {
   email: string;
   phoneNumber: string;
   createdAt: string;
+  role?: string;
 }
 
 export const UsersService = {

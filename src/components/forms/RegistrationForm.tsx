@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { RegistrationFormValues, registrationSchema } from "@/shemas/registration.shema";
 import Link from "next/link";
+import { RegistrationFormValues, registrationSchema } from "@/shemas/registration.shema";
 import { PasswordField } from "./PasswordField";
 import { Field } from "./Field";
 import { AuthService } from "@/servises/auth.service";
@@ -16,12 +16,11 @@ export default function RegistrationForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [alreadyExists, setAlreadyExists] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isSubmitting, isValid },
   } = useForm<RegistrationFormValues>({
     resolver: zodResolver(registrationSchema),
@@ -29,34 +28,35 @@ export default function RegistrationForm() {
   });
 
   const onSubmit = async (data: RegistrationFormValues) => {
-    setAlreadyExists(false);
+    setServerError(null);
     try {
       await AuthService.register(data);
       router.push("/cabinet");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 409) {
-          setAlreadyExists(true);
+          setServerError("User with this email already exists.");
         } else {
-          setError("email", {
-            type: "server",
-            message: error.response?.data?.message ?? "Registration failed.",
-          });
+          setServerError(error.response?.data?.message ?? "Registration failed.");
         }
       }
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#F2EDE6]">
+    <div className="min-h-screen bg-white">
       <BackButton />
       <div className="flex justify-center px-4 py-14">
-        <div className="w-full max-w-90">
-          <h1 className="mb-6 font-serif text-[22px] leading-snug text-gray-900">
+        <div className="w-full max-w-97.5">
+          <h1 className="mb-6 font-serif text-[28px] leading-snug text-gray-900">
             Create an Account
           </h1>
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+            {serverError && (
+              <p className="text-[12px] text-red-500">{serverError}</p>
+            )}
+
             <div className="grid grid-cols-2 gap-3">
               <Field
                 label="First name"
@@ -113,30 +113,16 @@ export default function RegistrationForm() {
             />
 
             <p className="text-[11px] text-gray-400">
-              Passwords must contain at least 8 characters
+              Use at least 8 characters, including a letter and a number
             </p>
-
-            {alreadyExists && (
-              <div className="border border-amber-200 bg-amber-50 px-4 py-3">
-                <p className="text-[12px] text-amber-800">
-                   User with such email already exists.{" "}
-                  <Link
-                    href="/login"
-                    className="font-medium underline underline-offset-2 hover:opacity-80"
-                  >
-                    Sign in to your account
-                  </Link>
-                </p>
-              </div>
-            )}
 
             <button
               type="submit"
-              disabled={isSubmitting || alreadyExists}
-              className={`w-full py-3.5 text-xs font-medium tracking-widest uppercase transition-colors ${
-                isValid && !alreadyExists
+              disabled={isSubmitting}
+              className={`w-full py-3.5 text-[11px] font-medium tracking-[0.2em] uppercase transition-colors ${
+                isValid
                   ? "bg-black text-white hover:bg-gray-900"
-                  : "bg-[#C8C5BD] text-white cursor-default"
+                  : "border border-gray-300 bg-white text-gray-400 cursor-default"
               } disabled:cursor-not-allowed`}
             >
               {isSubmitting ? "Signing up…" : "Sign Up"}
@@ -144,13 +130,13 @@ export default function RegistrationForm() {
 
             <p className="text-[11px] leading-relaxed text-gray-500">
               By signing up you are agreeing to our{" "}
-              <a href="/terms" className="underline underline-offset-2">
+              <Link href="/terms" className="text-red-500 hover:opacity-70 transition-opacity">
                 Terms of Service
-              </a>
+              </Link>
               . View our{" "}
-              <a href="/privacy" className="underline underline-offset-2">
+              <Link href="/privacy" className="text-red-500 hover:opacity-70 transition-opacity">
                 Privacy Policy
-              </a>
+              </Link>
               .
             </p>
           </form>
