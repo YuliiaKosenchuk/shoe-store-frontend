@@ -10,6 +10,7 @@ import Link from "next/link";
 import { PasswordField } from "./PasswordField";
 import { Field } from "./Field";
 import { AuthService } from "@/servises/auth.service";
+import { BackButton } from "@/components/ui/BackButton";
 
 export default function RegistrationForm() {
   const router = useRouter();
@@ -48,6 +49,7 @@ export default function RegistrationForm() {
 
   return (
     <div className="min-h-screen bg-[#F2EDE6]">
+      <BackButton />
       <div className="flex justify-center px-4 py-14">
         <div className="w-full max-w-90">
           <h1 className="mb-6 font-serif text-[22px] leading-snug text-gray-900">

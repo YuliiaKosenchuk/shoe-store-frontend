@@ -10,6 +10,7 @@ import { LoginFormValues, loginSchema } from "@/shemas/login.shema";
 import { AuthService } from "@/servises/auth.service";
 import { Field } from "./Field";
 import { PasswordField } from "./PasswordField";
+import { BackButton } from "@/components/ui/BackButton";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -40,8 +41,7 @@ export default function LoginForm() {
         console.log("[LoginForm] Error message:", message);
 
         const isNotFound =
-          status === 404 ||
-          /not found|does not exist|no user/i.test(message);
+          status === 404 || /not found|does not exist|no user/i.test(message);
 
         if (isNotFound) {
           setUserNotFound(true);
@@ -57,13 +57,18 @@ export default function LoginForm() {
 
   return (
     <div className="min-h-screen bg-[#F2EDE6]">
+      <BackButton />
       <div className="flex justify-center px-4 py-14">
         <div className="w-full max-w-90">
           <h1 className="mb-6 font-serif text-[22px] leading-snug text-gray-900">
             Sign in
           </h1>
 
-          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+            className="space-y-4"
+          >
             <Field
               label="Email address"
               type="email"
@@ -83,12 +88,12 @@ export default function LoginForm() {
                 onToggle={() => setShowPassword((p) => !p)}
                 autoComplete="current-password"
               />
-              <Link
+              {/* <Link
                 href="/forgot-password"
                 className="mt-2 inline-block text-[11px] text-gray-500 underline underline-offset-2 hover:text-gray-800"
               >
                 Forgot password?
-              </Link>
+              </Link> */}
             </div>
 
             {userNotFound && (

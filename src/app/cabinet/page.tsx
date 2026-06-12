@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { UsersService, UserProfile } from "@/servises/users.service";
+import { BackButton } from "@/components/ui/BackButton";
 
 export default function CabinetPage() {
   const router = useRouter();
@@ -65,6 +66,7 @@ export default function CabinetPage() {
 
   return (
     <div className="min-h-screen bg-[#F2EDE6]">
+      <BackButton />
       <div className="flex flex-col items-center px-4 py-20">
         <div className="flex h-24 w-24 items-center justify-center rounded-full bg-black text-white">
           <span className="font-serif text-2xl tracking-wide">{initials}</span>
