@@ -1,23 +1,25 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { RegistrationFormValues, registrationSchema } from "@/shemas/registration.shema";
+import Link from "next/link";
 import { PasswordField } from "./PasswordField";
 import { Field } from "./Field";
 import { AuthService } from "@/servises/auth.service";
 
 export default function RegistrationForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [alreadyExists, setAlreadyExists] = useState(false);
 
   const {
     register,
     handleSubmit,
-    watch,
     setError,
     formState: { errors, isSubmitting, isValid },
   } = useForm<RegistrationFormValues>({
@@ -25,51 +27,24 @@ export default function RegistrationForm() {
     mode: "onChange",
   });
 
-  // Отримуємо ім'я для екрану успіху
-  const firstNameValue = watch("firstName", "");
-
   const onSubmit = async (data: RegistrationFormValues) => {
-  try {
-    await AuthService.register({
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      phoneNumber: data.phoneNumber,
-      password: data.password,
-      confirmPassword: data.confirmPassword, // Якщо бекенд чекає repeatedPassword, це можна замапити в сервісі
-    });
-    
-    setSubmitted(true);
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      setError("email", {
-        type: "server",
-        message: error.response?.data?.message ?? "Registration failed.",
-      });
+    setAlreadyExists(false);
+    try {
+      await AuthService.register(data);
+      router.push("/cabinet");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 409) {
+          setAlreadyExists(true);
+        } else {
+          setError("email", {
+            type: "server",
+            message: error.response?.data?.message ?? "Registration failed.",
+          });
+        }
+      }
     }
-  }
-};
-
-  if (submitted) {
-    return (
-      <div className="min-h-screen bg-[#F2EDE6]">
-        <div className="flex items-center justify-center px-4 py-24">
-          <div className="text-center">
-            <h2 className="font-serif text-xl text-gray-900">Account created!</h2>
-            <p className="mt-2 text-sm text-gray-500">
-              Welcome, {firstNameValue}. You can now sign in.
-            </p>
-            <a
-              href="/login"
-              className="mt-6 inline-block bg-black px-8 py-3 text-xs font-medium tracking-widest text-white uppercase hover:bg-gray-800"
-            >
-              Sign In
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  };
 
   return (
     <div className="min-h-screen bg-[#F2EDE6]">
@@ -139,11 +114,25 @@ export default function RegistrationForm() {
               Passwords must contain at least 8 characters
             </p>
 
+            {alreadyExists && (
+              <div className="border border-amber-200 bg-amber-50 px-4 py-3">
+                <p className="text-[12px] text-amber-800">
+                   User with such email already exists.{" "}
+                  <Link
+                    href="/login"
+                    className="font-medium underline underline-offset-2 hover:opacity-80"
+                  >
+                    Sign in to your account
+                  </Link>
+                </p>
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || alreadyExists}
               className={`w-full py-3.5 text-xs font-medium tracking-widest uppercase transition-colors ${
-                isValid
+                isValid && !alreadyExists
                   ? "bg-black text-white hover:bg-gray-900"
                   : "bg-[#C8C5BD] text-white cursor-default"
               } disabled:cursor-not-allowed`}

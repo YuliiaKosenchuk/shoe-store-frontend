@@ -18,8 +18,12 @@ export default function TestBackendClient(): React.JSX.Element {
     setStatus(null);
     setError(null);
 
-    // Get URL from Vercel environment variables
-    const backendUrl: string = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'; 
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (!backendUrl) {
+      setError('NEXT_PUBLIC_API_URL is not set. Add it to .env.local or Vercel environment variables.');
+      setLoading(false);
+      return;
+    }
     const fullUrl = `${backendUrl}/api/health`;
 
     try {

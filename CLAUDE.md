@@ -23,7 +23,7 @@ Next.js 16 App Router project (`src/app/`). All routes, layouts, and pages live 
 
 **Backend**: A separate backend API is expected at `NEXT_PUBLIC_API_URL` (set in `.env.local`, defaults to `http://localhost:8080`). Server Components can fetch from this URL directly at request time; expose it to the client only when needed via the `NEXT_PUBLIC_` prefix. The registration endpoint is `POST /api/auth/register`.
 
-**Available libraries** (installed, not yet wired up): `axios` for HTTP, `react-hook-form` + `zod` for forms and validation, `zustand` for global state. Prefer these over ad-hoc patterns as the app grows.
+**Available libraries** (installed, not yet wired up): `axios` for HTTP, `react-hook-form` + `zod` for forms and validation, `zustand` for global state. Prefer these over ad-hoc patterns as the app grows.motion for animations (recuared  "use client")
 
 **Fonts**: Geist Sans (`--font-geist-sans`) and Geist Mono (`--font-geist-mono`) loaded via `next/font/google` in the root layout. Use these CSS variables when specifying fonts.
 
