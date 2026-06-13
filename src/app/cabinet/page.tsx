@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { UsersService, UserProfile } from "@/servises/users.service";
+import { AuthService } from "@/servises/auth.service";
 import { BackButton } from "@/components/ui/BackButton";
 
 export default function CabinetPage() {
@@ -40,7 +41,7 @@ export default function CabinetPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#F2EDE6] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-[#FFFFFF] flex items-center justify-center px-4">
         <div className="text-center">
           <p className="text-sm text-red-600">{error}</p>
           <button
@@ -56,16 +57,18 @@ export default function CabinetPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#F2EDE6] flex items-center justify-center">
+      <div className="min-h-screen bg-[#FFFFFF] flex items-center justify-center">
         <p className="text-sm text-gray-400 tracking-widest uppercase">Loading…</p>
       </div>
     );
   }
 
-  const initials = `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
+  const firstInitial = user.firstName?.[0] ?? "?";
+  const lastInitial = user.lastName?.[0] ?? "";
+  const initials = `${firstInitial}${lastInitial}`.toUpperCase();
 
   return (
-    <div className="min-h-screen bg-[#F2EDE6]">
+    <div className="min-h-screen bg-[#FFFFFF]">
       <BackButton />
       <div className="flex flex-col items-center px-4 py-20">
         <div className="flex h-24 w-24 items-center justify-center rounded-full bg-black text-white">
@@ -78,15 +81,11 @@ export default function CabinetPage() {
 
         <div className="mt-8 w-full max-w-sm divide-y divide-gray-200 border border-gray-200 bg-white">
           <Row label="Email" value={user.email} />
-          <Row label="Phone" value={user.phoneNumber} />
+          {user.phoneNumber && <Row label="Phone" value={user.phoneNumber} />}
         </div>
 
         <button
-          onClick={() => {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-            router.push("/login");
-          }}
+          onClick={() => AuthService.logout()}
           className="mt-10 text-xs font-medium tracking-widest text-gray-400 uppercase underline underline-offset-4 hover:text-gray-700"
         >
           Sign out

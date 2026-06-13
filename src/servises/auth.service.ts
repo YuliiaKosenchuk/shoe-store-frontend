@@ -68,9 +68,17 @@ export const AuthService = {
     return response.data;
   },
 
+  loginWithGoogle() {
+    const googleOAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/google`;
+    console.log('[AuthService.loginWithGoogle] Redirecting to Google OAuth:', googleOAuthUrl);
+    window.location.href = googleOAuthUrl;
+  },
+
   logout() {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      console.log('[AuthService.logout] Cleared session, redirecting to /login');
       window.location.href = '/login';
     }
   }

@@ -101,6 +101,10 @@ export default function LoginForm() {
 
             <button
               type="button"
+              onClick={() => {
+                console.log('[LoginForm] User initiated Google OAuth login');
+                AuthService.loginWithGoogle();
+              }}
               className="w-full flex items-center justify-center gap-2.5 border border-gray-300 py-3.5 text-[12px] font-medium text-gray-700 hover:bg-gray-50 transition-colors"
             >
               <GoogleIcon />
