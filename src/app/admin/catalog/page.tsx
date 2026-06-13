@@ -1,6 +1,6 @@
 export default function CatalogPage() {
   return (
-    <div className="min-h-screen bg-[#F2EDE6] px-6 py-14">
+    <div className="min-h-screen bg-[#FFFFFF] px-6 py-14">
       <p className="text-[10px] tracking-widest text-gray-400 uppercase mb-4">Admin</p>
       <h1 className="font-serif text-3xl text-gray-900 mb-10">Catalog</h1>
 
