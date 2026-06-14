@@ -1,7 +1,7 @@
 import { UseFormRegisterReturn } from "react-hook-form";
 
 export const inputBase =
-  "w-full border bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-300 outline-none transition-colors focus:border-[#C4974A]";
+  "w-full border bg-white px-[16px] py-[13px] text-[16px] text-[#010101] placeholder:text-[16px] placeholder:text-[#9a9a9a] outline-none transition-colors focus:border-[#7A2633]";
 
 export type FieldProps = {
   label: string;
@@ -15,7 +15,7 @@ export type FieldProps = {
 export function Field({ label, registration, error, type = "text", autoComplete, placeholder }: FieldProps) {
   return (
     <div>
-      <label htmlFor={registration.name} className="mb-1 block text-[11px] text-gray-600">
+      <label htmlFor={registration.name} className="mb-2 block text-[14px] font-medium leading-normal text-[#343434]">
         {label}
       </label>
       <input
@@ -24,9 +24,11 @@ export function Field({ label, registration, error, type = "text", autoComplete,
         autoComplete={autoComplete}
         placeholder={placeholder}
         {...registration}
-        className={`${inputBase} ${error ? "border-red-400" : "border-gray-300"}`}
+        className={`${inputBase} ${error ? "border-[#DF4441]" : "border-[#4E4E4E]"}`}
       />
-      {error && <p className="mt-1 text-[11px] text-red-500">{error}</p>}
+      <p className="mt-2 h-5 text-[14px] text-[#DF4441]">
+    {error || '\u00A0'}
+  </p>
     </div>
   );
 }

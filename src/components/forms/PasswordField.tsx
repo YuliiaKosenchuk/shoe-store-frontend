@@ -1,4 +1,4 @@
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeClosed } from "lucide-react";
 import { FieldProps, inputBase } from "./Field";
 
 export type PasswordFieldProps = FieldProps & {
@@ -17,7 +17,7 @@ export function PasswordField({
 }: PasswordFieldProps) {
   return (
     <div>
-      <label htmlFor={registration.name} className="mb-1 block text-[11px] text-gray-600">
+      <label htmlFor={registration.name} className="mb-2 block text-[14px] font-medium leading-normal text-[#343434]">
         {label}
       </label>
       <div className="relative">
@@ -27,7 +27,7 @@ export function PasswordField({
           autoComplete={autoComplete}
           placeholder={placeholder}
           {...registration}
-          className={`${inputBase} pr-10 ${error ? "border-red-400" : "border-gray-300"}`}
+          className={`${inputBase} pr-10 ${error ? "border-[#DF4441]" : "border-[#4E4E4E]"}`}
         />
         <button
           type="button"
@@ -35,10 +35,10 @@ export function PasswordField({
           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
           tabIndex={-1}
         >
-          {show ? <EyeOff size={16} strokeWidth={1.5} /> : <Eye size={16} strokeWidth={1.5} />}
+          {show ? <EyeClosed size={24} strokeWidth={1.5} /> : <Eye size={24} strokeWidth={1.5} />}
         </button>
       </div>
-      {error && <p className="mt-1 text-[11px] text-red-500">{error}</p>}
+      <p className="mt-2 h-5 text-[14px] text-[#DF4441]">{error || "\u00A0"}</p>
     </div>
   );
 }

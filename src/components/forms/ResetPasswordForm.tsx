@@ -60,18 +60,18 @@ export default function ResetPasswordForm() {
     <div className="min-h-screen bg-white">
       <BackButton />
       <div className="flex justify-center px-4 py-14">
-        <div className="w-full max-w-97.5">
-          <h1 className="mb-2 font-serif text-[28px] leading-snug text-gray-900">
+        <div className="w-full max-w-157">
+          <h1 className="mb-14 font-serif text-[28px] font-(--font-cormorant-garamond) leading-[1.1] text-gray-900">
             Create new password
           </h1>
-          <p className="mb-6 text-[13px] text-gray-500">
+          <p className="mb-1 text-[13px] text-gray-500">
             Your link has been verified. Please choose a new password for your account
           </p>
 
-          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-            {serverError && (
-              <p className="text-[12px] text-red-500">{serverError}</p>
-            )}
+          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-1">
+            <p className="mt-2 h-5 text-[14px] text-[#DF4441]">
+              {serverError || "\u00A0"}
+            </p>
 
             <PasswordField
               label="Password"
@@ -100,11 +100,11 @@ export default function ResetPasswordForm() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full py-3.5 text-[11px] font-medium tracking-[0.2em] uppercase transition-colors ${
+              className={`mt-9 w-full py-3.75 text-[14px] font-medium tracking-wide uppercase transition-colors disabled:cursor-not-allowed ${
                 isValid
                   ? "bg-black text-white hover:bg-gray-900"
-                  : "bg-black/25 text-white cursor-default"
-              } disabled:cursor-not-allowed`}
+                  : "bg-black/30 text-white cursor-default"
+              }`}
             >
               {isSubmitting ? "Resetting…" : "Reset Password"}
             </button>
@@ -112,7 +112,7 @@ export default function ResetPasswordForm() {
             {userNotFound && (
               <Link
                 href="/register"
-                className="block w-full py-3.5 text-center text-[11px] font-medium tracking-[0.2em] uppercase bg-black text-white hover:bg-gray-900 transition-colors"
+                className="block w-full py-3.75 text-center text-[14px] font-medium uppercase bg-black text-white hover:bg-gray-900 transition-colors"
               >
                 Create an account
               </Link>
@@ -120,7 +120,7 @@ export default function ResetPasswordForm() {
 
             <Link
               href="/login"
-              className="block w-full py-3.5 text-center text-[11px] tracking-[0.2em] uppercase font-medium border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+              className="block w-full border border-gray-300 py-3.75 text-center text-[14px] font-medium uppercase text-[#010101] hover:bg-gray-50 transition-colors"
             >
               Back to sign in
             </Link>

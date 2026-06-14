@@ -2,13 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Link from "next/link";
-import { RegistrationFormValues, registrationSchema } from "@/shemas/registration.shema";
+import {
+  RegistrationFormValues,
+  registrationSchema,
+} from "@/shemas/registration.shema";
 import { PasswordField } from "./PasswordField";
 import { Field } from "./Field";
+import { PhoneField } from "./PhoneField";
 import { AuthService } from "@/servises/auth.service";
 import { BackButton } from "@/components/ui/BackButton";
 
@@ -21,10 +25,12 @@ export default function RegistrationForm() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting, isValid },
   } = useForm<RegistrationFormValues>({
     resolver: zodResolver(registrationSchema),
     mode: "onChange",
+    defaultValues: { phoneNumber: "" },
   });
 
   const onSubmit = async (data: RegistrationFormValues) => {
@@ -37,7 +43,9 @@ export default function RegistrationForm() {
         if (error.response?.status === 409) {
           setServerError("User with this email already exists.");
         } else {
-          setServerError(error.response?.data?.message ?? "Registration failed.");
+          setServerError(
+            error.response?.data?.message ?? "Registration failed.",
+          );
         }
       }
     }
@@ -47,12 +55,16 @@ export default function RegistrationForm() {
     <div className="min-h-screen bg-white">
       <BackButton />
       <div className="flex justify-center px-4 py-14">
-        <div className="w-full max-w-97.5">
-          <h1 className="mb-6 font-serif text-[28px] leading-snug text-gray-900">
+        <div className="w-full max-w-157">
+          <h1 className="mb-6 font-serif text-[28px] font-(--font-cormorant-garamond) leading-[1.1] text-gray-900">
             Create an Account
           </h1>
 
-          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+            className="space-y-1"
+          >
             {serverError && (
               <p className="text-[12px] text-red-500">{serverError}</p>
             )}
@@ -83,13 +95,18 @@ export default function RegistrationForm() {
               autoComplete="email"
             />
 
-            <Field
-              label="Phone number"
-              type="tel"
-              registration={register("phoneNumber")}
-              placeholder="+48123456789"
-              error={errors.phoneNumber?.message}
-              autoComplete="tel"
+            <Controller
+              name="phoneNumber"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <PhoneField
+                  id="phoneNumber"
+                  label="Phone number"
+                  value={value || undefined}
+                  onChange={(v) => onChange(v ?? "")}
+                  error={errors.phoneNumber?.message}
+                />
+              )}
             />
 
             <PasswordField
@@ -102,8 +119,12 @@ export default function RegistrationForm() {
               autoComplete="new-password"
             />
 
+            <p className="mt-8 text-[16px] text-[#676767] text-normal leading-[1.3]">
+              Use at least 8 characters, including a letter and a number
+            </p>
+
             <PasswordField
-              label="Repeat Password"
+              label="Confirm Password"
               registration={register("confirmPassword")}
               placeholder="password"
               error={errors.confirmPassword?.message}
@@ -112,29 +133,31 @@ export default function RegistrationForm() {
               autoComplete="new-password"
             />
 
-            <p className="text-[11px] text-gray-400">
-              Use at least 8 characters, including a letter and a number
-            </p>
-
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full py-3.5 text-[11px] font-medium tracking-[0.2em] uppercase transition-colors ${
+              className={`w-full py-3.75 text-[14px] font-medium tracking-wide uppercase transition-colors disabled:cursor-not-allowed ${
                 isValid
                   ? "bg-black text-white hover:bg-gray-900"
-                  : "border border-gray-300 bg-white text-gray-400 cursor-default"
-              } disabled:cursor-not-allowed`}
+                  : "bg-black/30 text-white cursor-default"
+              }`}
             >
               {isSubmitting ? "Signing up…" : "Sign Up"}
             </button>
 
-            <p className="text-[11px] leading-relaxed text-gray-500">
+            <p className="text-[16px] text-[#676767] text-normal leading-[1.3]">
               By signing up you are agreeing to our{" "}
-              <Link href="/terms" className="text-red-500 hover:opacity-70 transition-opacity">
+              <Link
+                href="/terms"
+                className="text-[#7A2633] hover:opacity-70 transition-opacity"
+              >
                 Terms of Service
               </Link>
               . View our{" "}
-              <Link href="/privacy" className="text-red-500 hover:opacity-70 transition-opacity">
+              <Link
+                href="/privacy"
+                className="text-[#7A2633] hover:opacity-70 transition-opacity"
+              >
                 Privacy Policy
               </Link>
               .
