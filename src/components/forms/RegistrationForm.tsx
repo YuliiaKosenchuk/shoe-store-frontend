@@ -26,7 +26,7 @@ export default function RegistrationForm() {
     register,
     handleSubmit,
     control,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting, isValid, isSubmitted },
   } = useForm<RegistrationFormValues>({
     resolver: zodResolver(registrationSchema),
     mode: "onChange",
@@ -56,7 +56,7 @@ export default function RegistrationForm() {
       <BackButton />
       <div className="flex justify-center px-4 py-14">
         <div className="w-full max-w-157">
-          <h1 className="mb-6 font-serif text-[28px] font-(--font-cormorant-garamond) leading-[1.1] text-gray-900">
+          <h1 className="mb-9 font-serif text-[36px] font-(--font-cormorant-garamond) leading-[1.1] text-black">
             Create an Account
           </h1>
 
@@ -104,7 +104,7 @@ export default function RegistrationForm() {
                   label="Phone number"
                   value={value || undefined}
                   onChange={(v) => onChange(v ?? "")}
-                  error={errors.phoneNumber?.message}
+                  error={isSubmitted ? errors.phoneNumber?.message : undefined}
                 />
               )}
             />
@@ -117,11 +117,8 @@ export default function RegistrationForm() {
               show={showPassword}
               onToggle={() => setShowPassword((p) => !p)}
               autoComplete="new-password"
+              showInfo
             />
-
-            <p className="mt-8 text-[16px] text-[#676767] text-normal leading-[1.3]">
-              Use at least 8 characters, including a letter and a number
-            </p>
 
             <PasswordField
               label="Confirm Password"
@@ -136,7 +133,7 @@ export default function RegistrationForm() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full py-3.75 text-[14px] font-medium tracking-wide uppercase transition-colors disabled:cursor-not-allowed ${
+              className={`w-full mt-5.75 py-3.75 text-[14px] font-medium tracking-wide uppercase transition-colors disabled:cursor-not-allowed ${
                 isValid
                   ? "bg-black text-white hover:bg-gray-900"
                   : "bg-black/30 text-white cursor-default"
@@ -145,7 +142,7 @@ export default function RegistrationForm() {
               {isSubmitting ? "Signing up…" : "Sign Up"}
             </button>
 
-            <p className="text-[16px] text-[#676767] text-normal leading-[1.3]">
+            <p className="mt-4 text-[16px] text-[#676767] text-normal leading-[1.3]">
               By signing up you are agreeing to our{" "}
               <Link
                 href="/terms"

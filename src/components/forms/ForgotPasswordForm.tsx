@@ -17,6 +17,8 @@ export default function ForgotPasswordForm() {
   const [sent, setSent] = useState(false);
   const [userNotFound, setUserNotFound] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [isResending, setIsResending] = useState(false);
+  const [resendMessage, setResendMessage] = useState<string | null>(null);
 
   const {
     register,
@@ -51,28 +53,58 @@ export default function ForgotPasswordForm() {
     }
   };
 
+  const handleResend = async () => {
+    setResendMessage(null);
+    setIsResending(true);
+    try {
+      await AuthService.forgotPassword(getValues("email"));
+      setResendMessage("Email resent successfully.");
+    } catch {
+      setResendMessage("Failed to resend. Please try again.");
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   if (sent) {
     return (
       <div className="min-h-screen bg-white">
         <BackButton />
         <div className="flex justify-center px-4 py-14">
-          <div className="w-full max-w-97.5">
-            <h1 className="mb-5 font-serif text-[28px] font-(--font-cormorant-garamond) leading-[1.1] text-gray-900">
-              Check your email
+          <div className="w-full max-w-157">
+            <h1 className="mb-9 font-serif text-[36px] font-(--font-cormorant-garamond) leading-[1.1] text-black">
+              Recovery email sent
             </h1>
-            <p className="mb-8 text-[13px] text-gray-500">
-              We sent a password reset link to{" "}
-              <span className="font-medium text-gray-900">
+            <p className="mb-6 text-[16px] text-[#676767] leading-[1.3]">
+              Please check your inbox (and spam). Didn&apos;t receive an email at{" "}
+              <span className="font-semibold text-[#7A2633]">
                 {getValues("email")}
               </span>
-              . Check your inbox and follow the instructions.
+              ?
             </p>
-            <Link
-              href="/login"
-              className="block w-full border border-gray-300 py-3.75 text-center text-[14px] font-medium uppercase text-[#010101] hover:bg-gray-50 transition-colors"
-            >
-              Back to sign in
-            </Link>
+            {resendMessage && (
+              <p className="mb-4 text-[14px] text-[#676767]">{resendMessage}</p>
+            )}
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setSent(false);
+                  setResendMessage(null);
+                }}
+                className="w-full py-3.75 bg-black text-white text-[14px] font-medium tracking-wide uppercase hover:bg-gray-900 transition-colors"
+              >
+                Change Email
+              </button>
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={isResending}
+                className="w-full py-3.75 border border-gray-300 text-[14px] font-normal leading-normal text-[#010101] hover:bg-gray-50 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isResending ? "Sending…" : "Resend email"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -84,12 +116,9 @@ export default function ForgotPasswordForm() {
       <BackButton />
       <div className="flex justify-center px-4 py-14">
         <div className="w-full max-w-157">
-          <h1 className="mb-14 font-serif text-[28px] font-(--font-cormorant-garamond) leading-[1.1] text-gray-900">
+          <h1 className="mb-9 font-serif text-[36px] font-(--font-cormorant-garamond) leading-[1.1] text-black">
             Reset password
           </h1>
-          <p className="mb-1 text-[13px] text-gray-500">
-            Enter your email to reset your password
-          </p>
 
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -98,6 +127,10 @@ export default function ForgotPasswordForm() {
           >
             <p className="mt-2 h-5 text-[14px] text-[#DF4441]">
               {serverError || "\u00A0"}
+            </p>
+
+            <p className="mb-4 text-[16px] text-[#676767] text-normal leading-[1.3]">
+              Enter your email to reset your password
             </p>
 
             <Field
@@ -112,7 +145,7 @@ export default function ForgotPasswordForm() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`mt-9 w-full py-3.75 text-[14px] font-medium tracking-wide uppercase transition-colors disabled:cursor-not-allowed ${
+              className={`mt-3.25 w-full py-3.75 text-[14px] font-medium tracking-wide uppercase transition-colors disabled:cursor-not-allowed ${
                 isValid
                   ? "bg-black text-white hover:bg-gray-900"
                   : "bg-black/30 text-white cursor-default"

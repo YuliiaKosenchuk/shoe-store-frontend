@@ -52,7 +52,7 @@ export default function LoginForm() {
       <BackButton />
       <div className="flex justify-center px-4 py-14">
         <div className="w-full max-w-157">
-          <h1 className="mb-9 font-serif text-[28px] font-(--font-cormorant-garamond) leading-[1.1] text-gray-900">
+          <h1 className="mb-9 font-serif text-[36px] font-(--font-cormorant-garamond) leading-[1.1] text-black">
             Sign in
           </h1>
 
@@ -86,7 +86,7 @@ export default function LoginForm() {
               />
               <Link
                 href="/forgot-password"
-                className="mt-1 mb-8 inline-block font-normal text-[16px] text-[#7A2633] underline hover:opacity-60 transition-opacity"
+                className="mt-1 mb-4 inline-block font-normal text-[16px] text-[#7A2633] underline hover:opacity-60 transition-opacity"
               >
                 Forgot password?
               </Link>
@@ -95,7 +95,7 @@ export default function LoginForm() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full mb-4 py-3.75 text-[14px] font-medium tracking-wide uppercase transition-colors ${
+              className={`w-full mb-4 py-3.75 text-[14px] font-medium tracking-wide leading-[1.4] uppercase transition-colors ${
                 isValid
                   ? "bg-black text-white hover:bg-gray-900"
                   : "bg-black/30 text-white cursor-default"
@@ -110,7 +110,7 @@ export default function LoginForm() {
                 console.log("[LoginForm] User initiated Google OAuth login");
                 AuthService.loginWithGoogle();
               }}
-              className="w-full mb-8 flex items-center justify-center gap-2.5 border border-gray-300 py-3 text-[14px] uppercase font-normal text-[#010101] hover:bg-gray-50 transition-colors"
+              className="w-full mb-8 flex items-center justify-center gap-2.5 border border-gray-300 py-3.5 text-[14px] font-normal leading-normal text-[#010101] hover:bg-gray-50 transition-colors"
             >
               <GoogleIcon />
               Log in with Google
@@ -118,12 +118,12 @@ export default function LoginForm() {
           </form>
 
           <div className="mt-8 space-y-4">
-            <p className="font-serif font-(--font-cormorant-garamond) text-[26px] text-black">
+            <p className="font-serif font-(--font-cormorant-garamond) leading-[1.2] text-[26px] text-black">
               Don&apos;t have an Account yet?
             </p>
             <Link
               href="/register"
-              className="block w-full border border-gray-300 py-3.75 text-center text-[14px] font-medium text-[#010101] hover:bg-gray-50 transition-colors"
+              className="block w-full border border-gray-300 py-3.5 text-center text-[14px] font-normal leading-normal text-[#010101] hover:bg-gray-50 transition-colors"
             >
               Register Now
             </Link>
