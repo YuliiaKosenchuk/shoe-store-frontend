@@ -1,7 +1,6 @@
 "use client";
 
 import { use, useState } from "react";
-import { ShoppingBag } from "lucide-react";
 import { getMockProduct } from "@/servises/products.mock";
 import type { ProductSize } from "@/shemas/product.shema";
 import { WishlistButton } from "@/components/ui/WishlistButton";
