@@ -2,10 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import axios from "axios";
 import { UsersService, UserProfile } from "@/servises/users.service";
 import { AuthService } from "@/servises/auth.service";
 import { BackButton } from "@/components/ui/BackButton";
+
+const adminNavItems = [
+  { label: "CATALOG", href: "/admin/catalog" },
+  { label: "ORDERS", href: "/admin/orders" },
+  { label: "CUSTOMERS", href: "/admin/customers" },
+];
 
 export default function CabinetPage() {
   const router = useRouter();
@@ -66,6 +73,7 @@ export default function CabinetPage() {
   const firstInitial = user.firstName?.[0] ?? "?";
   const lastInitial = user.lastName?.[0] ?? "";
   const initials = `${firstInitial}${lastInitial}`.toUpperCase();
+  const isAdmin = user.role?.toUpperCase() === "ADMIN";
 
   return (
     <div className="min-h-screen bg-[#FFFFFF]">
@@ -83,6 +91,25 @@ export default function CabinetPage() {
           <Row label="Email" value={user.email} />
           {user.phoneNumber && <Row label="Phone" value={user.phoneNumber} />}
         </div>
+
+        {isAdmin && (
+          <div className="mt-10 w-full max-w-sm">
+            <p className="mb-3 text-[9px] tracking-[0.2em] text-black/35 uppercase">
+              Admin
+            </p>
+            <div className="divide-y divide-gray-200 border border-gray-200 bg-white">
+              {adminNavItems.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="flex items-center px-5 py-4 text-[10px] font-medium tracking-[0.2em] text-[#B8893E] hover:opacity-60 transition-opacity"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         <button
           onClick={() => AuthService.logout()}

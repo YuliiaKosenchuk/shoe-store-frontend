@@ -11,7 +11,7 @@ import { AuthService } from "@/servises/auth.service";
 import { Field } from "./Field";
 import { PasswordField } from "./PasswordField";
 import { BackButton } from "@/components/ui/BackButton";
-import { GoogleIcon } from "../ ui/GoogleIcon";
+import { GoogleIcon } from "../ui/GoogleIcon";
 
 export default function LoginForm() {
   const router = useRouter();

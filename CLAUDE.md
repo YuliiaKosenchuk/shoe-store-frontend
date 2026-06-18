@@ -21,12 +21,66 @@ Next.js 16 App Router project (`src/app/`). All routes, layouts, and pages live 
 
 **Styling**: Tailwind CSS v4 via PostCSS. No CSS Modules or styled-components.
 
-**Backend**: A separate backend API is expected at `NEXT_PUBLIC_API_URL` (set in `.env.local`, defaults to `http://localhost:8080`). Server Components can fetch from this URL directly at request time; expose it to the client only when needed via the `NEXT_PUBLIC_` prefix. The registration endpoint is `POST /api/auth/register`.
+**Design tokens**: Background color is `#F2EDE6` (warm beige). Accent color for links/focus is `#7A2633`. UI follows a minimal luxury aesthetic — serif headings, uppercase tracking-widest labels, black/gray palette.
 
-**Available libraries** (installed, not yet wired up): `axios` for HTTP, `react-hook-form` + `zod` for forms and validation, `zustand` for global state. Prefer these over ad-hoc patterns as the app grows.motion for animations (recuared  "use client")
+**Fonts**: `Cormorant Garamond` (variable `--font-cormorant-garamond`, for serif headings) and `Jost` (variable `--font-jost`, for body/sans) loaded in the root layout.
 
-**Fonts**: Geist Sans (`--font-geist-sans`) and Geist Mono (`--font-geist-mono`) loaded via `next/font/google` in the root layout. Use these CSS variables when specifying fonts.
+## Key Libraries
 
-**Design tokens**: Background color is `#F2EDE6` (warm beige). UI follows a minimal luxury aesthetic — serif headings, uppercase tracking-widest labels, black/gray palette.
+| Library | Purpose |
+|---|---|
+| `axios` | HTTP via `src/lib/apiClient.ts` |
+| `react-hook-form` + `zod` | All forms and validation |
+| `zustand` | Global state (installed, not yet wired up) |
+| `@tanstack/react-query` | Server state caching (installed, not yet wired up) |
+| `motion` | Animations (requires `"use client"`) |
+| `react-international-phone` | Phone number input |
+| `embla-carousel-react` | Carousels |
+| `lucide-react` | Icons |
 
-**TypeScript**: strict mode enabled. Use the `@/*` alias for imports instead of relative paths that cross directory boundaries.
+## Backend & API
+
+Backend is a separate service at `NEXT_PUBLIC_API_URL` (defaults to `http://localhost:8080`). All requests go through `src/lib/apiClient.ts` (an axios instance).
+
+**Auth API endpoints:**
+- `POST /api/auth/register` — payload uses `repeatedPassword` (not `confirmPassword`)
+- `POST /api/auth/login`
+- `POST /api/auth/forgot-password`
+- `POST /api/auth/reset-password`
+- `GET /api/users/me` — returns `UserProfile` (id, firstName, lastName, email, phoneNumber, createdAt, role)
+- `PATCH /api/users/me`
+- `/oauth2/authorization/google` — backend redirect for Google OAuth
+
+**Auth pattern:** JWT token stored in `localStorage` under the key `token`. The `apiClient` interceptor auto-attaches it as `Authorization: Bearer <token>`. A 401 response clears the token and redirects to `/login`. After Google OAuth, the backend redirects to `/oauth2/callback?token=...` which the client saves to localStorage.
+
+## Directory Conventions
+
+> Note: two directories have intentional typos that must be preserved:
+> - `src/shemas/` (not `schemas/`) — Zod schemas + inferred TypeScript types
+> - `src/servises/` (not `services/`) — API service objects (`AuthService`, `UsersService`)
+
+All service calls go through the service layer (`src/servises/`) rather than calling `apiClient` directly from components.
+
+## Routes & Access Control
+
+| Route | Notes |
+|---|---|
+| `/` | Home |
+| `/register` | Public |
+| `/login` | Public |
+| `/forgot-password` | Public |
+| `/reset-password` | Public; expects `?token=` query param |
+| `/cabinet` | Protected — redirects to `/login` if no localStorage token |
+| `/oauth2/callback` | Google OAuth landing — extracts token from `?token=` / `?accessToken=` / `?access_token=` |
+| `/admin/catalog`, `/admin/orders`, `/admin/customers` | Visible in cabinet only when `user.role === "ADMIN"` |
+
+Access control is client-side only (token check in `useEffect`). The Header fetches user initials from `/api/users/me` on every route change to keep auth state fresh.
+
+## Form Component Pattern
+
+Shared primitives in `src/components/forms/`:
+- `Field` — labeled text input with error display
+- `PasswordField` — show/hide toggle + optional info tooltip
+- `PhoneField` — wraps `react-international-phone` via `Controller`
+
+All forms use `react-hook-form` with `zodResolver`. Validation mode is `onChange`. Server errors are displayed via a `serverError` state string above the submit button.
