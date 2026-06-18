@@ -3,12 +3,14 @@
 import Link from "next/link";
 import { useWishlistStore } from "@/store/wishlist.store";
 import { ProductsGrid } from "@/components/ui/ProductsGrid";
+import { Container } from "@/components/ui/Container";
 
 export default function WishlistPage() {
   const items = useWishlistStore((state) => state.items);
 
   return (
-    <main className="px-8 py-12">
+    <main>
+      <Container className="px-8 py-12">
       <h1 className="font-(family-name:--font-cormorant-garamond) text-4xl font-light tracking-widest uppercase mb-10">
         Wishlist
       </h1>
@@ -28,6 +30,7 @@ export default function WishlistPage() {
       ) : (
         <ProductsGrid products={items} />
       )}
+      </Container>
     </main>
   );
 }

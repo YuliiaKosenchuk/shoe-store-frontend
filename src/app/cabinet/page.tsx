@@ -7,6 +7,7 @@ import axios from "axios";
 import { UsersService, UserProfile } from "@/servises/users.service";
 import { AuthService } from "@/servises/auth.service";
 import { BackButton } from "@/components/ui/BackButton";
+import { Container } from "@/components/ui/Container";
 
 const adminNavItems = [
   { label: "CATALOG", href: "/admin/catalog" },
@@ -77,6 +78,7 @@ export default function CabinetPage() {
 
   return (
     <div className="min-h-screen bg-[#FFFFFF]">
+      <Container>
       <BackButton />
       <div className="flex flex-col items-center px-4 py-20">
         <div className="flex h-24 w-24 items-center justify-center rounded-full bg-black text-white">
@@ -118,6 +120,7 @@ export default function CabinetPage() {
           Sign out
         </button>
       </div>
+      </Container>
     </div>
   );
 }

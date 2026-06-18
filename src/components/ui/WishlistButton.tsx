@@ -7,9 +7,16 @@ import type { Product } from "@/shemas/product.shema";
 interface WishlistButtonProps {
   product: Product;
   className?: string;
+  activeIconClass?: string;
+  defaultIconClass?: string;
 }
 
-export function WishlistButton({ product, className = "" }: WishlistButtonProps) {
+export function WishlistButton({
+  product,
+  className = "",
+  activeIconClass,
+  defaultIconClass,
+}: WishlistButtonProps) {
   const { hasHydrated, isInWishlist, toggleItem } = useWishlistStore();
   const wishlisted = hasHydrated && isInWishlist(product.id);
 
@@ -28,8 +35,8 @@ export function WishlistButton({ product, className = "" }: WishlistButtonProps)
         strokeWidth={1}
         className={`transition-colors ${
           wishlisted
-            ? "text-[#7A2633] fill-[#7A2633]"
-            : "text-gray-800 group-hover/wishlist:text-[#7A2633]"
+            ? (activeIconClass ?? "text-[#7A2633] fill-[#7A2633]")
+            : (defaultIconClass ?? "text-gray-800 group-hover/wishlist:text-[#7A2633]")
         }`}
       />
     </button>

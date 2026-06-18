@@ -4,6 +4,12 @@ export interface ProductImage {
   urls: string[];
 }
 
+export interface ProductSize {
+  size: number;
+  stock: number;
+  available: boolean;
+}
+
 export interface Product {
   id: number;
   category: string;
@@ -15,7 +21,7 @@ export interface Product {
   season: string;
   material: string;
   colors: string[];
-  sizes?: number[];
+  sizes?: ProductSize[];
   createdAt: string;
   images: ProductImage[];
 }

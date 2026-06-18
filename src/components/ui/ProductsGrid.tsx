@@ -3,6 +3,7 @@
 import { MOCK_PRODUCTS } from "@/servises/products.mock";
 import { ProductCard } from "@/components/ui/ProductCard";
 import type { Product } from "@/shemas/product.shema";
+import { Container } from "./Container";
 
 interface ProductsGridProps {
   products?: Product[];
@@ -27,10 +28,12 @@ export function ProductsGrid({ products = MOCK_PRODUCTS }: ProductsGridProps) {
   // }
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,302px)] justify-center gap-x-4 gap-y-10 px-6 py-10">
-      {products.map((product, i) => (
-        <ProductCard key={product.id} product={product} priority={i < 4} />
-      ))}
-    </div>
+    <Container>
+      <div className="grid grid-cols-[repeat(auto-fill,302px)] justify-center gap-x-4 gap-y-10 px-6 py-10">
+        {products.map((product, i) => (
+          <ProductCard key={product.id} product={product} priority={i < 4} />
+        ))}
+      </div>
+    </Container>
   );
 }

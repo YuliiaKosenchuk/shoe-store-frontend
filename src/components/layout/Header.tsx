@@ -7,11 +7,12 @@ import { Search, User, Heart, ShoppingBag, Menu, X } from "lucide-react";
 import { UsersService } from "@/servises/users.service";
 import { useWishlistStore } from "@/store/wishlist.store";
 import LogoComponent from "../ui/LogoComponent";
+import { Container } from "../ui/Container";
 
 const navItems = [
-  { label: "Bags", href: "/" },
+  { label: "Bags", href: "/bags" },
   { label: "Shoes", href: "/shoes" },
-  { label: "Accessories", href: "/" },
+  { label: "Accessories", href: "/accessories" },
   { label: "About us", href: "/" },
   { label: "Help", href: "/" },
 ];
@@ -51,7 +52,8 @@ export default function Header() {
 
   return (
     <header className="bg-white border-b border-[#EBEBEB] relative z-50">
-      <div className="grid grid-cols-3 items-center px-8 py-4">
+      <Container>
+        <div className="grid grid-cols-3 items-center px-8 py-4">
         {/* Left — nav (desktop) / hamburger (mobile) */}
         <div className="flex items-center gap-7">
           <button
@@ -110,6 +112,7 @@ export default function Header() {
           <ShoppingBag size={24} strokeWidth={1} className={iconCls} />
         </div>
       </div>
+      </Container>
 
       {/* Mobile menu */}
       {menuOpen && (

@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import type { Product } from "@/shemas/product.shema";
 
-const DEFAULT_SIZES = [35, 36, 37, 38, 39, 40, 41, 42];
 
 const FALLBACK_IMAGES: string[] = [];
 
@@ -89,7 +88,14 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
   // use test cloudinary images when the product has none yet
   const carouselImages = rawImages.length > 0 ? rawImages : FALLBACK_IMAGES;
 
-  const availableSizes = new Set(product.sizes ?? DEFAULT_SIZES);
+  const allSizeNumbers = product.sizes
+    ? product.sizes.map((s) => s.size)
+    : [35, 36, 37, 38, 39, 40, 41, 42];
+  const availableSizeSet = new Set(
+    product.sizes
+      ? product.sizes.filter((s) => s.available).map((s) => s.size)
+      : [35, 36, 37, 38, 39, 40, 41, 42]
+  );
 
   const discount =
     product.priceOld > 0 && product.priceOld > product.price
@@ -100,7 +106,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
     <div className="group flex flex-col cursor-pointer w-full h-124">
       <div
         className="relative w-full h-101 shrink-0 overflow-hidden bg-[#F8F8F8] cursor-pointer"
-        onClick={() => router.push(`/products/${product.id}`)}
+        onClick={() => router.push(`/${product.category.toLowerCase()}/${product.id}`)}
       >
         <div ref={emblaRef} className="h-full overflow-hidden">
           <div className="flex h-full">
@@ -151,8 +157,8 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
         <div className="absolute bottom-4 left-4 right-4 h-17 bg-[#DADADA]/35 px-4 pt-3 pb-4 translate-y-[calc(100%+16px)] group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
           <p className="text-[14px] leading-normal tracking-widest text-[#343434] mb-2.5">Size</p>
           <div className="flex gap-3 flex-wrap">
-            {DEFAULT_SIZES.map((size) => {
-              const available = availableSizes.has(size);
+            {allSizeNumbers.map((size) => {
+              const available = availableSizeSet.has(size);
               return (
                 <button
                   key={size}
@@ -175,7 +181,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 
       <div className="mt-3 space-y-1.5">
         <Link
-          href={`/products/${product.id}`}
+          href={`/${product.category.toLowerCase()}/${product.id}`}
           className="font-(family-name:--font-jost) text-base font-normal leading-snug text-gray-900 hover:text-[#7A2633] transition-colors"
         >
           {product.name}
