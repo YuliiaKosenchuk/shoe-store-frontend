@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Search, User, Heart, ShoppingBag, Menu, X } from "lucide-react";
 import { UsersService } from "@/servises/users.service";
+import { useWishlistStore } from "@/store/wishlist.store";
 import LogoComponent from "../ui/LogoComponent";
 
 const navItems = [
@@ -21,6 +22,9 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [initials, setInitials] = useState<string | null>(null);
   const pathname = usePathname();
+  const wishlistCount = useWishlistStore((state) =>
+    state.hasHydrated ? state.items.length : 0
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -95,7 +99,14 @@ export default function Header() {
             </Link>
           )}
 
-          <Heart size={24} strokeWidth={1} className={iconCls} />
+          <Link href="/wishlist" aria-label="Wishlist" className={`relative ${iconCls}`}>
+            <Heart size={24} strokeWidth={1} />
+            {wishlistCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-black text-white font-(family-name:--font-jost) text-[8px] font-medium leading-none">
+                {wishlistCount}
+              </span>
+            )}
+          </Link>
           <ShoppingBag size={24} strokeWidth={1} className={iconCls} />
         </div>
       </div>

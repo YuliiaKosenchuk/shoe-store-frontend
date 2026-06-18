@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { WishlistButton } from "@/components/ui/WishlistButton";
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import type { Product } from "@/shemas/product.shema";
 
@@ -37,6 +38,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, priority = false }: ProductCardProps) {
+  const router = useRouter();
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [activeColor, setActiveColor] = useState<string>(
@@ -53,6 +55,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
   const scrollPrev = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
+      e.stopPropagation();
       emblaApi?.scrollPrev();
     },
     [emblaApi]
@@ -61,6 +64,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
   const scrollNext = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
+      e.stopPropagation();
       emblaApi?.scrollNext();
     },
     [emblaApi]
@@ -94,7 +98,10 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 
   return (
     <div className="group flex flex-col cursor-pointer w-full h-124">
-      <div className="relative w-full h-101 shrink-0 overflow-hidden bg-[#F8F8F8]">
+      <div
+        className="relative w-full h-101 shrink-0 overflow-hidden bg-[#F8F8F8] cursor-pointer"
+        onClick={() => router.push(`/products/${product.id}`)}
+      >
         <div ref={emblaRef} className="h-full overflow-hidden">
           <div className="flex h-full">
             {carouselImages.map((url, i) => (
@@ -112,7 +119,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             ))}
           </div>
         </div>
-        <WishlistButton className="absolute top-3 right-3 z-10" />
+        <WishlistButton product={product} className="absolute top-3 right-3 z-10" />
         <button
           onClick={scrollPrev}
           className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
@@ -149,7 +156,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               return (
                 <button
                   key={size}
-                  onClick={(e) => e.preventDefault()}
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
                   disabled={!available}
                   className={`text-sm font-sans text-[14px] font-light transition-colors ${
                     available

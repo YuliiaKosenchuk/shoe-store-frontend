@@ -1,14 +1,17 @@
 "use client";
 
 import { Heart } from "lucide-react";
-import { useState } from "react";
+import { useWishlistStore } from "@/store/wishlist.store";
+import type { Product } from "@/shemas/product.shema";
 
 interface WishlistButtonProps {
+  product: Product;
   className?: string;
 }
 
-export function WishlistButton({ className = "" }: WishlistButtonProps) {
-  const [wishlisted, setWishlisted] = useState(false);
+export function WishlistButton({ product, className = "" }: WishlistButtonProps) {
+  const { hasHydrated, isInWishlist, toggleItem } = useWishlistStore();
+  const wishlisted = hasHydrated && isInWishlist(product.id);
 
   return (
     <button
@@ -16,7 +19,8 @@ export function WishlistButton({ className = "" }: WishlistButtonProps) {
       aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
       onClick={(e) => {
         e.preventDefault();
-        setWishlisted((prev) => !prev);
+        e.stopPropagation();
+        toggleItem(product);
       }}
     >
       <Heart

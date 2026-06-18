@@ -14,7 +14,8 @@ export default function LogoComponent() {
           width={210}
           height={41}
           className="transition-all duration-300"
-          priority 
+          style={{ height: 'auto' }}
+          priority
         />
       </Link>
       {/* <Link

@@ -2,9 +2,13 @@
 
 import { MOCK_PRODUCTS } from "@/servises/products.mock";
 import { ProductCard } from "@/components/ui/ProductCard";
+import type { Product } from "@/shemas/product.shema";
 
-export function ProductsGrid() {
-  const products = MOCK_PRODUCTS;
+interface ProductsGridProps {
+  products?: Product[];
+}
+
+export function ProductsGrid({ products = MOCK_PRODUCTS }: ProductsGridProps) {
 
   // if (isLoading && !data) {
   //   return (
