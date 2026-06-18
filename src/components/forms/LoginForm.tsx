@@ -28,6 +28,7 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
+    console.log("[LoginForm.onSubmit] Called with email:", data.email);
     setServerError(null);
     try {
       await AuthService.login(data);
@@ -36,6 +37,12 @@ export default function LoginForm() {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
         const message: string = error.response?.data?.message ?? "";
+        console.log("[LoginForm.onSubmit] Axios error — status:", status, "message:", message);
+        if (!error.response) {
+          console.error("[LoginForm.onSubmit] Network error — backend may be down");
+          setServerError("Unable to connect. Please check your connection.");
+          return;
+        }
         const isNotFound =
           status === 404 || /not found|does not exist|no user/i.test(message);
         setServerError(
@@ -43,6 +50,8 @@ export default function LoginForm() {
             ? "This user does not exist. Please register."
             : "Enter your username and password to continue.",
         );
+      } else {
+        console.error("[LoginForm.onSubmit] Unexpected error:", error);
       }
     }
   };
@@ -57,7 +66,9 @@ export default function LoginForm() {
           </h1>
 
           <form
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit, (fieldErrors) =>
+              console.log("[LoginForm] Validation failed:", fieldErrors)
+            )}
             noValidate
             className="space-y-1"
           >
