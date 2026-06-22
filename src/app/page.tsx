@@ -21,9 +21,7 @@ const categories = [
 export default function Home() {
   return (
     <main>
-      <div className="pb-18">
-        {/* <Hero /> */}
-      </div>
+      {/* <Hero /> */}
       <Container>
         <div className="px-8 grid grid-cols-1 sm:grid-cols-2">
           {categories.map(({ label, href, src }) => (

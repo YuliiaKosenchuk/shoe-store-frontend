@@ -1,10 +1,11 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useLayoutEffect, useState } from "react";
 import { getMockProduct } from "@/servises/products.mock";
 import type { ProductSize } from "@/shemas/product.shema";
 import { WishlistButton } from "@/components/ui/WishlistButton";
 import { useWishlistStore } from "@/store/wishlist.store";
+import { useBreadcrumbStore } from "@/store/breadcrumb.store";
 import { ProductImageGallery } from "./_components/ProductImageGallery";
 import { ColorSelector } from "./_components/ColorSelector";
 import { SizeSelector } from "./_components/SizeSelector";
@@ -38,6 +39,7 @@ export default function ProductPage({ params }: ProductPageProps) {
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [inBag, setInBag] = useState(false);
   const { hasHydrated, items: wishlistItems } = useWishlistStore();
+  const { setPageTitle, clearPageTitle } = useBreadcrumbStore();
 
   // --- Backend data fetching (uncomment when API is ready, remove mock block below) ---
   // const { data: product, isPending, isError } = useQuery({
@@ -78,6 +80,13 @@ export default function ProductPage({ params }: ProductPageProps) {
 
   // --- Mock (remove once backend is ready) ---
   const product = getMockProduct(Number(id));
+
+  useLayoutEffect(() => {
+    if (product) {
+      setPageTitle(product.name);
+      return () => clearPageTitle();
+    }
+  }, [product?.name, setPageTitle, clearPageTitle]);
 
   if (!product) {
     return (

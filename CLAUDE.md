@@ -89,3 +89,7 @@ Shared primitives in `src/components/forms/`:
 - `PhoneField` — wraps `react-international-phone` via `Controller`
 
 All forms use `react-hook-form` with `zodResolver`. Validation mode is `onChange`. Server errors are displayed via a `serverError` state string above the submit button.
+
+## Code Style
+
+**Commented-out code**: Do not delete commented-out code blocks unless the user explicitly requests removal of comments/commented code. Treat them as intentional drafts or alternatives kept for reference.

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import Header from "@/components/layout/Header";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { CookieBanner } from "@/components/ui/CookieBanner";
 import QueryProvider from "@/components/providers/QueryProvider";
 import "./globals.css";
 
@@ -31,10 +33,10 @@ export default function RootLayout({
     >
       <body>
         <QueryProvider>
-          <div className="absolute top-0 left-0 w-full z-50">
-            <Header />
-          </div>
+          <Header />
+          <Breadcrumbs />
           {children}
+          <CookieBanner />
         </QueryProvider>
       </body>
     </html>

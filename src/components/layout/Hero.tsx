@@ -84,7 +84,7 @@ export default function Hero() {
   return (
     <section
       ref={ref}
-      className="relative w-full h-screen min-h-150 overflow-hidden bg-[#ece9e2]"
+      className="relative w-full h-[calc(100vh-4.5rem)] min-h-150 overflow-hidden bg-[#ece9e2]"
     >
       <motion.div
         style={{ y: textY }}

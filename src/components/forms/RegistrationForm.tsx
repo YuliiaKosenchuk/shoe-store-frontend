@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import Link from "next/link";
 import {
   RegistrationFormValues,
   registrationSchema,
@@ -15,12 +14,14 @@ import { Field } from "./Field";
 import { PhoneField } from "./PhoneField";
 import { AuthService } from "@/servises/auth.service";
 import { BackButton } from "@/components/ui/BackButton";
+import { PolicyModal } from "@/components/ui/PolicyModal";
 
 export default function RegistrationForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [policyModal, setPolicyModal] = useState<"terms" | "privacy" | null>(null);
 
   const {
     register,
@@ -145,24 +146,28 @@ export default function RegistrationForm() {
 
             <p className="mt-4 text-[16px] text-[#676767] text-normal leading-[1.3]">
               By signing up you are agreeing to our{" "}
-              <Link
-                href="/terms"
+              <button
+                type="button"
+                onClick={() => setPolicyModal("terms")}
                 className="text-[#7A2633] hover:opacity-70 transition-opacity"
               >
                 Terms of Service
-              </Link>
+              </button>
               . View our{" "}
-              <Link
-                href="/privacy"
+              <button
+                type="button"
+                onClick={() => setPolicyModal("privacy")}
                 className="text-[#7A2633] hover:opacity-70 transition-opacity"
               >
                 Privacy Policy
-              </Link>
+              </button>
               .
             </p>
           </form>
         </div>
       </div>
+
+      <PolicyModal type={policyModal} onClose={() => setPolicyModal(null)} />
     </div>
   );
 }

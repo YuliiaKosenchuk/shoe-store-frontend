@@ -50,10 +50,18 @@ export default function Header() {
     };
   }, [pathname]);
 
+  const isHome = pathname === "/";
+
   return (
-    <header className="w-full bg-transparent relative z-50">
-      <Container>
-        <div className="grid grid-cols-3 items-center px-8 py-4">
+    <header
+      className={
+        isHome
+          ? "relative w-full z-10 h-18" //bg-[#ece9e2]
+          : "relative w-full z-10 h-18"
+      }
+    >
+      <Container className="h-full">
+        <div className="grid grid-cols-3 h-full items-center px-8">
         {/* Left — nav (desktop) / hamburger (mobile) */}
         <div className="flex items-center gap-7">
           <button
