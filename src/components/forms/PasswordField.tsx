@@ -28,7 +28,7 @@ export function PasswordField({
           <div className="group absolute z-10 left-17 top-1/2 -translate-y-1/2">
   <Info
     size={18}
-    strokeWidth={1.5}
+    strokeWidth={1.25}
     className="cursor-default text-gray-400 hover:text-gray-600"
   />
   <div className="pointer-events-none absolute top-full left-0 mt-1 w-46 bg-white p-4 text-[14px] leading-normal text-[#323236] shadow-[0_0_15px_rgba(0,0,0,0.1)] opacity-0 transition-opacity group-hover:opacity-100 z-10">
@@ -44,6 +44,9 @@ export function PasswordField({
           autoComplete={autoComplete}
           placeholder={placeholder}
           {...registration}
+          onCopy={(e) => e.preventDefault()}
+          onCut={(e) => e.preventDefault()}
+          onPaste={(e) => e.preventDefault()}
           className={`${inputBase} ${showInfo ? "pr-16" : "pr-10"} ${error ? "border-[#DF4441]" : "border-[#4E4E4E]"}`}
         />
         <button
@@ -53,9 +56,9 @@ export function PasswordField({
           tabIndex={-1}
         >
           {show ? (
-            <Eye size={24} strokeWidth={1.5} />
+            <Eye size={24} strokeWidth={1.25} />
           ) : (
-            <EyeClosed size={24} strokeWidth={1.5} />
+            <EyeClosed size={24} strokeWidth={1.25} />
           )}
         </button>
       </div>

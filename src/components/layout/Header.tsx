@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, User, Heart, ShoppingBag, Menu, X } from "lucide-react";
+import { Search, User, Heart, Menu, X, Handbag } from "lucide-react";
 import { UsersService } from "@/servises/users.service";
 import { useWishlistStore } from "@/store/wishlist.store";
 import LogoComponent from "../ui/LogoComponent";
@@ -51,7 +51,7 @@ export default function Header() {
   }, [pathname]);
 
   return (
-    <header className="bg-white border-b border-[#EBEBEB] relative z-50">
+    <header className="w-full bg-transparent relative z-50">
       <Container>
         <div className="grid grid-cols-3 items-center px-8 py-4">
         {/* Left — nav (desktop) / hamburger (mobile) */}
@@ -62,9 +62,9 @@ export default function Header() {
             aria-label={menuOpen ? "Close menu" : "Open menu"}
           >
             {menuOpen ? (
-              <X size={24} strokeWidth={1} />
+              <X size={24} strokeWidth={1.25} />
             ) : (
-              <Menu size={24} strokeWidth={1} />
+              <Menu size={24} strokeWidth={1.25} />
             )}
           </button>
 
@@ -85,7 +85,7 @@ export default function Header() {
 
         {/* Right — icons */}
         <div className="flex items-center justify-end gap-5">
-          <Search size={24} strokeWidth={1} className={iconCls} />
+          <Search size={24} strokeWidth={1.25} className={iconCls} />
 
           {initials ? (
             <Link href="/cabinet" aria-label="My cabinet" className="hover:opacity-70 transition-opacity">
@@ -97,19 +97,19 @@ export default function Header() {
             </Link>
           ) : (
             <Link href="/login" aria-label="Sign in" className={iconCls}>
-              <User size={24} strokeWidth={1} />
+              <User size={24} strokeWidth={1.25} />
             </Link>
           )}
 
           <Link href="/wishlist" aria-label="Wishlist" className={`relative ${iconCls}`}>
-            <Heart size={24} strokeWidth={1} />
+            <Heart size={24} strokeWidth={1.25} />
             {wishlistCount > 0 && (
               <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-black text-white font-(family-name:--font-jost) text-[8px] font-medium leading-none">
                 {wishlistCount}
               </span>
             )}
           </Link>
-          <ShoppingBag size={24} strokeWidth={1} className={iconCls} />
+          <Handbag size={24} strokeWidth={1.25} className={iconCls} />
         </div>
       </div>
       </Container>

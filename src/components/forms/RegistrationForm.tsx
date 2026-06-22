@@ -26,7 +26,7 @@ export default function RegistrationForm() {
     register,
     handleSubmit,
     control,
-    formState: { errors, isSubmitting, isValid, isSubmitted },
+    formState: { errors, isSubmitting, isValid, touchedFields },
   } = useForm<RegistrationFormValues>({
     resolver: zodResolver(registrationSchema),
     mode: "onChange",
@@ -98,13 +98,14 @@ export default function RegistrationForm() {
             <Controller
               name="phoneNumber"
               control={control}
-              render={({ field: { onChange, value } }) => (
+              render={({ field: { onChange, value, onBlur } }) => (
                 <PhoneField
                   id="phoneNumber"
                   label="Phone number"
                   value={value || undefined}
                   onChange={(v) => onChange(v ?? "")}
-                  error={isSubmitted ? errors.phoneNumber?.message : undefined}
+                  onBlur={onBlur}
+                  error={touchedFields.phoneNumber ? errors.phoneNumber?.message : undefined}
                 />
               )}
             />

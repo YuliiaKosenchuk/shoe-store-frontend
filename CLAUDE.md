@@ -76,6 +76,11 @@ All service calls go through the service layer (`src/servises/`) rather than cal
 
 Access control is client-side only (token check in `useEffect`). The Header fetches user initials from `/api/users/me` on every route change to keep auth state fresh.
 
+## Layout
+
+All pages (including the home page `/`) must be wrapped in `<Container>` (`src/components/ui/Container.tsx`) for consistent centering at `max-w-336` (1344px).
+
+
 ## Form Component Pattern
 
 Shared primitives in `src/components/forms/`:

@@ -34,8 +34,8 @@ export const registrationSchema = z
       .trim()
       .min(1, "Phone number is required")
       .regex(
-        /^\+[0-9 ]+$/,
-        "Phone number must start with '+' and contain only digits and spaces"
+        /^\+[0-9]{12,15}$/,
+        "Please enter a valid phone number"
       ),
     
     password: z
@@ -44,7 +44,7 @@ export const registrationSchema = z
       .max(64, "Password must not exceed 64 characters")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,64}$/,
-        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+        "Invalid password format"
       ),
     
     confirmPassword: z

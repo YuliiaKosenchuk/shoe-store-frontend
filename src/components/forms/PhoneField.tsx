@@ -12,11 +12,12 @@ type PhoneFieldProps = {
   label: string;
   value: string | undefined;
   onChange: (value: string | undefined) => void;
+  onBlur?: () => void;
   error?: string;
   id?: string;
 };
 
-export function PhoneField({ label, value, onChange, error, id = "phone" }: PhoneFieldProps) {
+export function PhoneField({ label, value, onChange, onBlur, error, id = "phone" }: PhoneFieldProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -88,7 +89,7 @@ export function PhoneField({ label, value, onChange, error, id = "phone" }: Phon
             <span className="text-[16px] leading-none text-[#010101]">+{country.dialCode}</span>
             <ChevronDown
               size={24}
-              strokeWidth={1.5}
+              strokeWidth={1.25}
               className={`-mb-1 text-[#010101] transition-transform duration-200 ease-in-out${isOpen ? " rotate-180" : ""}`}
             />
           </button>
@@ -103,7 +104,7 @@ export function PhoneField({ label, value, onChange, error, id = "phone" }: Phon
                 className="absolute left-0 top-full z-50 mt-1 w-64 border border-[#e0e0e0] bg-white shadow-md"
               >
                 <div className="flex items-center gap-2 border-b border-[#e0e0e0] px-3 py-2">
-                  <Search size={24} className="shrink-0 text-[#9a9a9a]" />
+                  <Search size={24} strokeWidth={1.25} className="shrink-0 text-[#9a9a9a]" />
                   <input
                     ref={searchRef}
                     type="text"
@@ -158,6 +159,7 @@ export function PhoneField({ label, value, onChange, error, id = "phone" }: Phon
           type="tel"
           value={inputValue}
           onChange={handlePhoneValueChange}
+          onBlur={onBlur}
           placeholder="00 000 00 00"
           className="min-w-0 flex-1 bg-transparent px-4 py-3.25 text-[16px] text-[#010101] outline-none placeholder:text-[#9a9a9a]"
         />

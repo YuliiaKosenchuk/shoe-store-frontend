@@ -40,7 +40,7 @@ export function ProductAccordion({ sections }: ProductAccordionProps) {
               </span>
               <ChevronDown
                 size={24}
-                strokeWidth={1}
+                strokeWidth={1.25}
                 className={`shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
               />
             </button>

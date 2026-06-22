@@ -103,9 +103,9 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
       : null;
 
   return (
-    <div className="group flex flex-col cursor-pointer w-full h-124">
+    <div className="group flex flex-col cursor-pointer w-full">
       <div
-        className="relative w-full h-101 shrink-0 overflow-hidden bg-[#F8F8F8] cursor-pointer"
+        className="relative w-full aspect-302/404 overflow-hidden bg-[#F8F8F8] cursor-pointer"
         onClick={() => router.push(`/${product.category.toLowerCase()}/${product.id}`)}
       >
         <div ref={emblaRef} className="h-full overflow-hidden">
@@ -125,13 +125,13 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             ))}
           </div>
         </div>
-        <WishlistButton product={product} className="absolute top-3 right-3 z-10" />
+        <WishlistButton product={product} className="absolute top-3 right-3 z-10" hideWhenInactive />
         <button
           onClick={scrollPrev}
           className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           aria-label="Previous image"
         >
-          <ChevronLeft size={24} strokeWidth={1.5} />
+          <ChevronLeft size={24} strokeWidth={1.25} />
         </button>
 
         <button
@@ -139,11 +139,11 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           aria-label="Next image"
         >
-          <ChevronRight size={24} strokeWidth={1.5} />
+          <ChevronRight size={24} strokeWidth={1.25} />
         </button>
 
         {carouselImages.length > 1 && (
-          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black/10 z-5">
+          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black/10 z-5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <div
               className="h-full bg-gray-800 transition-all duration-300 ease-out"
               style={{
@@ -203,32 +203,30 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           )}
         </div>
 
-        {product.colors.length > 0 && (
-          <div className="flex gap-2 pt-0.5">
-            {product.colors.map((color) => (
-              <button
-                key={color}
-                onClick={(e) => { e.preventDefault(); handleColorChange(color); }}
-                className="flex flex-col items-center gap-1.5"
-                title={color}
-              >
-                <div
-                  className="w-10 h-3"
-                  style={{ backgroundColor: toHex(color) }}
-                />
-                <div className="w-10 h-px">
-                  {color === activeColor && (
-                    <motion.div
-                      layoutId={`color-indicator-${product.id}`}
-                      className="w-full h-full bg-black"
-                      transition={{ duration: 0.18, ease: "easeInOut" }}
-                    />
-                  )}
-                </div>
-              </button>
-            ))}
-          </div>
-        )}
+        <div className="flex gap-2 pt-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          {product.colors.map((color) => (
+            <button
+              key={color}
+              onClick={(e) => { e.preventDefault(); handleColorChange(color); }}
+              className="flex flex-col items-center gap-1.5"
+              title={color}
+            >
+              <div
+                className="w-10 h-3"
+                style={{ backgroundColor: toHex(color) }}
+              />
+              <div className="w-10 h-px">
+                {color === activeColor && (
+                  <motion.div
+                    layoutId={`color-indicator-${product.id}`}
+                    className="w-full h-full bg-black"
+                    transition={{ duration: 0.18, ease: "easeInOut" }}
+                  />
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

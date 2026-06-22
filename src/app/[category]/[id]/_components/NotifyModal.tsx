@@ -46,7 +46,7 @@ export function NotifyModal({ size, onClose }: NotifyModalProps) {
           className="absolute top-4 right-4 text-[#818181] hover:text-black transition-colors"
           aria-label="Close"
         >
-          <X size={18} strokeWidth={1.5} />
+          <X size={18} strokeWidth={1.25} />
         </button>
 
         {submitted ? (

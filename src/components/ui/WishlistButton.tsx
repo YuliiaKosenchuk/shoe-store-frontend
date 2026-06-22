@@ -9,6 +9,7 @@ interface WishlistButtonProps {
   className?: string;
   activeIconClass?: string;
   defaultIconClass?: string;
+  hideWhenInactive?: boolean;
 }
 
 export function WishlistButton({
@@ -16,13 +17,19 @@ export function WishlistButton({
   className = "",
   activeIconClass,
   defaultIconClass,
+  hideWhenInactive = false,
 }: WishlistButtonProps) {
   const { hasHydrated, isInWishlist, toggleItem } = useWishlistStore();
   const wishlisted = hasHydrated && isInWishlist(product.id);
 
+  const visibilityClass =
+    hideWhenInactive && !wishlisted
+      ? "opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+      : "";
+
   return (
     <button
-      className={`group/wishlist p-1 transition-colors ${className}`}
+      className={`group/wishlist p-1 transition-colors ${visibilityClass} ${className}`}
       aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
       onClick={(e) => {
         e.preventDefault();
@@ -32,7 +39,7 @@ export function WishlistButton({
     >
       <Heart
         size={24}
-        strokeWidth={1}
+        strokeWidth={1.25}
         className={`transition-colors ${
           wishlisted
             ? (activeIconClass ?? "text-[#7A2633] fill-[#7A2633]")

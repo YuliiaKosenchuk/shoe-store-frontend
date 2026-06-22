@@ -39,7 +39,7 @@ export function SizeSelector({ sizes, selectedSize, onChange }: SizeSelectorProp
                     className="absolute -top-1 -right-3 -translate-x-1/2 text-[#818181] transition-colors"
                     aria-label={`Notify me when size ${item.size} is available`}
                   >
-                    <BellRing size={11} strokeWidth={1} />
+                    <BellRing size={11} strokeWidth={1.25} />
                   </button>
                 ) : isLowStock ? (
                   <span className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-[#EAA51C]" />

@@ -17,51 +17,40 @@ export const AuthService = {
       repeatedPassword: data.confirmPassword,
     };
 
-    console.log('[AuthService.register] Sending payload:', payload);
+    console.log('[Auth] Register: step 1 — creating account for', data.email);
+    await apiClient.post('/api/auth/register', payload);
+    console.log('[Auth] Register: step 2 — account created, logging in');
 
-    const response = await apiClient.post('/api/auth/register', payload);
-
-    console.log('[AuthService.register] Response status:', response.status);
-    console.log('[AuthService.register] Response data:', response.data);
+    const loginResponse = await apiClient.post('/api/auth/login', {
+      email: data.email,
+      password: data.password,
+    });
 
     if (typeof window !== 'undefined') {
-      const token = response.data?.token ?? response.data?.accessToken ?? null;
+      const token = loginResponse.data?.token ?? null;
       if (token) {
         localStorage.setItem('token', token);
-        console.log('[AuthService.register] Token saved to localStorage');
+        console.log('[Auth] Register: token saved, user is authenticated');
       } else {
-        console.warn('[AuthService.register] No token in response — skipping localStorage write');
+        console.warn('[Auth] Register: login succeeded but no token in response');
       }
-
-      const user = {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-      };
-      localStorage.setItem('user', JSON.stringify(user));
-      console.log('[AuthService.register] User saved to localStorage:', user);
     }
 
-    return response.data;
+    return loginResponse.data;
   },
 
-
   async login(credentials: { email: string; password: string }) {
-    console.log('[AuthService.login] Sending credentials for:', credentials.email);
+    console.log('[Auth] Login:', credentials.email);
 
     const response = await apiClient.post('/api/auth/login', credentials);
 
-    console.log('[AuthService.login] Response status:', response.status);
-    console.log('[AuthService.login] Response data:', response.data);
-
     if (typeof window !== 'undefined') {
       const token = response.data?.token ?? response.data?.accessToken ?? null;
       if (token) {
         localStorage.setItem('token', token);
-        console.log('[AuthService.login] Token saved to localStorage');
+        console.log('[Auth] Login: token saved');
       } else {
-        console.warn('[AuthService.login] No token in response');
+        console.warn('[Auth] Login: no token in response');
       }
     }
 
@@ -69,18 +58,22 @@ export const AuthService = {
   },
 
   async forgotPassword(email: string) {
+    console.log('[Auth] Forgot password for:', email);
     const response = await apiClient.post('/api/auth/forgot-password', { email });
+    console.log('[Auth] Forgot password: reset email sent');
     return response.data;
   },
 
   async resetPassword(token: string, newPassword: string) {
+    console.log('[Auth] Reset password: submitting new password');
     const response = await apiClient.post('/api/auth/reset-password', { token, newPassword });
+    console.log('[Auth] Reset password: success');
     return response.data;
   },
 
   loginWithGoogle() {
     const googleOAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/google`;
-    console.log('[AuthService.loginWithGoogle] Redirecting to Google OAuth:', googleOAuthUrl);
+    console.log('[Auth] Google OAuth: redirecting to', googleOAuthUrl);
     window.location.href = googleOAuthUrl;
   },
 
@@ -88,7 +81,7 @@ export const AuthService = {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      console.log('[AuthService.logout] Cleared session, redirecting to /login');
+      console.log('[Auth] Logout: session cleared');
       window.location.href = '/login';
     }
   }

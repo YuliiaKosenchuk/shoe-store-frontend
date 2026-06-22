@@ -1,22 +1,175 @@
-import { Container } from "@/components/ui/Container";
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { ProductsService } from "@/servises/products.service";
+import { AdminService } from "@/servises/admin.service";
+import { ConfirmModal } from "@/components/admin/ConfirmModal";
+import type { Product } from "@/shemas/product.shema";
 
 export default function CatalogPage() {
-  return (
-    <div className="min-h-screen bg-[#FFFFFF]">
-      <Container className="px-6 py-14">
-        <p className="text-[10px] tracking-widest text-gray-400 uppercase mb-4">Admin</p>
-        <h1 className="font-serif text-3xl text-gray-900 mb-10">Catalog</h1>
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="bg-white border border-gray-100 p-5 flex flex-col gap-3">
-              <div className="h-40 bg-gray-100" />
-              <div className="h-3 w-2/3 bg-gray-200 rounded-sm" />
-              <div className="h-3 w-1/3 bg-gray-100 rounded-sm" />
-            </div>
-          ))}
+  useEffect(() => {
+    console.log("[Admin] fetching products list");
+    ProductsService.getProducts()
+      .then((data) => {
+        console.log(`[Admin] products loaded: ${data.length} items`);
+        setProducts(data);
+      })
+      .catch((err) => {
+        console.error("[Admin] failed to fetch products:", err);
+        setError("Failed to load products");
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  async function handleDelete() {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      await AdminService.deleteProduct(deleteTarget.id);
+      setProducts((prev) => prev.filter((p) => p.id !== deleteTarget.id));
+      setDeleteTarget(null);
+    } catch (err) {
+      console.error("[Admin] delete product error:", err);
+    } finally {
+      setDeleting(false);
+    }
+  }
+
+  const filtered = products.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <p className="text-sm text-gray-400 tracking-widest uppercase">Loading…</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <p className="text-sm text-red-500 border border-red-200 bg-red-50 px-4 py-3">{error}</p>
+    );
+  }
+
+  return (
+    <>
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <p className="text-[10px] tracking-widest text-gray-400 uppercase mb-1">Admin</p>
+          <h1 className="font-serif text-3xl text-gray-900">Catalog</h1>
         </div>
-      </Container>
-    </div>
+        <Link
+          href="/admin/catalog/new"
+          className="flex items-center gap-2 bg-black text-white text-xs tracking-widest uppercase px-5 py-3 hover:bg-gray-800 transition-colors"
+        >
+          <Plus size={14} strokeWidth={1.25} />
+          New Product
+        </Link>
+      </div>
+
+      <div className="relative mb-6 max-w-sm">
+        <Search size={14} strokeWidth={1.25} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by name…"
+          className="w-full border border-gray-200 pl-9 pr-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-gray-400 transition-colors"
+        />
+      </div>
+
+      <div className="border border-gray-100 overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-gray-100">
+              {["ID", "Photo", "Name", "Category", "Price", "Colors", "Actions"].map((h) => (
+                <th
+                  key={h}
+                  className="px-5 py-3 text-left text-[10px] tracking-widest text-gray-400 uppercase font-medium whitespace-nowrap"
+                >
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.length === 0 && (
+              <tr>
+                <td colSpan={7} className="px-5 py-10 text-center text-xs text-gray-400">
+                  No products found
+                </td>
+              </tr>
+            )}
+            {filtered.map((product) => (
+              <tr key={product.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                <td className="px-5 py-4 text-xs text-gray-500">{product.id}</td>
+                <td className="px-5 py-4">
+                  {product.images[0]?.mainUrl ? (
+                    <div className="relative h-12 w-12">
+                      <Image
+                        src={product.images[0].mainUrl}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    </div>
+                  ) : (
+                    <div className="h-12 w-12 bg-gray-100" />
+                  )}
+                </td>
+                <td className="px-5 py-4 text-xs font-medium text-gray-900 max-w-50 truncate">
+                  <Link href={`/admin/catalog/${product.id}`} className="hover:underline">
+                    {product.name}
+                  </Link>
+                </td>
+                <td className="px-5 py-4 text-xs text-gray-500">{product.category}</td>
+                <td className="px-5 py-4 text-xs text-gray-900">${product.price}</td>
+                <td className="px-5 py-4 text-xs text-gray-500">{product.colors.length}</td>
+                <td className="px-5 py-4">
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href={`/admin/catalog/${product.id}/edit`}
+                      className="flex items-center gap-1 text-[10px] tracking-widest uppercase text-gray-500 hover:text-gray-900 transition-colors"
+                    >
+                      <Pencil size={12} strokeWidth={1.25} />
+                      Edit
+                    </Link>
+                    <button
+                      onClick={() => setDeleteTarget(product)}
+                      className="flex items-center gap-1 text-[10px] tracking-widest uppercase text-red-400 hover:text-red-600 transition-colors"
+                    >
+                      <Trash2 size={12} strokeWidth={1.25} />
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <ConfirmModal
+        open={!!deleteTarget}
+        title="Delete product?"
+        description={`"${deleteTarget?.name}" will be permanently removed.`}
+        confirmLabel="Delete"
+        loading={deleting}
+        onConfirm={handleDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
+    </>
   );
 }

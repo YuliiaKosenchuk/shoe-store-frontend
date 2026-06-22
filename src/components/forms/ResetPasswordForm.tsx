@@ -107,6 +107,7 @@ export default function ResetPasswordForm() {
               show={showConfirm}
               onToggle={() => setShowConfirm((p) => !p)}
               autoComplete="new-password"
+              disableCopy
             />
 
             <div className="mt-5 space-y-3">

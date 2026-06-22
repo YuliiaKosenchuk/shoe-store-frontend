@@ -13,7 +13,7 @@ export function BackButton() {
         aria-label="Go back"
         className="flex items-center gap-1.5 text-[11px] font-medium tracking-widest uppercase text-gray-400 hover:text-gray-800 transition-colors"
       >
-        <ArrowLeft size={14} strokeWidth={1.5} />
+        <ArrowLeft size={14} strokeWidth={1.25} />
         Back
       </button>
     </div>

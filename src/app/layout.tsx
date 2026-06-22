@@ -31,7 +31,9 @@ export default function RootLayout({
     >
       <body>
         <QueryProvider>
-          <Header />
+          <div className="absolute top-0 left-0 w-full z-50">
+            <Header />
+          </div>
           {children}
         </QueryProvider>
       </body>

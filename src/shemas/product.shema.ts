@@ -1,4 +1,5 @@
 export interface ProductImage {
+  id?: number;
   color: string;
   mainUrl: string;
   urls: string[];
@@ -24,4 +25,35 @@ export interface Product {
   sizes?: ProductSize[];
   createdAt: string;
   images: ProductImage[];
+  variants?: ProductVariantDto[];
+}
+
+export interface ProductDto {
+  id: number;
+  category: string;
+  name: string;
+  description: string;
+  price: number;
+  priceOld: number;
+  gender: string;
+  season: string;
+  material: string;
+  createdAt: string;
+}
+
+export interface ProductVariantDto {
+  id: number;
+  productId: number;
+  size: number;
+  color: string;
+  stockQty: number;
+  sku: string;
+}
+
+export interface ProductImageDto {
+  id: number;
+  productId: number;
+  color: string;
+  mainUrl: string;
+  urls: string[];
 }
