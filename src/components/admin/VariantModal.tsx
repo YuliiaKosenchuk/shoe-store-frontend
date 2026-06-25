@@ -8,10 +8,10 @@ import { X, RefreshCw } from "lucide-react";
 import { createVariantSchema, CreateVariantFormValues } from "@/shemas/admin-product.shema";
 import type { ProductVariantDto } from "@/shemas/product.shema";
 
-function buildSku(productName: string, color: string, size: number | undefined, existingSkus: string[]): string {
+function buildSku(productName: string, color: string, size: string | undefined, existingSkus: string[]): string {
   const model = productName.replace(/[^a-zA-Z0-9]/g, "").slice(0, 3).toUpperCase().padEnd(3, "X");
   const clr = (color || "").replace(/[^a-zA-Z]/g, "").slice(0, 3).toUpperCase().padEnd(3, "X");
-  const sz = size !== undefined ? String(size).replace(".", "") : "000";
+  const sz = (size ?? "000").replace(/[^0-9]/g, "").slice(0, 3).padEnd(3, "0");
 
   for (let i = 0; i < 20; i++) {
     const rand = Math.floor(Math.random() * 0xffff).toString(16).toUpperCase().padStart(4, "0");
@@ -55,11 +55,11 @@ export function VariantModal({ open, editing, loading, serverError, productName 
 
   useEffect(() => {
     if (open) {
-      reset(
-        editing
-          ? { size: editing.size, color: editing.color, stockQty: editing.stockQty, sku: editing.sku }
-          : { size: undefined, color: "", stockQty: 0, sku: "" }
-      );
+      if (editing) {
+        reset({ size: editing.size, color: editing.color, stockQty: editing.stockQty, sku: editing.sku });
+      } else {
+        reset({ size: "", color: "", stockQty: 0, sku: "" });
+      }
     }
   }, [open, editing, reset]);
 
@@ -96,20 +96,29 @@ export function VariantModal({ open, editing, loading, serverError, productName 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <Field label="Size" error={errors.size?.message}>
                 <input
-                  {...register("size", { valueAsNumber: true })}
-                  type="number"
-                  step="0.5"
+                  {...register("size")}
+                  type="text"
                   className={inp(!!errors.size)}
                   placeholder="38"
                 />
               </Field>
 
               <Field label="Color" error={errors.color?.message}>
-                <input {...register("color")} className={inp(!!errors.color)} placeholder="black" />
+                <input
+                  {...register("color")}
+                  type="text"
+                  className={inp(!!errors.color)}
+                  placeholder="Black"
+                />
               </Field>
 
               <Field label="Stock Qty" error={errors.stockQty?.message}>
-                <input {...register("stockQty", { valueAsNumber: true })} type="number" className={inp(!!errors.stockQty)} placeholder="10" />
+                <input
+                  {...register("stockQty", { valueAsNumber: true })}
+                  type="number"
+                  className={inp(!!errors.stockQty)}
+                  placeholder="10"
+                />
               </Field>
 
               <Field label="SKU (optional)" error={errors.sku?.message}>

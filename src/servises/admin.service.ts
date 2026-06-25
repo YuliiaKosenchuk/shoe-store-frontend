@@ -26,6 +26,12 @@ export const AdminService = {
     console.log(`[Admin] product ${id} deleted`);
   },
 
+  async getVariants(productId: number): Promise<ProductVariantDto[]> {
+    const response = await apiClient.get(`/api/products/${productId}/variants`);
+    console.log("[Admin] getVariants raw response:", JSON.stringify(response.data));
+    return response.data;
+  },
+
   async createVariant(productId: number, data: CreateVariantFormValues): Promise<ProductVariantDto> {
     console.log(`[Admin] adding variant to productId=${productId}`, data);
     const response = await apiClient.post(`/api/products/${productId}/variants`, data);
@@ -51,12 +57,12 @@ export const AdminService = {
     return response.data;
   },
 
-  async updateImage(id: number, color: string, data: Partial<CreateImageFormValues>): Promise<ProductImageDto> {
-    const response = await apiClient.patch(`/api/products/images/${id}/${color}`, data);
+  async updateImage(id: number, data: Partial<CreateImageFormValues>): Promise<ProductImageDto> {
+    const response = await apiClient.patch(`/api/products/images/${id}`, data);
     return response.data;
   },
 
-  async deleteImage(imageId: number, color: string): Promise<void> {
-    await apiClient.delete(`/api/products/images/${imageId}/${color}`);
+  async deleteImage(imageId: number): Promise<void> {
+    await apiClient.delete(`/api/products/images/${imageId}`);
   },
 };

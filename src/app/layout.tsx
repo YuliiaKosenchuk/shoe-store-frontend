@@ -17,7 +17,7 @@ const JostSans = Jost({
 });
 
 export const metadata: Metadata = {
-  title: "Store",
+  title: "ATELIER",
   description: "Luxury shoe store",
 };
 

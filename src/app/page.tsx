@@ -2,6 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import Hero from "@/components/layout/Hero";
+import HeroV2 from "@/components/layout/HeroV2";
+import CategoryAccordion from "@/components/layout/CategoryAccordion";
+import CategoryAccordionHorizontal from "@/components/layout/CategoryAccordionHorizontal";
 
 const categories = [
   {
@@ -21,9 +24,14 @@ const categories = [
 export default function Home() {
   return (
     <main>
-      {/* <Hero /> */}
-      <Container>
-        <div className="px-8 grid grid-cols-1 sm:grid-cols-2">
+      <Hero />
+      <HeroV2 />
+      <CategoryAccordion categories={categories} />
+      <div className="mb-10">
+        <CategoryAccordionHorizontal categories={categories} />
+      </div>
+      {/* <Container > */}
+      {/* <div className="px-8 grid grid-cols-1 sm:grid-cols-2">
           {categories.map(({ label, href, src }) => (
             <Link key={href} href={href} className="group block">
               <div className="overflow-hidden">
@@ -41,8 +49,8 @@ export default function Home() {
               </p>
             </Link>
           ))}
-        </div>
-      </Container>
+        </div> */}
+      {/* </Container> */}
     </main>
   );
 }

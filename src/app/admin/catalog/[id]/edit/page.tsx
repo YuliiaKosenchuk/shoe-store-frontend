@@ -38,11 +38,14 @@ export default function EditProductPage() {
 
   useEffect(() => {
     console.log(`[Admin] loading product id=${productId} for edit`);
-    ProductsService.getProduct(productId)
-      .then((data) => {
+    Promise.all([
+      ProductsService.getProduct(productId),
+      AdminService.getVariants(productId),
+    ])
+      .then(([data, variantList]) => {
         console.log("[Admin] product loaded, resetting form");
         setProduct(data);
-        setVariants(data.variants ?? []);
+        setVariants(variantList);
         setImages(
           (data.images ?? []).map((img) => ({
             id: img.id ?? 0,

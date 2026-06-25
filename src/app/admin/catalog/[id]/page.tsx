@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ChevronLeft, Pencil } from "lucide-react";
 import { ProductsService } from "@/servises/products.service";
+import { AdminService } from "@/servises/admin.service";
 import type { Product, ProductVariantDto, ProductImageDto } from "@/shemas/product.shema";
 
 function InfoRow({ label, value }: { label: string; value: string | number | undefined | null }) {
@@ -28,10 +29,13 @@ export default function ViewProductPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    ProductsService.getProduct(productId)
-      .then((data) => {
+    Promise.all([
+      ProductsService.getProduct(productId),
+      AdminService.getVariants(productId),
+    ])
+      .then(([data, variantList]) => {
         setProduct(data);
-        setVariants(data.variants ?? []);
+        setVariants(variantList);
         setImages(
           (data.images ?? []).map((img, index) => ({
             id: img.id ?? -(index + 1),

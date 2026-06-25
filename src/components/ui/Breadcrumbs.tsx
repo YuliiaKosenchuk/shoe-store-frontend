@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Container } from "./Container";
 import { useBreadcrumbStore } from "@/store/breadcrumb.store";
 
-const ALLOWED_PREFIXES = ["/bags", "/shoes", "/accessories", "/wishlist"];
+const ALLOWED_PREFIXES = ["/bags", "/shoes", "/accessories", "/wishlist", "/new-arrivals"];
 
 function isAllowed(pathname: string): boolean {
   return ALLOWED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
@@ -42,18 +42,18 @@ export function Breadcrumbs() {
   return (
     <nav aria-label="Breadcrumb">
       <Container className="px-8">
-        <ol className="flex items-center gap-3 py-4 font-(family-name:--font-jost) text-base font-light">
+        <ol className="flex items-center gap-3 py-4.5 font-(family-name:--font-jost) text-[14px] leading-normal font-light">
           <li>
             <Link
               href="/"
-              className="text-black/50 hover:text-[#7A2633] transition-colors"
+              className="text-black hover:text-[#7A2633] transition-colors"
             >
               Home
             </Link>
           </li>
           {crumbs.map((crumb) => (
             <li key={crumb.href} className="flex items-center gap-3">
-              <span className="text-black/30">/</span>
+              <span className="text-black">/</span>
               {crumb.isLast ? (
                 <span className="text-black underline underline-offset-4">
                   {crumb.label}
@@ -61,7 +61,7 @@ export function Breadcrumbs() {
               ) : (
                 <Link
                   href={crumb.href}
-                  className="text-black/50 hover:text-[#7A2633] transition-colors"
+                  className="text-black hover:text-[#7A2633] transition-colors"
                 >
                   {crumb.label}
                 </Link>

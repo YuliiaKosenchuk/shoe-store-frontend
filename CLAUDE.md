@@ -31,8 +31,8 @@ Next.js 16 App Router project (`src/app/`). All routes, layouts, and pages live 
 |---|---|
 | `axios` | HTTP via `src/lib/apiClient.ts` |
 | `react-hook-form` + `zod` | All forms and validation |
-| `zustand` | Global state (installed, not yet wired up) |
-| `@tanstack/react-query` | Server state caching (installed, not yet wired up) |
+| `zustand` | Global state — `src/store/wishlist.store.ts` (persist) and `src/store/breadcrumb.store.ts` |
+| `@tanstack/react-query` | Server state — `QueryProvider` is wired into the root layout; storefront pages still use mock data with `useQuery` blocks commented in |
 | `motion` | Animations (requires `"use client"`) |
 | `react-international-phone` | Phone number input |
 | `embla-carousel-react` | Carousels |
@@ -50,6 +50,20 @@ Backend is a separate service at `NEXT_PUBLIC_API_URL` (defaults to `http://loca
 - `GET /api/users/me` — returns `UserProfile` (id, firstName, lastName, email, phoneNumber, createdAt, role)
 - `PATCH /api/users/me`
 - `/oauth2/authorization/google` — backend redirect for Google OAuth
+
+**Product & Admin API endpoints:**
+- `GET /api/products` — list all products
+- `GET /api/products/:id` — single product (optional `?color=&size=`)
+- `POST /api/products` — create product (`AdminService.createProduct`)
+- `PATCH /api/products/:id` — update product
+- `DELETE /api/products/:id` — delete product
+- `GET /api/products/:id/variants` — list variants
+- `POST /api/products/:id/variants` — create variant (size, color, stockQty, sku)
+- `PATCH /api/products/variants/:id` — update variant
+- `DELETE /api/products/variants/:id` — delete variant
+- `POST /api/products/:id/images` — create image (color, mainUrl, urls[])
+- `PATCH /api/products/images/:id` — update image
+- `DELETE /api/products/images/:id` — delete image
 
 **Auth pattern:** JWT token stored in `localStorage` under the key `token`. The `apiClient` interceptor auto-attaches it as `Authorization: Bearer <token>`. A 401 response clears the token and redirects to `/login`. After Google OAuth, the backend redirects to `/oauth2/callback?token=...` which the client saves to localStorage.
 

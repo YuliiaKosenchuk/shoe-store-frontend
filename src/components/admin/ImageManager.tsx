@@ -18,6 +18,7 @@ interface ImageManagerProps {
   productId: number;
   images: ProductImageDto[];
   onImagesChange: (images: ProductImageDto[]) => void;
+  onRefresh?: () => Promise<void>;
 }
 
 interface PendingImage {
@@ -25,7 +26,7 @@ interface PendingImage {
   color: string;
 }
 
-export function ImageManager({ productId, images, onImagesChange }: ImageManagerProps) {
+export function ImageManager({ productId, images, onImagesChange, onRefresh }: ImageManagerProps) {
   const widgetRef = useRef<ReturnType<typeof window.cloudinary.createMediaLibrary> | null>(null);
   const [widgetReady, setWidgetReady] = useState(false);
   const [pending, setPending] = useState<PendingImage | null>(null);
@@ -98,7 +99,11 @@ export function ImageManager({ productId, images, onImagesChange }: ImageManager
         color: pending.color.trim(),
         mainUrl: pending.url,
       });
-      onImagesChange([...images, saved]);
+      if (onRefresh) {
+        await onRefresh();
+      } else {
+        onImagesChange([...images, saved]);
+      }
       setPending(null);
     } catch (err) {
       console.error("[Admin] image save error:", err);
@@ -113,8 +118,12 @@ export function ImageManager({ productId, images, onImagesChange }: ImageManager
     setDeleting(true);
     setDeleteError(null);
     try {
-      await AdminService.deleteImage(deleteTarget.id, deleteTarget.color);
-      onImagesChange(images.filter((img) => img.id !== deleteTarget.id));
+      await AdminService.deleteImage(deleteTarget.id);
+      if (onRefresh) {
+        await onRefresh();
+      } else {
+        onImagesChange(images.filter((img) => img.id !== deleteTarget.id));
+      }
       setDeleteTarget(null);
     } catch (err) {
       console.error("[Admin] image delete error:", err);

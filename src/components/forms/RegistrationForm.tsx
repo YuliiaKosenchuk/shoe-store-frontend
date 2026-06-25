@@ -13,7 +13,7 @@ import { PasswordField } from "./PasswordField";
 import { Field } from "./Field";
 import { PhoneField } from "./PhoneField";
 import { AuthService } from "@/servises/auth.service";
-import { BackButton } from "@/components/ui/BackButton";
+// import { BackButton } from "@/components/ui/BackButton";
 import { PolicyModal } from "@/components/ui/PolicyModal";
 
 export default function RegistrationForm() {
@@ -54,7 +54,7 @@ export default function RegistrationForm() {
 
   return (
     <div className="min-h-screen bg-white">
-      <BackButton />
+      {/* <BackButton /> */}
       <div className="flex justify-center px-4 py-14">
         <div className="w-full max-w-157">
           <h1 className="mb-9 font-serif text-[36px] font-(--font-cormorant-garamond) leading-[1.1] text-black">

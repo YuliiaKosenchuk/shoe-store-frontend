@@ -18,7 +18,7 @@ export const createProductSchema = z.object({
 export type CreateProductFormValues = z.infer<typeof createProductSchema>;
 
 export const createVariantSchema = z.object({
-  size: z.number({ error: "Size must be a number" }).positive("Size must be positive"),
+  size: z.string().min(1, "Size is required"),
   color: z.string().min(1, "Color is required"),
   stockQty: z.number({ error: "Stock quantity must be a number" }).min(0, "Stock quantity must be 0 or more"),
   sku: z.string().optional(),

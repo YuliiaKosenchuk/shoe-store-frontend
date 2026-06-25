@@ -72,7 +72,8 @@ export const AuthService = {
   },
 
   loginWithGoogle() {
-    const googleOAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/google`;
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+    const googleOAuthUrl = `${apiBase}/oauth2/authorization/google`;
     console.log('[Auth] Google OAuth: redirecting to', googleOAuthUrl);
     window.location.href = googleOAuthUrl;
   },

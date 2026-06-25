@@ -44,7 +44,7 @@ export interface ProductDto {
 export interface ProductVariantDto {
   id: number;
   productId: number;
-  size: number;
+  size: string;
   color: string;
   stockQty: number;
   sku: string;

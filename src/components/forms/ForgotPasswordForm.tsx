@@ -69,7 +69,7 @@ export default function ForgotPasswordForm() {
   if (sent) {
     return (
       <div className="min-h-screen bg-white">
-        <BackButton />
+        {/* <BackButton /> */}
         <div className="flex justify-center px-4 py-14">
           <div className="w-full max-w-157">
             <h1 className="mb-9 font-serif text-[36px] font-(--font-cormorant-garamond) leading-[1.1] text-black">
@@ -113,7 +113,7 @@ export default function ForgotPasswordForm() {
 
   return (
     <div className="min-h-screen bg-white">
-      <BackButton />
+      {/* <BackButton /> */}
       <div className="flex justify-center px-4 py-14">
         <div className="w-full max-w-157">
           <h1 className="mb-9 font-serif text-[36px] font-(--font-cormorant-garamond) leading-[1.1] text-black">
