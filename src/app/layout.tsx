@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import Header from "@/components/layout/Header";
+import TopBar from "@/components/layout/TopBar";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CookieBanner } from "@/components/ui/CookieBanner";
 import QueryProvider from "@/components/providers/QueryProvider";
@@ -33,6 +34,7 @@ export default function RootLayout({
     >
       <body>
         <QueryProvider>
+          <TopBar />
           <Header />
           <Breadcrumbs />
           {children}

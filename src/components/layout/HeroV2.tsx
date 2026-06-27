@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { Container } from "@/components/ui/Container";
 
 export default function HeroV2() {
   const ref = useRef(null);
@@ -19,9 +20,9 @@ export default function HeroV2() {
   return (
     <section
       ref={ref}
-      className="relative w-full mb-20 min-h-[calc(100vh-4.5rem)] overflow-hidden bg-white"
+      className="w-full overflow-hidden bg-white"
     >
-      <div className="max-w-336 mx-auto h-full flex items-center px-6 lg:px-12">
+      <Container className="min-h-[calc(100vh-4.5rem)] flex px-6 lg:px-12">
         {/* Left: text content */}
         <motion.div
           style={{ y: textY }}
@@ -73,19 +74,17 @@ export default function HeroV2() {
         {/* Right: model image */}
         <motion.div
           style={{ y: imageY }}
-          className="hidden lg:block absolute right-0 top-0 w-1/2 h-full"
+          className="hidden lg:block w-1/2 relative"
         >
-          <div className="relative w-full h-full">
-            <Image
-              src="/images/hero-222.png"
-              alt="Model"
-              fill
-              priority
-              className="object-contain object-right-top"
-            />
-          </div>
+          <Image
+            src="/images/hero-22222.png"
+            alt="Model"
+            fill
+            priority
+            className="object-contain object-bottom"
+          />
         </motion.div>
-      </div>
+      </Container>
     </section>
   );
 }

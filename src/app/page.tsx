@@ -1,36 +1,44 @@
-import Image from "next/image";
-import Link from "next/link";
-import { Container } from "@/components/ui/Container";
-import Hero from "@/components/layout/Hero";
-import HeroV2 from "@/components/layout/HeroV2";
-import CategoryAccordion from "@/components/layout/CategoryAccordion";
-import CategoryAccordionHorizontal from "@/components/layout/CategoryAccordionHorizontal";
+// import Image from "next/image";
+// import Link from "next/link";
+// import SocialBar from "@/components/layout/SocialBar";
+import FeatureBar from "@/components/layout/FeatureBar";
+import HeroV4 from "@/components/layout/HeroV4";
+import CategoriesSection from "@/components/layout/CategoriesSection";
+import BestsellersSection from "@/components/layout/BestsellersSection";
+import DiscountsSection from "@/components/layout/DiscountsSection";
+import MaterialsSection from "@/components/layout/MaterialsSection";
+import EditorialsSection from "@/components/layout/EditorialsSection";
+import SaleSection from "@/components/layout/SaleSection";
+import SocialSection from "@/components/layout/SocialSection";
 
-const categories = [
-  {
-    label: "New Arrivals",
-    href: "/new-arrivals",
-    src: "/images/new-arrivals.jpg",
-  },
-  { label: "Shoes", href: "/shoes", src: "/images/shoes.jpg" },
-  { label: "Bags", href: "/bags", src: "/images/bags.jpg" },
-  {
-    label: "Accessories",
-    href: "/accessories",
-    src: "/images/accessories.jpg",
-  },
-];
+// const categories = [
+//   {
+//     label: "New Arrivals",
+//     href: "/new-arrivals",
+//     src: "/images/new-arrivals.jpg",
+//   },
+//   { label: "Shoes", href: "/shoes", src: "/images/shoes.jpg" },
+//   { label: "Bags", href: "/bags", src: "/images/bags.jpg" },
+//   {
+//     label: "Accessories",
+//     href: "/accessories",
+//     src: "/images/accessories.jpg",
+//   },
+// ];
 
 export default function Home() {
   return (
     <main>
-      <Hero />
-      <HeroV2 />
-      <CategoryAccordion categories={categories} />
-      <div className="mb-10">
-        <CategoryAccordionHorizontal categories={categories} />
-      </div>
-      {/* <Container > */}
+      <HeroV4 />
+      {/* <SocialBar /> */}
+      <FeatureBar />
+      <CategoriesSection />
+      <BestsellersSection />
+      <MaterialsSection />
+      <EditorialsSection />
+      <SaleSection />
+      <DiscountsSection />
+      <SocialSection />
       {/* <div className="px-8 grid grid-cols-1 sm:grid-cols-2">
           {categories.map(({ label, href, src }) => (
             <Link key={href} href={href} className="group block">
@@ -50,7 +58,6 @@ export default function Home() {
             </Link>
           ))}
         </div> */}
-      {/* </Container> */}
     </main>
   );
 }

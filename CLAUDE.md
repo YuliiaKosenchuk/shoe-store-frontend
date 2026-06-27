@@ -40,7 +40,7 @@ Next.js 16 App Router project (`src/app/`). All routes, layouts, and pages live 
 
 ## Backend & API
 
-Backend is a separate service at `NEXT_PUBLIC_API_URL` (defaults to `http://localhost:8080`). All requests go through `src/lib/apiClient.ts` (an axios instance).
+Backend is a separate service at `NEXT_PUBLIC_API_URL` (defaults to `http://andziak.pl`). All requests go through `src/lib/apiClient.ts` (an axios instance). OpenAPI spec: `http://andziak.pl/v3/api-docs`.
 
 **Auth API endpoints:**
 - `POST /api/auth/register` — payload uses `repeatedPassword` (not `confirmPassword`)
@@ -53,17 +53,27 @@ Backend is a separate service at `NEXT_PUBLIC_API_URL` (defaults to `http://loca
 
 **Product & Admin API endpoints:**
 - `GET /api/products` — list all products
-- `GET /api/products/:id` — single product (optional `?color=&size=`)
+- `GET /api/products/:id` — single product; polymorphic: no params → `ProductResponseDto` (colors[]), `?color=` → `ProductColorResponseDto` (sizes[]), `?color=&size=` → `ProductColorSizeResponseDto` (stockQty)
 - `POST /api/products` — create product (`AdminService.createProduct`)
 - `PATCH /api/products/:id` — update product
 - `DELETE /api/products/:id` — delete product
 - `GET /api/products/:id/variants` — list variants
-- `POST /api/products/:id/variants` — create variant (size, color, stockQty, sku)
+- `POST /api/products/:id/variants` — create variant (size, color, stockQty, sku, productImageId?)
 - `PATCH /api/products/variants/:id` — update variant
 - `DELETE /api/products/variants/:id` — delete variant
+- `GET /api/products/:id/images` — list images
 - `POST /api/products/:id/images` — create image (color, mainUrl, urls[])
-- `PATCH /api/products/images/:id` — update image
-- `DELETE /api/products/images/:id` — delete image
+- `PATCH /api/products/images/:id/:color` — update image
+- `DELETE /api/products/images/:id/:color` — delete image
+
+**Cart API endpoints:**
+- `GET /api/carts/:cartId` — get cart with items
+- `POST /api/carts/items` — add item; body: `{ productVariantId, quantity, cartId? }` — `cartId` is null for first guest item or auth users
+- `PATCH /api/carts/:cartId/items/:cartItemId` — update quantity; body: `{ quantity }`
+- `DELETE /api/carts/:cartId/items/:cartItemId` — remove item
+- `POST /api/carts/merge` — merge guest cart into auth user cart; body: `{ cartId }`
+
+**CartResponseDto**: `{ cartId, productsCount, cartSubtotal, cartItems[] }` where each item: `{ id, name, price, priceOld, color, size, quantity, subtotal, imageUrl }`
 
 **Auth pattern:** JWT token stored in `localStorage` under the key `token`. The `apiClient` interceptor auto-attaches it as `Authorization: Bearer <token>`. A 401 response clears the token and redirects to `/login`. After Google OAuth, the backend redirects to `/oauth2/callback?token=...` which the client saves to localStorage.
 

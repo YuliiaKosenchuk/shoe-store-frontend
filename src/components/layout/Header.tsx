@@ -17,8 +17,6 @@ const navItems = [
   { label: "Help", href: "/" },
 ];
 
-const iconCls = "cursor-pointer hover:text-[#7A2633] transition-colors";
-
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [initials, setInitials] = useState<string | null>(null);
@@ -52,11 +50,15 @@ export default function Header() {
 
   const isHome = pathname === "/";
 
+  const iconCls = isHome
+    ? "cursor-pointer text-white hover:opacity-70 transition-opacity"
+    : "cursor-pointer hover:text-[#7A2633] transition-colors";
+
   return (
     <header
       className={
         isHome
-          ? "relative w-full z-10 h-18" //bg-[#ece9e2]
+          ? "relative w-full z-10 h-18 bg-transparent"
           : "relative w-full z-10 h-18"
       }
     >
@@ -65,7 +67,10 @@ export default function Header() {
         {/* Left — nav (desktop) / hamburger (mobile) */}
         <div className="flex items-center gap-7">
           <button
-            className="lg:hidden hover:text-[#7A2633] transition-colors"
+            className={isHome
+              ? "lg:hidden text-white hover:opacity-70 transition-opacity"
+              : "lg:hidden hover:text-[#7A2633] transition-colors"
+            }
             onClick={() => setMenuOpen((prev) => !prev)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
           >
@@ -81,7 +86,10 @@ export default function Header() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="text-[14px] font-light text-black hover:text-[#7A2633] transition-colors"
+                className={isHome
+                  ? "text-[14px] font-light text-white hover:opacity-70 transition-opacity"
+                  : "text-[14px] font-light text-black hover:text-[#7A2633] transition-colors"
+                }
               >
                 {item.label}
               </Link>
@@ -89,7 +97,9 @@ export default function Header() {
           </nav>
         </div>
 
-        <LogoComponent />
+        <div className={isHome ? "[&_img]:brightness-0 [&_img]:invert" : ""}>
+          <LogoComponent />
+        </div>
 
         {/* Right — icons */}
         <div className="flex items-center justify-end gap-5">
@@ -97,7 +107,7 @@ export default function Header() {
 
           {initials ? (
             <Link href="/cabinet" aria-label="My cabinet" className="hover:opacity-70 transition-opacity">
-              <div className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-black text-white">
+              <div className={`flex h-4.5 w-4.5 items-center justify-center rounded-full ${isHome ? "bg-white text-black" : "bg-black text-white"}`}>
                 <span className="font-(family-name:--font-jost) text-[8px] font-medium tracking-wide leading-none">
                   {initials}
                 </span>
@@ -112,7 +122,7 @@ export default function Header() {
           <Link href="/wishlist" aria-label="Wishlist" className={`relative ${iconCls}`}>
             <Heart size={24} strokeWidth={1.25} />
             {wishlistCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-black text-white font-(family-name:--font-jost) text-[8px] font-medium leading-none">
+              <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-white text-black font-(family-name:--font-jost) text-[8px] font-medium leading-none">
                 {wishlistCount}
               </span>
             )}

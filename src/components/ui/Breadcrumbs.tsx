@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Container } from "./Container";
 import { useBreadcrumbStore } from "@/store/breadcrumb.store";
 
-const ALLOWED_PREFIXES = ["/bags", "/shoes", "/accessories", "/wishlist", "/new-arrivals"];
+const ALLOWED_PREFIXES = ["/bags", "/shoes", "/accessories", "/wishlist", "/new-arrivals", "/bestsellers", "/sale"];
 
 function isAllowed(pathname: string): boolean {
   return ALLOWED_PREFIXES.some((prefix) => pathname.startsWith(prefix));

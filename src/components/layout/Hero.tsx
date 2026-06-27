@@ -19,7 +19,7 @@ export default function Hero() {
   return (
     <section
       ref={ref}
-      className="relative w-full mb-20 h-[calc(100vh-4.5rem)] min-h-150 overflow-hidden bg-[#C1D8FB]/34"
+      className="relative w-full h-[calc(100vh-4.5rem)] min-h-150 overflow-hidden bg-[#C1BEBB0F]/6"
     >
       <motion.div
         style={{ y: textY }}
