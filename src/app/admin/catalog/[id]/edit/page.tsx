@@ -135,7 +135,7 @@ export default function EditProductPage() {
     priceOld: product.priceOld || undefined,
     gender: product.gender as CreateProductFormValues["gender"],
     season: product.season as CreateProductFormValues["season"],
-    material: product.material,
+    material: product.material as CreateProductFormValues["material"],
   };
 
   return (
