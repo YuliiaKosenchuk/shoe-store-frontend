@@ -1,5 +1,9 @@
-import { ProductsGrid } from "@/components/ui/ProductsGrid";
+import { ProductsPageContent } from "@/components/ui/ProductsPageContent";
+
+export const metadata = {
+  title: "Bags | ATELIER",
+};
 
 export default function BagsPage() {
-  return <ProductsGrid />;
+  return <ProductsPageContent filter="bags" />;
 }

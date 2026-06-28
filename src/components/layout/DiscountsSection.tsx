@@ -5,16 +5,27 @@ import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useRef } from "react";
 import { ProductCard } from "@/components/ui/ProductCard";
-import { MOCK_PRODUCTS } from "@/servises/products.mock";
+import { useQuery } from "@tanstack/react-query";
+import { ProductsService } from "@/servises/products.service";
+// import { MOCK_PRODUCTS } from "@/servises/products.mock";
 
 const SCROLL_SPEED = 3;
 const HOVER_ZONE = 0.18;
 
-const DISCOUNTED_PRODUCTS = MOCK_PRODUCTS.filter(
-  (p) => p.priceOld > 0 && p.priceOld > p.price
-);
+// const DISCOUNTED_PRODUCTS = MOCK_PRODUCTS.filter(
+//   (p) => p.priceOld > 0 && p.priceOld > p.price
+// );
 
 export default function DiscountsSection() {
+  const { data: allProducts = [] } = useQuery({
+    queryKey: ["products"],
+    queryFn: ProductsService.getProducts,
+  });
+
+  const products = allProducts.filter(
+    (p) => p.priceOld > 0 && p.priceOld > p.price
+  );
+
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     dragFree: true,
@@ -116,7 +127,7 @@ export default function DiscountsSection() {
               paddingRight: "max(2rem, calc((100vw - 1344px) / 2 + 2rem))",
             }}
           >
-            {DISCOUNTED_PRODUCTS.map((product, i) => (
+            {products.map((product, i) => (
               <div key={product.id} className="flex-none w-74.5">
                 <ProductCard product={product} priority={i < 4} />
               </div>

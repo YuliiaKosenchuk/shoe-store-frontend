@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "motion/react";
 import { X, RefreshCw } from "lucide-react";
 import { createVariantSchema, CreateVariantFormValues } from "@/shemas/admin-product.shema";
 import type { ProductVariantDto } from "@/shemas/product.shema";
+import { AdminSelect } from "@/components/admin/AdminSelect";
+
+const COLORS = ["blue", "white", "brown", "red", "grey", "beige", "black"];
 
 function buildSku(productName: string, color: string, size: string | undefined, existingSkus: string[]): string {
   const model = productName.replace(/[^a-zA-Z0-9]/g, "").slice(0, 3).toUpperCase().padEnd(3, "X");
@@ -39,6 +42,7 @@ export function VariantModal({ open, editing, loading, serverError, productName 
     reset,
     setValue,
     watch,
+    control,
     formState: { errors },
   } = useForm<CreateVariantFormValues>({
     resolver: zodResolver(createVariantSchema),
@@ -104,11 +108,18 @@ export function VariantModal({ open, editing, loading, serverError, productName 
               </Field>
 
               <Field label="Color" error={errors.color?.message}>
-                <input
-                  {...register("color")}
-                  type="text"
-                  className={inp(!!errors.color)}
-                  placeholder="Black"
+                <Controller
+                  control={control}
+                  name="color"
+                  render={({ field }) => (
+                    <AdminSelect
+                      value={field.value ?? ""}
+                      onChange={field.onChange}
+                      options={COLORS.map((c) => ({ value: c, label: c.charAt(0).toUpperCase() + c.slice(1) }))}
+                      placeholder="Select color"
+                      error={!!errors.color}
+                    />
+                  )}
                 />
               </Field>
 

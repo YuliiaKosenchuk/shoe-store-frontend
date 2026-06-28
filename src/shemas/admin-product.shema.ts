@@ -3,6 +3,7 @@ import { z } from "zod";
 export const CATEGORIES = ["SHOES", "BAGS", "ACCESSORIES"] as const;
 export const GENDERS = ["MALE", "FEMALE", "UNISEX"] as const;
 export const SEASONS = ["SPRING", "SUMMER", "AUTUMN", "WINTER", "ALL_SEASON"] as const;
+export const MATERIALS = ["leather", "natural pu", "mesh", "printed fabric"] as const;
 
 export const createProductSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -12,7 +13,7 @@ export const createProductSchema = z.object({
   priceOld: z.number({ error: "Old price must be a number" }).positive("Old price must be positive").optional(),
   gender: z.enum(GENDERS, { message: "Gender is required" }),
   season: z.enum(SEASONS, { message: "Season is required" }),
-  material: z.string().min(1, "Material is required"),
+  material: z.enum(MATERIALS, { message: "Material is required" }),
 });
 
 export type CreateProductFormValues = z.infer<typeof createProductSchema>;

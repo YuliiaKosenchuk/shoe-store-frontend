@@ -36,25 +36,23 @@ export default function EditProductPage() {
   const [deleteVariantTarget, setDeleteVariantTarget] = useState<ProductVariantDto | null>(null);
   const [deletingVariant, setDeletingVariant] = useState(false);
 
+  async function refreshImages() {
+    const imageList = await AdminService.getImages(productId);
+    setImages(imageList);
+  }
+
   useEffect(() => {
     console.log(`[Admin] loading product id=${productId} for edit`);
     Promise.all([
       ProductsService.getProduct(productId),
       AdminService.getVariants(productId),
+      AdminService.getImages(productId),
     ])
-      .then(([data, variantList]) => {
+      .then(([data, variantList, imageList]) => {
         console.log("[Admin] product loaded, resetting form");
         setProduct(data);
         setVariants(variantList);
-        setImages(
-          (data.images ?? []).map((img) => ({
-            id: img.id ?? 0,
-            productId,
-            color: img.color,
-            mainUrl: img.mainUrl,
-            urls: img.urls ?? [],
-          }))
-        );
+        setImages(imageList);
       })
       .catch((err) => {
         console.error("[Admin] failed to load product:", err);
@@ -234,6 +232,7 @@ export default function EditProductPage() {
           productId={productId}
           images={images}
           onImagesChange={setImages}
+          onRefresh={refreshImages}
         />
       </section>
 

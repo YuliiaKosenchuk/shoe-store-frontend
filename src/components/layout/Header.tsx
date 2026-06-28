@@ -122,7 +122,7 @@ export default function Header() {
           <Link href="/wishlist" aria-label="Wishlist" className={`relative ${iconCls}`}>
             <Heart size={24} strokeWidth={1.25} />
             {wishlistCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-white text-black font-(family-name:--font-jost) text-[8px] font-medium leading-none">
+              <span className={`absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full font-(family-name:--font-jost) text-[8px] font-medium leading-none ${isHome ? "bg-white text-black" : "bg-black text-white"}`}>
                 {wishlistCount}
               </span>
             )}

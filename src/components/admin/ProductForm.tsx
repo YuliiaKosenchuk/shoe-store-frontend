@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   createProductSchema,
@@ -8,7 +8,9 @@ import {
   CATEGORIES,
   GENDERS,
   SEASONS,
+  MATERIALS,
 } from "@/shemas/admin-product.shema";
+import { AdminSelect } from "./AdminSelect";
 
 interface ProductFormProps {
   defaultValues?: Partial<CreateProductFormValues>;
@@ -27,6 +29,7 @@ export function ProductForm({
 }: ProductFormProps) {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<CreateProductFormValues>({
@@ -47,30 +50,51 @@ export function ProductForm({
         </FormField>
 
         <FormField label="Category" error={errors.category?.message}>
-          <select {...register("category")} className={inputCls(!!errors.category)}>
-            <option value="">Select category</option>
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
+          <Controller
+            control={control}
+            name="category"
+            render={({ field }) => (
+              <AdminSelect
+                value={field.value ?? ""}
+                onChange={field.onChange}
+                options={CATEGORIES.map((c) => ({ value: c, label: c }))}
+                placeholder="Select category"
+                error={!!errors.category}
+              />
+            )}
+          />
         </FormField>
 
         <FormField label="Gender" error={errors.gender?.message}>
-          <select {...register("gender")} className={inputCls(!!errors.gender)}>
-            <option value="">Select gender</option>
-            {GENDERS.map((g) => (
-              <option key={g} value={g}>{g}</option>
-            ))}
-          </select>
+          <Controller
+            control={control}
+            name="gender"
+            render={({ field }) => (
+              <AdminSelect
+                value={field.value ?? ""}
+                onChange={field.onChange}
+                options={GENDERS.map((g) => ({ value: g, label: g }))}
+                placeholder="Select gender"
+                error={!!errors.gender}
+              />
+            )}
+          />
         </FormField>
 
         <FormField label="Season" error={errors.season?.message}>
-          <select {...register("season")} className={inputCls(!!errors.season)}>
-            <option value="">Select season</option>
-            {SEASONS.map((s) => (
-              <option key={s} value={s}>{s}</option>
-            ))}
-          </select>
+          <Controller
+            control={control}
+            name="season"
+            render={({ field }) => (
+              <AdminSelect
+                value={field.value ?? ""}
+                onChange={field.onChange}
+                options={SEASONS.map((s) => ({ value: s, label: s }))}
+                placeholder="Select season"
+                error={!!errors.season}
+              />
+            )}
+          />
         </FormField>
 
         <FormField label="Price" error={errors.price?.message}>
@@ -82,7 +106,19 @@ export function ProductForm({
         </FormField>
 
         <FormField label="Material" error={errors.material?.message} className="sm:col-span-2">
-          <input {...register("material")} className={inputCls(!!errors.material)} placeholder="Leather, suede…" />
+          <Controller
+            control={control}
+            name="material"
+            render={({ field }) => (
+              <AdminSelect
+                value={field.value ?? ""}
+                onChange={field.onChange}
+                options={MATERIALS.map((m) => ({ value: m, label: m }))}
+                placeholder="Select material"
+                error={!!errors.material}
+              />
+            )}
+          />
         </FormField>
       </div>
 

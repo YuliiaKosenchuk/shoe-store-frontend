@@ -1,9 +1,10 @@
 import type { Product, ProductSize } from "@/shemas/product.shema";
 
 const LOCAL_IMAGES = [
-  "https://res.cloudinary.com/dmavecpcx/image/upload/q_auto/f_auto/v1781784255/1_n5g5tq.png",
-  "https://res.cloudinary.com/dmavecpcx/image/upload/q_auto/f_auto/v1781784255/2_ixjf3w.png",
-  "https://res.cloudinary.com/dmavecpcx/image/upload/q_auto/f_auto/v1781784254/3_a4nvt2.png",
+  "https://res.cloudinary.com/dmavecpcx/image/upload/v1782288222/5.3_jkz9d8.png",
+  "https://res.cloudinary.com/dmavecpcx/image/upload/v1782288221/5.1_q4srwx.png",
+  "https://res.cloudinary.com/dmavecpcx/image/upload/v1782288222/5.2_o2jklu.png",
+  "https://res.cloudinary.com/dmavecpcx/image/upload/v1782288222/5.4_t3lwbt.png",
 ];
 
 const BASE_PRODUCT: Product = {

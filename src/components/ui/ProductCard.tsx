@@ -5,10 +5,12 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { WishlistButton } from "@/components/ui/WishlistButton";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import type { Product } from "@/shemas/product.shema";
+import { ProductsService } from "@/servises/products.service";
 
 
 const FALLBACK_IMAGES: string[] = [];
@@ -38,11 +40,28 @@ interface ProductCardProps {
 
 export function ProductCard({ product, priority = false }: ProductCardProps) {
   const router = useRouter();
+  const cardId = useId();
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [activeColor, setActiveColor] = useState<string>(
-    product.images[0]?.color ?? product.colors[0] ?? ""
-  );
+  const [isHovered, setIsHovered] = useState(false);
+  const [activeColor, setActiveColor] = useState<string>(() => {
+    const firstImageColor = product.images[0]?.color;
+    if (firstImageColor && product.colors.includes(firstImageColor)) {
+      return firstImageColor;
+    }
+    return product.colors[0] ?? firstImageColor ?? "";
+  });
+  const { data: allImages = null } = useQuery({
+    queryKey: ["product-images", product.id],
+    queryFn: () => ProductsService.getImages(product.id),
+  });
+
+  const { data: variants } = useQuery({
+    queryKey: ["product-variants", product.id],
+    queryFn: () => ProductsService.getVariants(product.id),
+    enabled: isHovered,
+    staleTime: 5 * 60 * 1000,
+  });
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -50,6 +69,12 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
     emblaApi.on("select", onSelect);
     return () => { emblaApi.off("select", onSelect); };
   }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.reInit();
+    emblaApi.scrollTo(0, true);
+  }, [emblaApi, activeColor, allImages]);
 
   const scrollPrev = useCallback(
     (e: React.MouseEvent) => {
@@ -69,32 +94,25 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
     [emblaApi]
   );
 
-  const handleColorChange = useCallback(
-    (color: string) => {
-      setActiveColor(color);
-      emblaApi?.scrollTo(0);
-    },
-    [emblaApi]
+  const handleColorChange = useCallback((color: string) => {
+    setActiveColor(color);
+  }, []);
+
+  const imageSource = allImages ?? product.images;
+  const activeImages = imageSource.filter((img) => img.color === activeColor);
+  const rawImages = activeImages.flatMap((img) =>
+    img.urls?.length ? img.urls : img.mainUrl ? [img.mainUrl] : []
   );
 
-  const activeImage =
-    product.images.find((img) => img.color === activeColor) ?? product.images[0];
-  const rawImages = activeImage?.urls?.length
-    ? activeImage.urls
-    : activeImage?.mainUrl
-    ? [activeImage.mainUrl]
-    : [];
+  // filter out invalid URLs from DB until they're fixed in admin
+  const validImages = rawImages.filter((url) => { try { new URL(url); return true; } catch { return false; } });
+  const carouselImages = validImages.length > 0 ? validImages : FALLBACK_IMAGES;
 
-  // use test cloudinary images when the product has none yet
-  const carouselImages = rawImages.length > 0 ? rawImages : FALLBACK_IMAGES;
-
-  const allSizeNumbers = product.sizes
-    ? product.sizes.map((s) => s.size)
-    : [35, 36, 37, 38, 39, 40, 41, 42];
+  const allSizeNumbers = [35, 36, 37, 38, 39, 40, 41, 42];
   const availableSizeSet = new Set(
-    product.sizes
-      ? product.sizes.filter((s) => s.available).map((s) => s.size)
-      : [35, 36, 37, 38, 39, 40, 41, 42]
+    (variants ?? [])
+      .filter((v) => v.color === activeColor && v.stockQty > 0)
+      .map((v) => Number(v.size))
   );
 
   const discount =
@@ -103,28 +121,37 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
       : null;
 
   return (
-    <div className="group flex flex-col cursor-pointer w-full">
+    <div
+      className="group flex flex-col cursor-pointer w-full"
+      onMouseEnter={() => setIsHovered(true)}
+    >
       <div
         className="relative w-full aspect-302/404 overflow-hidden bg-[#F8F8F8] cursor-pointer"
-        onClick={() => router.push(`/${product.category.toLowerCase()}/${product.id}`)}
+        onClick={() => router.push(`/${product.category.toLowerCase()}/${product.id}?color=${encodeURIComponent(activeColor)}`)}
       >
-        <div ref={emblaRef} className="h-full overflow-hidden">
-          <div className="flex h-full">
-            {carouselImages.map((url, i) => (
-              <div key={i} className="relative min-w-0 shrink-0 grow-0 basis-full bg-[#F8F8F8]">
-                <Image
-                  src={url}
-                  alt={`${product.name} — view ${i + 1}`}
-                  fill
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  className="object-cover"
-                  priority={priority && i === 0}
-                  loading={priority && i === 0 ? "eager" : "lazy"}
-                />
-              </div>
-            ))}
+        {carouselImages.length === 0 ? (
+          <div className="h-full flex items-center justify-center">
+            <span className="font-(family-name:--font-jost) text-sm text-[#818181]">No image</span>
           </div>
-        </div>
+        ) : (
+          <div ref={emblaRef} className="h-full overflow-hidden">
+            <div className="flex h-full">
+              {carouselImages.map((url, i) => (
+                <div key={i} className="relative min-w-0 shrink-0 grow-0 basis-full bg-[#F8F8F8]">
+                  <Image
+                    src={url}
+                    alt={`${product.name} — view ${i + 1}`}
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    className="object-cover"
+                    priority={priority && i === 0}
+                    loading={priority && i === 0 ? "eager" : "lazy"}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         <WishlistButton product={product} className="absolute top-3 right-3 z-10" hideWhenInactive />
         <button
           onClick={scrollPrev}
@@ -181,7 +208,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 
       <div className="mt-3 space-y-1.5">
         <Link
-          href={`/${product.category.toLowerCase()}/${product.id}`}
+          href={`/${product.category.toLowerCase()}/${product.id}?color=${encodeURIComponent(activeColor)}`}
           className="font-(family-name:--font-jost) text-base font-normal leading-snug text-gray-900 hover:text-[#7A2633] transition-colors"
         >
           {product.name}
@@ -204,7 +231,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
         </div>
 
         <div className="flex gap-2 pt-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          {product.colors.map((color) => (
+          {[...new Set(product.colors)].map((color) => (
             <button
               key={color}
               onClick={(e) => { e.preventDefault(); handleColorChange(color); }}
@@ -218,7 +245,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               <div className="w-10 h-px">
                 {color === activeColor && (
                   <motion.div
-                    layoutId={`color-indicator-${product.id}`}
+                    layoutId={`color-indicator-${cardId}`}
                     className="w-full h-full bg-black"
                     transition={{ duration: 0.18, ease: "easeInOut" }}
                   />

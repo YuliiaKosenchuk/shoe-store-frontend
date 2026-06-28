@@ -19,7 +19,7 @@ export function ColorSelector({ images, selectedColor, onChange }: ColorSelector
         <span className="font-medium text-[16px] text-[#010101] leading-[1.3]">{colorLabel}</span>
       </p>
       <div className="flex gap-2">
-        {images.map((img) => (
+        {images.filter((img, idx, arr) => arr.findIndex((i) => i.color === img.color) === idx).map((img) => (
           <button
             key={img.color}
             onClick={() => onChange(img.color)}

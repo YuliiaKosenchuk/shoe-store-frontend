@@ -5,12 +5,19 @@ import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useRef } from "react";
 import { ProductCard } from "@/components/ui/ProductCard";
-import { MOCK_PRODUCTS } from "@/servises/products.mock";
+import { useQuery } from "@tanstack/react-query";
+import { ProductsService } from "@/servises/products.service";
+// import { MOCK_PRODUCTS } from "@/servises/products.mock";
 
 const SCROLL_SPEED = 3;
 const HOVER_ZONE = 0.18;
 
 export default function BestsellersSection() {
+  const { data: products = [] } = useQuery({
+    queryKey: ["products"],
+    queryFn: ProductsService.getProducts,
+  });
+
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     dragFree: true,
@@ -114,7 +121,7 @@ export default function BestsellersSection() {
               paddingRight: "max(2rem, calc((100vw - 1344px) / 2 + 2rem))",
             }}
           >
-            {MOCK_PRODUCTS.map((product, i) => (
+            {products.map((product, i) => (
               <div key={product.id} className="flex-none w-74.5">
                 <ProductCard product={product} priority={i < 4} />
               </div>

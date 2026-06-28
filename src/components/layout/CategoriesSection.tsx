@@ -23,7 +23,7 @@ export default function CategoriesSection() {
       <Container>
         <div className="px-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
           {categories.map(({ label, href, src, alt }) => (
-            <div key={href} className="group relative h-60 sm:h-80 lg:h-94.5 overflow-hidden">
+            <Link key={href} href={href} className="group relative block h-60 sm:h-80 lg:h-94.5 overflow-hidden">
               <Image
                 src={src}
                 alt={alt}
@@ -40,15 +40,14 @@ export default function CategoriesSection() {
                 >
                   {label}
                 </h2>
-                <Link
-                  href={href}
-                  className="mt-2 inline-block text-black text-[16px] leading-[1.3] underline underline-offset-4 transition-opacity hover:opacity-60"
+                <span
+                  className="mt-2 inline-block text-black text-[16px] leading-[1.3] underline underline-offset-4 transition-opacity group-hover:opacity-60"
                   style={{ fontFamily: "var(--font-jost)" }}
                 >
                   Shop now
-                </Link>
+                </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </Container>

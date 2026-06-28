@@ -50,6 +50,11 @@ export const AdminService = {
     await apiClient.delete(`/api/products/variants/${id}`);
   },
 
+  async getImages(productId: number): Promise<ProductImageDto[]> {
+    const response = await apiClient.get(`/api/products/${productId}/images`);
+    return response.data;
+  },
+
   async createImage(productId: number, data: CreateImageFormValues): Promise<ProductImageDto> {
     console.log(`[Admin] submitting image: productId=${productId} color=${data.color} url=${data.mainUrl}`);
     const response = await apiClient.post(`/api/products/${productId}/images`, data);

@@ -6,6 +6,9 @@ import { Trash2, ImagePlus } from "lucide-react";
 import type { ProductImageDto } from "@/shemas/product.shema";
 import { AdminService } from "@/servises/admin.service";
 import { ConfirmModal } from "./ConfirmModal";
+import { AdminSelect } from "./AdminSelect";
+
+const COLORS = ["blue", "white", "brown", "red", "grey", "beige", "black"];
 
 declare global {
   interface Window {
@@ -88,7 +91,7 @@ export function ImageManager({ productId, images, onImagesChange, onRefresh }: I
   }
 
   async function saveImage() {
-    if (!pending || !pending.color.trim()) {
+    if (!pending || !pending.color) {
       setImageError("Please enter a color name");
       return;
     }
@@ -96,7 +99,7 @@ export function ImageManager({ productId, images, onImagesChange, onRefresh }: I
     setSavingImage(true);
     try {
       const saved = await AdminService.createImage(productId, {
-        color: pending.color.trim(),
+        color: pending.color,
         mainUrl: pending.url,
       });
       if (onRefresh) {
@@ -159,11 +162,12 @@ export function ImageManager({ productId, images, onImagesChange, onRefresh }: I
             <label className="text-[10px] tracking-widest uppercase text-gray-500">
               Assign color for this photo
             </label>
-            <input
+            <AdminSelect
               value={pending.color}
-              onChange={(e) => setPending({ ...pending, color: e.target.value })}
-              placeholder="e.g. black"
-              className="border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
+              onChange={(color) => setPending({ ...pending, color })}
+              options={COLORS.map((c) => ({ value: c, label: c.charAt(0).toUpperCase() + c.slice(1) }))}
+              placeholder="Select color"
+              error={!!imageError}
             />
             {imageError && <p className="text-[11px] text-red-500">{imageError}</p>}
             <div className="flex gap-2 mt-1">

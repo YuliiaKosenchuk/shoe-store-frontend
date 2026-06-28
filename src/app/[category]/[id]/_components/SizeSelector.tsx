@@ -11,8 +11,15 @@ interface SizeSelectorProps {
   onChange: (size: number) => void;
 }
 
+const ALL_SIZES = [35, 36, 37, 38, 39, 40, 41, 42];
+
 export function SizeSelector({ sizes, selectedSize, onChange }: SizeSelectorProps) {
   const [notifySize, setNotifySize] = useState<number | null>(null);
+
+  const allSizes = ALL_SIZES.map((size) => {
+    const found = sizes.find((s) => Number(s.size) === size);
+    return found ? { ...found, size } : { size, stock: 0, available: false };
+  });
 
   return (
     <>
@@ -26,7 +33,7 @@ export function SizeSelector({ sizes, selectedSize, onChange }: SizeSelectorProp
           )}
         </p>
         <div className="flex flex-wrap gap-5 font-(family-name:--font-jost) text-sm text-[#010101] leading-normal">
-          {sizes.map((item) => {
+          {allSizes.map((item) => {
             const isSelected = item.size === selectedSize;
             const isLowStock = item.available && item.stock <= 2;
 

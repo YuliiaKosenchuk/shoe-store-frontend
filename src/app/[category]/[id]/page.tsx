@@ -1,8 +1,10 @@
 "use client";
 
 import { use, useLayoutEffect, useState } from "react";
-import { getMockProduct } from "@/servises/products.mock";
-import type { ProductSize } from "@/shemas/product.shema";
+import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
+import { ProductsService } from "@/servises/products.service";
+// import { getMockProduct } from "@/servises/products.mock";
 import { WishlistButton } from "@/components/ui/WishlistButton";
 import { useWishlistStore } from "@/store/wishlist.store";
 import { useBreadcrumbStore } from "@/store/breadcrumb.store";
@@ -12,21 +14,6 @@ import { SizeSelector } from "./_components/SizeSelector";
 import { ProductAccordion } from "./_components/ProductAccordion";
 import { Container } from "@/components/ui/Container";
 
-// --- Backend imports (uncomment when API is ready) ---
-// import { useEffect } from "react";
-// import { useQuery } from "@tanstack/react-query";
-// import { ProductsService } from "@/servises/products.service";
-
-const DEFAULT_SIZES: ProductSize[] = [
-  { size: 35, stock: 5, available: true },
-  { size: 36, stock: 5, available: true },
-  { size: 37, stock: 5, available: true },
-  { size: 38, stock: 5, available: true },
-  { size: 39, stock: 5, available: true },
-  { size: 40, stock: 5, available: true },
-  { size: 41, stock: 5, available: true },
-  { size: 42, stock: 5, available: true },
-];
 
 interface ProductPageProps {
   params: Promise<{ category: string; id: string }>;
@@ -34,52 +21,40 @@ interface ProductPageProps {
 
 export default function ProductPage({ params }: ProductPageProps) {
   const { id } = use(params);
+  const searchParams = useSearchParams();
+  const colorFromUrl = searchParams.get("color") ?? "";
 
-  const [selectedColor, setSelectedColor] = useState<string>("");
+  const [userColor, setUserColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [inBag, setInBag] = useState(false);
   const { hasHydrated, items: wishlistItems } = useWishlistStore();
   const { setPageTitle, clearPageTitle } = useBreadcrumbStore();
 
-  // --- Backend data fetching (uncomment when API is ready, remove mock block below) ---
-  // const { data: product, isPending, isError } = useQuery({
-  //   queryKey: ["product", id, selectedColor, selectedSize],
-  //   queryFn: () =>
-  //     ProductsService.getProduct(
-  //       Number(id),
-  //       selectedColor || undefined,
-  //       selectedSize ? String(selectedSize) : undefined,
-  //     ),
-  // });
-  //
-  // useEffect(() => {
-  //   if (product && !selectedColor) {
-  //     setSelectedColor(product.images[0]?.color ?? product.colors[0] ?? "");
-  //   }
-  // }, [product, selectedColor]);
-  //
-  // if (isPending) {
-  //   return (
-  //     <div className="flex items-center justify-center min-h-[60vh]">
-  //       <p className="font-(family-name:--font-jost) text-[#818181] text-sm tracking-widest uppercase">
-  //         Loading...
-  //       </p>
-  //     </div>
-  //   );
-  // }
-  //
-  // if (isError || !product) {
-  //   return (
-  //     <div className="flex items-center justify-center min-h-[60vh]">
-  //       <p className="font-(family-name:--font-jost) text-[#818181] text-sm tracking-widest uppercase">
-  //         Product not found
-  //       </p>
-  //     </div>
-  //   );
-  // }
+  // Fetch all images separately — avoids the backend JOIN bug on GET /api/products/:id (no params)
+  const { data: allImages = [], isError: imagesError } = useQuery({
+    queryKey: ["product-images", id],
+    queryFn: () => ProductsService.getImages(Number(id)),
+  });
 
-  // --- Mock (remove once backend is ready) ---
-  const product = getMockProduct(Number(id));
+  const { data: variants = [] } = useQuery({
+    queryKey: ["product-variants", id],
+    queryFn: () => ProductsService.getVariants(Number(id)),
+  });
+
+  // Derive selectedColor without an effect: user pick → URL param → first image color
+  const selectedColor = userColor ?? (colorFromUrl || (allImages[0]?.color ?? ""));
+
+  // Fetch product with a color param — uses a different backend code path that avoids the bug
+  const { data: product, isError: productError } = useQuery({
+    queryKey: ["product", id, selectedColor, selectedSize],
+    queryFn: () =>
+      ProductsService.getProduct(
+        Number(id),
+        selectedColor || undefined,
+        selectedSize ? String(selectedSize) : undefined,
+      ),
+    enabled: !!selectedColor,
+  });
 
   useLayoutEffect(() => {
     if (product) {
@@ -88,11 +63,23 @@ export default function ProductPage({ params }: ProductPageProps) {
     }
   }, [product?.name, setPageTitle, clearPageTitle]);
 
+  // --- Mock (comment in if backend is unavailable) ---
+  // const product = getMockProduct(Number(id));
+
   if (!product) {
+    if (imagesError || productError) {
+      return (
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <p className="font-(family-name:--font-jost) text-[#818181] text-sm tracking-widest uppercase">
+            Product not found
+          </p>
+        </div>
+      );
+    }
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <p className="font-(family-name:--font-jost) text-[#818181] text-sm tracking-widest uppercase">
-          Product not found
+          Loading...
         </p>
       </div>
     );
@@ -100,11 +87,15 @@ export default function ProductPage({ params }: ProductPageProps) {
 
   const wishlisted = hasHydrated && wishlistItems.some((p) => p.id === product.id);
 
-  const effectiveColor =
-    selectedColor || product.images[0]?.color || product.colors[0] || "";
+  // Deduplicate images by color (guards against duplicate DB entries)
+  const uniqueImages = allImages.filter(
+    (img, idx, arr) => arr.findIndex((i) => i.color === img.color) === idx,
+  );
+
+  const effectiveColor = selectedColor || uniqueImages[0]?.color || "";
 
   const activeImage =
-    product.images.find((img) => img.color === effectiveColor) ?? product.images[0];
+    uniqueImages.find((img) => img.color === effectiveColor) ?? uniqueImages[0];
   const galleryImages = activeImage?.urls?.length
     ? activeImage.urls
     : activeImage?.mainUrl
@@ -116,7 +107,9 @@ export default function ProductPage({ params }: ProductPageProps) {
       ? Math.round((1 - product.price / product.priceOld) * 100)
       : null;
 
-  const sizes = product.sizes ?? DEFAULT_SIZES;
+  const sizes = variants
+    .filter((v) => v.color === effectiveColor)
+    .map((v) => ({ size: Number(v.size), stock: v.stockQty, available: v.stockQty > 0 }));
 
   const accordionSections = [
     { title: "Description", content: product.description },
@@ -168,11 +161,11 @@ export default function ProductPage({ params }: ProductPageProps) {
         </div>
 
         {/* Color selector */}
-        {product.images.length > 0 && (
+        {uniqueImages.length > 0 && (
           <ColorSelector
-            images={product.images}
+            images={uniqueImages}
             selectedColor={effectiveColor}
-            onChange={setSelectedColor}
+            onChange={setUserColor}
           />
         )}
 
@@ -191,7 +184,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             }`}
             onClick={() => setInBag(true)}
           >
-            
+
             {inBag ? "In Bag" : "Add to Bag"}
           </button>
           <div

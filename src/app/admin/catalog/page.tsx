@@ -7,13 +7,16 @@ import { Plus, Pencil, Trash2, Search } from "lucide-react";
 import { ProductsService } from "@/servises/products.service";
 import { AdminService } from "@/servises/admin.service";
 import { ConfirmModal } from "@/components/admin/ConfirmModal";
+import { AdminSelect } from "@/components/admin/AdminSelect";
 import type { Product } from "@/shemas/product.shema";
+import { CATEGORIES } from "@/shemas/admin-product.shema";
 
 export default function CatalogPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
   const [deleting, setDeleting] = useState(false);
 
@@ -45,9 +48,11 @@ export default function CatalogPage() {
     }
   }
 
-  const filtered = products.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = products.filter((p) => {
+    const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory = !category || p.category === category;
+    return matchesSearch && matchesCategory;
+  });
 
   if (loading) {
     return (
@@ -79,14 +84,26 @@ export default function CatalogPage() {
         </Link>
       </div>
 
-      <div className="relative mb-6 max-w-sm">
-        <Search size={14} strokeWidth={1.25} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by name…"
-          className="w-full border border-gray-200 pl-9 pr-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-gray-400 transition-colors"
-        />
+      <div className="flex items-center gap-3 mb-6">
+        <div className="relative max-w-sm flex-1">
+          <Search size={14} strokeWidth={1.25} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search by name…"
+            className="w-full border border-gray-200 pl-9 pr-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:border-gray-400 transition-colors"
+          />
+        </div>
+        <div className="min-w-42.5">
+          <AdminSelect
+            value={category}
+            onChange={setCategory}
+            options={[
+              { value: "", label: "All categories" },
+              ...CATEGORIES.map((c) => ({ value: c, label: c })),
+            ]}
+          />
+        </div>
       </div>
 
       <div className="border border-gray-100 overflow-x-auto">
