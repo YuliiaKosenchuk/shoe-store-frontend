@@ -51,6 +51,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
     }
     return product.colors[0] ?? firstImageColor ?? "";
   });
+  
   const { data: allImages = null } = useQuery({
     queryKey: ["product-images", product.id],
     queryFn: () => ProductsService.getImages(product.id),
@@ -100,9 +101,10 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 
   const imageSource = allImages ?? product.images;
   const activeImages = imageSource.filter((img) => img.color === activeColor);
-  const rawImages = activeImages.flatMap((img) =>
-    img.urls?.length ? img.urls : img.mainUrl ? [img.mainUrl] : []
-  );
+  const rawImages = activeImages.flatMap((img) => {
+    const others = (img.urls ?? []).filter((u) => u !== img.mainUrl);
+    return img.mainUrl ? [img.mainUrl, ...others] : (img.urls ?? []);
+  });
 
   // filter out invalid URLs from DB until they're fixed in admin
   const validImages = rawImages.filter((url) => { try { new URL(url); return true; } catch { return false; } });

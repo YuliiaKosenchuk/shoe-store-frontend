@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import Header from "@/components/layout/Header";
 import TopBar from "@/components/layout/TopBar";
+import Footer from "@/components/layout/Footer";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CookieBanner } from "@/components/ui/CookieBanner";
 import QueryProvider from "@/components/providers/QueryProvider";
@@ -32,12 +33,13 @@ export default function RootLayout({
       lang="en"
       className={`${CormorantGaramond.variable} ${JostSans.variable} h-full antialiased`}
     >
-      <body>
+      <body className="flex flex-col min-h-screen">
         <QueryProvider>
           <TopBar />
           <Header />
           <Breadcrumbs />
-          {children}
+          <div className="flex-1">{children}</div>
+          <Footer />
           <CookieBanner />
         </QueryProvider>
       </body>
