@@ -4,6 +4,7 @@ import { useState } from "react";
 import { BellRing } from "lucide-react";
 import type { ProductSize } from "@/shemas/product.shema";
 import { NotifyModal } from "./NotifyModal";
+import { SizeGuideModal } from "./SizeGuideModal";
 
 interface SizeSelectorProps {
   sizes: ProductSize[];
@@ -15,6 +16,7 @@ const ALL_SIZES = [35, 36, 37, 38, 39, 40, 41, 42];
 
 export function SizeSelector({ sizes, selectedSize, onChange }: SizeSelectorProps) {
   const [notifySize, setNotifySize] = useState<number | null>(null);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
 
   const allSizes = ALL_SIZES.map((size) => {
     const found = sizes.find((s) => Number(s.size) === size);
@@ -24,14 +26,23 @@ export function SizeSelector({ sizes, selectedSize, onChange }: SizeSelectorProp
   return (
     <>
       <div>
-        <p className=" mb-4 font-(family-name:--font-jost) text-sm tracking-widest text-[#4E4E4E]">
-          Size:{" "}
-          {selectedSize && (
-            <span className="font-medium text-[16px] text-[#010101] leading-[1.3]">
-              {selectedSize}
-            </span>
-          )}
-        </p>
+        <div className="flex items-center justify-between mb-4">
+          <p className="font-(family-name:--font-jost) text-sm tracking-widest text-[#4E4E4E]">
+            Size:{" "}
+            {selectedSize && (
+              <span className="font-medium text-[16px] text-[#010101] leading-[1.3]">
+                {selectedSize}
+              </span>
+            )}
+          </p>
+          <button
+            type="button"
+            onClick={() => setShowSizeGuide(true)}
+            className="font-(family-name:--font-jost) text-[16px] leading-[1.3] text-[#7A2633] underline underline-offset-2 hover:text-[#010101] transition-colors"
+          >
+            Size guide
+          </button>
+        </div>
         <div className="flex flex-wrap gap-5 font-(family-name:--font-jost) text-sm text-[#010101] leading-normal">
           {allSizes.map((item) => {
             const isSelected = item.size === selectedSize;
@@ -78,6 +89,9 @@ export function SizeSelector({ sizes, selectedSize, onChange }: SizeSelectorProp
 
       {notifySize !== null && (
         <NotifyModal size={notifySize} onClose={() => setNotifySize(null)} />
+      )}
+      {showSizeGuide && (
+        <SizeGuideModal onClose={() => setShowSizeGuide(false)} />
       )}
     </>
   );

@@ -23,7 +23,7 @@ export default function HeroV4() {
       <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>
         <Image
           src="/images/hero-5-11.png"
-          alt=""
+          alt="Background"
           fill
           priority
           className="object-cover object-center"
@@ -65,21 +65,21 @@ export default function HeroV4() {
       </motion.div>
 
       {/* Layer 4 — UI overlays: constrained by Container */}
-      <motion.div className="absolute top-32 inset-0 z-30 pointer-events-none" style={{ y: modelY }}>
-        <Container className="h-full relative px-6">
+      <motion.div className="absolute top-24 inset-0 z-30 pointer-events-none" style={{ y: modelY }}>
+        <Container className="h-full relative px-8">
           {/* Top-left category labels */}
           <motion.div
-            className="absolute top-6 left-6 flex gap-3 items-start pointer-events-auto"
+            className="absolute top-14 left-8 flex gap-3 items-start pointer-events-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.45 }}
           >
-            <div className="w-px h-11 bg-[#010101] mt-0.5 shrink-0" />
+            <div className="w-px h-11 bg-[#010101]/90 mt-0.5 shrink-0" />
             <div className="flex flex-col gap-1">
-              <span className="font-(--font-jost) mb-2 text-[#010101] text-[12px] uppercase tracking-widest leading-normal">
+              <span className="font-(--font-jost) mb-2 text-[#010101]/90 text-[12px] uppercase tracking-widest leading-normal">
                 Leather Goods
               </span>
-              <span className="font-(--font-jost) text-[#010101] text-[12px] uppercase tracking-widest leading-normal">
+              <span className="font-(--font-jost) text-[#010101]/90 text-[12px] uppercase tracking-widest leading-normal">
                 SS26 Capsule
               </span>
             </div>
@@ -94,12 +94,12 @@ export default function HeroV4() {
           >
             <Link
               href="/new-arrivals"
-              className="inline-flex items-center gap-5 font-(--font-jost) text-[#010101] text-[24px] uppercase leading-normal tracking-widest hover:opacity-70 transition-opacity"
+              className="inline-flex items-center gap-5 font-(--font-jost) text-[#010101]/90 text-[24px] uppercase leading-normal tracking-widest hover:opacity-70 transition-opacity"
             >
               Discover Collection
               <Image
                 src="/images/arrow-right-hero.svg"
-                alt=""
+                alt="arrow right"
                 width={40}
                 height={40}
               />

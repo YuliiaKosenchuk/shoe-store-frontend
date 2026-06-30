@@ -51,7 +51,7 @@ export default function SaleSection() {
               src="/images/sale-img.png"
               alt="Summer Sale"
               fill
-              className="object-cover object-top"
+              className="object-contain object-bottom"
               sizes="50vw"
               priority
             />

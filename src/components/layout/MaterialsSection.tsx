@@ -21,13 +21,13 @@ export default function MaterialsSection() {
         <Container>
           <div className="px-8" style={{ maxWidth: "calc(297px + 4rem)" }}>
             <h2
-              className="text-white text-[32px] sm:text-[40px] lg:text-[36px] leading-[1.3] tracking-tight mb-4"
+              className="max-w-60.75 text-white text-[26px] leading-[1.2] tracking-tight mb-4"
               style={{ fontFamily: "var(--font-cormorant-garamond)" }}
             >
               The details make the design
             </h2>
             <p
-              className="text-white/85 text-[14px] leading-[1.6] mb-6"
+              className="text-white/85 text-[16px] leading-[1.3] mb-6"
               style={{ fontFamily: "var(--font-jost)" }}
             >
               True quality knows no compromise. We select the finest materials
@@ -36,7 +36,7 @@ export default function MaterialsSection() {
             </p>
             <Link
               href="/materials"
-              className="inline-flex items-center gap-2 h-12 bg-white text-black text-[26px]leading-[1.2] tracking-widest px-4 transition-opacity hover:opacity-80"
+              className="inline-flex items-center gap-2 h-12 bg-white text-[#010101]/90 text-[26px] font-semibold leading-[1.2] p-4 transition-opacity hover:opacity-80"
               style={{ fontFamily: "var(--font-cormorant-garamond)" }}
             >
               Discover our materials

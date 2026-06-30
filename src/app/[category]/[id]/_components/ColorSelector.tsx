@@ -35,7 +35,7 @@ export function ColorSelector({ images, selectedColor, onChange }: ColorSelector
               src={img.mainUrl}
               alt={img.color}
               fill
-              className="object-cover"
+              className="object-cover p-1"
               sizes="72px"
             />
           </button>

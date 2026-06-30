@@ -13,6 +13,8 @@ import { ColorSelector } from "./_components/ColorSelector";
 import { SizeSelector } from "./_components/SizeSelector";
 import { ProductAccordion } from "./_components/ProductAccordion";
 import { Container } from "@/components/ui/Container";
+import YouMayAlsoLikeSection from "@/components/layout/YouMayAlsoLikeSection";
+import SocialSection from "@/components/layout/SocialSection";
 
 
 interface ProductPageProps {
@@ -44,17 +46,25 @@ export default function ProductPage({ params }: ProductPageProps) {
   // Derive selectedColor without an effect: user pick → URL param → first image color
   const selectedColor = userColor ?? (colorFromUrl || (allImages[0]?.color ?? ""));
 
-  // Fetch product with a color param — uses a different backend code path that avoids the bug
+  // Fetch base product data once — name/price/description don't vary by color;
+  // gallery images come from allImages, sizes from variants (both already fetched above)
   const { data: product, isError: productError } = useQuery({
-    queryKey: ["product", id, selectedColor, selectedSize],
-    queryFn: () =>
-      ProductsService.getProduct(
-        Number(id),
-        selectedColor || undefined,
-        selectedSize ? String(selectedSize) : undefined,
-      ),
-    enabled: !!selectedColor,
+    queryKey: ["product", id],
+    queryFn: () => ProductsService.getProduct(Number(id)),
   });
+
+  // Compute effectiveColor and sizes here so the auto-select effect can reference them
+  const effectiveColor = selectedColor || allImages[0]?.color || "";
+  const sizes = variants
+    .filter((v) => v.color === effectiveColor)
+    .map((v) => ({ size: Number(v.size), stock: v.stockQty, available: v.stockQty > 0 }));
+
+  // Derive effective selected size: user pick if valid for current color, else smallest available
+  const smallestAvailable =
+    [...sizes].filter((s) => s.available).sort((a, b) => a.size - b.size)[0]?.size ?? null;
+  const effectiveSelectedSize = sizes.some((s) => s.size === selectedSize && s.available)
+    ? selectedSize
+    : smallestAvailable;
 
   useLayoutEffect(() => {
     if (product) {
@@ -92,14 +102,13 @@ export default function ProductPage({ params }: ProductPageProps) {
     (img, idx, arr) => arr.findIndex((i) => i.color === img.color) === idx,
   );
 
-  const effectiveColor = selectedColor || uniqueImages[0]?.color || "";
-
   const activeImage =
     uniqueImages.find((img) => img.color === effectiveColor) ?? uniqueImages[0];
-  const galleryImages = activeImage?.urls?.length
-    ? activeImage.urls
-    : activeImage?.mainUrl
-    ? [activeImage.mainUrl]
+  const galleryImages = activeImage
+    ? [
+        ...(activeImage.mainUrl ? [activeImage.mainUrl] : []),
+        ...(activeImage.urls ?? []),
+      ]
     : [];
 
   const discount =
@@ -107,20 +116,15 @@ export default function ProductPage({ params }: ProductPageProps) {
       ? Math.round((1 - product.price / product.priceOld) * 100)
       : null;
 
-  const sizes = variants
-    .filter((v) => v.color === effectiveColor)
-    .map((v) => ({ size: Number(v.size), stock: v.stockQty, available: v.stockQty > 0 }));
-
   const accordionSections = [
     { title: "Description", content: product.description },
     {
       title: "Product Details",
-      content: `Material: ${product.material}  •  Season: ${product.season}  •  Gender: ${product.gender}`,
-    },
-    {
-      title: "Size guide",
-      content:
-        "Our shoes are sized in European measurements. If you are between sizes, we recommend sizing up for a more comfortable fit.",
+      content: [
+        { label: "Material", value: product.material?.toLowerCase() ?? "—" },
+        { label: "Season", value: product.season?.toLowerCase() ?? "—" },
+        { label: "Gender", value: product.gender?.toLowerCase() ?? "—" },
+      ],
     },
     {
       title: "Shipping & Returns",
@@ -130,90 +134,95 @@ export default function ProductPage({ params }: ProductPageProps) {
   ];
 
   return (
-    <Container className="grid grid-cols-1 lg:grid-cols-[628fr_517fr] gap-0 lg:gap-[clamp(40px,11vw,133px)] px-4 lg:px-8 py-6 lg:py-10">
-      {/* Image gallery */}
-      <div>
-        <ProductImageGallery images={galleryImages} productName={product.name} />
-      </div>
-
-      {/* Product info panel */}
-      <div className="lg:sticky lg:top-8 lg:self-start space-y-6 pt-6 lg:pt-0">
-        {/* Name & price */}
-        <div className="">
-          <h1 className="mb-6 font-(family-name:--font-cormorant-garamond) text-4xl font-semibold leading-[1.1] text-black">
-            {product.name}
-          </h1>
-          <div className="mb-6 flex items-center gap-3">
-            <span className="font-(family-name:--font-jost) text-[20px] font-medium">
-              ₴{product.price.toLocaleString()}
-            </span>
-            {discount !== null && (
-              <>
-                <span className="font-(family-name:--font-jost) text-base font-normal text-[#818181] line-through">
-                  ₴{product.priceOld.toLocaleString()}
-                </span>
-                <span className="font-(family-name:--font-jost) text-base font-normal text-[#DF4441]">
-                  -{discount}%
-                </span>
-              </>
-            )}
-          </div>
+    <>
+      <Container className="grid grid-cols-1 lg:grid-cols-[628fr_517fr] gap-0 lg:gap-[clamp(40px,11vw,133px)] px-4 lg:px-8 py-6 lg:py-10">
+        {/* Image gallery */}
+        <div>
+          <ProductImageGallery images={galleryImages} productName={product.name} />
         </div>
 
-        {/* Color selector */}
-        {uniqueImages.length > 0 && (
-          <ColorSelector
-            images={uniqueImages}
-            selectedColor={effectiveColor}
-            onChange={setUserColor}
-          />
-        )}
+        {/* Product info panel */}
+        <div className="space-y-6 pt-6 lg:pt-0">
+          {/* Name & price */}
+          <div className="">
+            <h1 className="mb-6 font-(family-name:--font-cormorant-garamond) text-4xl font-semibold leading-[1.1] text-black">
+              {product.name}
+            </h1>
+            <div className="mb-6 flex items-center gap-3">
+              <span className="font-(family-name:--font-jost) text-[20px] font-medium">
+                ₴{product.price.toLocaleString()}
+              </span>
+              {discount !== null && (
+                <>
+                  <span className="font-(family-name:--font-jost) text-base font-normal text-[#818181] line-through">
+                    ₴{product.priceOld.toLocaleString()}
+                  </span>
+                  <span className="font-(family-name:--font-jost) text-base font-normal text-[#DF4441]">
+                    -{discount}%
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
 
-        {/* Size selector */}
-        <SizeSelector
-          sizes={sizes}
-          selectedSize={selectedSize}
-          onChange={(size) => setSelectedSize(size === selectedSize ? null : size)}
-        />
-
-        {/* Add to bag + wishlist */}
-        <div className="mb-2 flex gap-px">
-          <button
-            className={`flex-1 flex items-center justify-center gap-3 h-13 text-white font-(family-name:--font-jost) text-sm tracking-widest uppercase transition-colors duration-200 ${
-              inBag ? "bg-[#7A2633]" : "bg-[#010101] hover:bg-[#7A2633]"
-            }`}
-            onClick={() => setInBag(true)}
-          >
-
-            {inBag ? "In Bag" : "Add to Bag"}
-          </button>
-          <div
-            className={`w-13 h-13 flex items-center justify-center border transition-colors duration-200 ${
-              wishlisted
-                ? "bg-[#7A2633]"
-                : "bg-[#010101] hover:bg-[#7A2633]"
-            }`}
-          >
-            <WishlistButton
-              product={product}
-              activeIconClass="text-white fill-white"
-              defaultIconClass="text-white"
+          {/* Color selector */}
+          {uniqueImages.length > 0 && (
+            <ColorSelector
+              images={uniqueImages}
+              selectedColor={effectiveColor}
+              onChange={setUserColor}
             />
+          )}
+
+          {/* Size selector */}
+          <SizeSelector
+            sizes={sizes}
+            selectedSize={effectiveSelectedSize}
+            onChange={setSelectedSize}
+          />
+
+          {/* Add to bag + wishlist */}
+          <div className="mb-2 flex gap-px">
+            <button
+              className={`flex-1 flex items-center justify-center gap-3 h-13 text-white font-(family-name:--font-jost) text-sm tracking-widest uppercase transition-colors duration-200 ${
+                inBag ? "bg-[#7A2633]" : "bg-[#010101] hover:bg-[#7A2633]"
+              }`}
+              onClick={() => setInBag(true)}
+            >
+
+              {inBag ? "In Bag" : "Add to Bag"}
+            </button>
+            <div
+              className={`w-13 h-13 flex items-center justify-center border transition-colors duration-200 ${
+                wishlisted
+                  ? "bg-[#7A2633]"
+                  : "bg-[#010101] hover:bg-[#7A2633]"
+              }`}
+            >
+              <WishlistButton
+                product={product}
+                activeIconClass="text-white fill-white"
+                defaultIconClass="text-white"
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Stock / shipping info */}
-        <div className=" mb-2.75 flex items-center justify-between text-[14px] font-(family-name:--font-jost) text-[#010101]">
-          <span className="flex items-center gap-1.5">
-            <span className="inline-block w-2.5 h-2.5 rounded-full bg-amber-400" />
-            Low stock
-          </span>
-          <span>Free delivery on orders over 150 EUR</span>
-        </div>
+          {/* Stock / shipping info */}
+          <div className=" mb-2.75 flex items-center justify-between text-[14px] font-(family-name:--font-jost) text-[#010101]">
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block w-2.5 h-2.5 rounded-full bg-amber-400" />
+              Low stock
+            </span>
+            <span>Free delivery on orders over 150 EUR</span>
+          </div>
 
-        {/* Accordion */}
-        <ProductAccordion sections={accordionSections} />
-      </div>
-    </Container>
+          {/* Accordion */}
+          <ProductAccordion sections={accordionSections} />
+        </div>
+      </Container>
+
+      <YouMayAlsoLikeSection excludeId={Number(id)} />
+      <SocialSection />
+    </>
   );
 }

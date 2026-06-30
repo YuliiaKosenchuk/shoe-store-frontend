@@ -4,9 +4,14 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
+interface AccordionRow {
+  label: string;
+  value: string;
+}
+
 interface AccordionSection {
   title: string;
-  content: string;
+  content: string | AccordionRow[];
 }
 
 interface ProductAccordionProps {
@@ -35,7 +40,7 @@ export function ProductAccordion({ sections }: ProductAccordionProps) {
               onClick={() => toggle(i)}
               className="w-full flex items-center justify-between py-4 text-left"
             >
-              <span className="font-(family-name:--font-cormorant-garamond) text-[20px] leading-[1.3] tracking-widest font-semibold text-[#010101]">
+              <span className="font-(family-name:--font-cormorant-garamond) text-[20px] leading-[1.3] font-semibold text-[#010101]">
                 {section.title}
               </span>
               <ChevronDown
@@ -54,9 +59,20 @@ export function ProductAccordion({ sections }: ProductAccordionProps) {
                   transition={{ duration: 0.25, ease: "easeInOut" }}
                   className="overflow-hidden"
                 >
-                  <p className="font-(family-name:--font-jost) text-[16px] text-[#4E4E4E] leading-relaxed pb-4">
-                    {section.content}
-                  </p>
+                  {Array.isArray(section.content) ? (
+                    <dl className="font-(family-name:--font-jost) text-[16px] pb-4">
+                      {section.content.map((row) => (
+                        <div key={row.label} className="grid grid-cols-[1fr_1.5fr] py-2">
+                          <dt className="text-[16px] text-[#4E4E4E]">{row.label}</dt>
+                          <dd className="text-[16px] font-medium text-[#010101]">{row.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  ) : (
+                    <p className="font-(family-name:--font-jost) text-[16px] text-[#4E4E4E] leading-relaxed pb-4">
+                      {section.content}
+                    </p>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>

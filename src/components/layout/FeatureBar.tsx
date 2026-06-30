@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Container } from "@/components/ui/Container";
 
 const features = [
   {
@@ -25,22 +26,22 @@ const features = [
 
 export default function FeatureBar() {
   return (
-    <div className="bg-[#F4F3F2] py-6">
-      <div className="max-w-336 mx-auto px-8">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+    <div className="bg-[#F4F3F2] py-4">
+      <Container className="px-8">
+        <div className="grid grid-cols-2 sm:grid-cols-4 justify-items-center">
           {features.map(({ icon, title, subtitle }) => (
             <div key={title} className="flex items-center gap-4">
               <Image src={icon} alt={title} width={36} height={36} className="shrink-0" />
               <div>
-                <p
-                  className="text-black [font-family:var(--font-jost)]"
-                  style={{ fontSize: "20px", lineHeight: 1.3 }}
+                <h3
+                  className="mb-1 text-[#010101]/90 text-[20px] leading-[1.3] font-semibold"
+                  style={{ fontFamily: "var(--font-cormorant-garamond)" }}
                 >
                   {title}
-                </p>
+                </h3>
                 <p
-                  className="text-black/60 [font-family:var(--font-jost)]"
-                  style={{ fontSize: "14px", lineHeight: 1.4 }}
+                  className="text-[#4E4E4E]/70 text-[14px] leading-[1.4]"
+                  style={{ fontFamily: "var(--font-jost)" }}
                 >
                   {subtitle}
                 </p>
@@ -48,7 +49,7 @@ export default function FeatureBar() {
             </div>
           ))}
         </div>
-      </div>
+      </Container>
     </div>
   );
 }

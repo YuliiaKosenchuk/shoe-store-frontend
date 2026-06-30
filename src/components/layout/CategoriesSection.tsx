@@ -35,13 +35,13 @@ export default function CategoriesSection() {
               {/* Text overlay */}
               <div className="absolute inset-0 flex flex-col justify-center pl-8 md:pl-16">
                 <h2
-                  className="text-black uppercase tracking-wide leading-none text-[28px] md:text-[3.5vw] lg:text-[36px] font-semibold"
+                  className="text-[#010101]/90 uppercase tracking-wide leading-none text-[28px] md:text-[3.5vw] lg:text-[36px] font-semibold"
                   style={{ fontFamily: "var(--font-cormorant-garamond)" }}
                 >
                   {label}
                 </h2>
                 <span
-                  className="mt-2 inline-block text-black text-[16px] leading-[1.3] underline underline-offset-4 transition-opacity group-hover:opacity-60"
+                  className="mt-1.5 inline-block text-[#010101]/90 text-[16px] leading-[1.3] underline underline-offset-4 transition-opacity group-hover:opacity-60"
                   style={{ fontFamily: "var(--font-jost)" }}
                 >
                   Shop now

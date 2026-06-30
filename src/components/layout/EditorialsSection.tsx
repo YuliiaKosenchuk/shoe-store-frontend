@@ -54,7 +54,7 @@ export default function EditorialsSection() {
                 />
               </div>
               <p
-                className="text-[16px] leading-[1.3] tracking-widest uppercase font-semibold text-black mb-3"
+                className="text-[16px] leading-[1.3] tracking-widest uppercase font-medium text-black/90 mb-4"
                 style={{ fontFamily: "var(--font-jost)" }}
               >
                 {title}

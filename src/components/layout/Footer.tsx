@@ -3,8 +3,17 @@
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Container } from "@/components/ui/Container";
 import LogoComponent from "@/components/ui/LogoComponent";
+
+const newsletterSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+});
+
+type NewsletterFormValues = z.infer<typeof newsletterSchema>;
 
 const shopLinks = [
   { label: "Bags", href: "/bags" },
@@ -20,7 +29,6 @@ const customerServiceLinks = [
   { label: "Cookies", href: "/cookies" },
   { label: "Care Instructions", href: "/care-instructions" },
   { label: "FAQ", href: "/faq" },
-  { label: "Size Guide", href: "/size-guide" },
 ];
 
 const companyLinks = [
@@ -35,6 +43,13 @@ const legalLinks = [
   { label: "Returns Policy", href: "/returns-policy" },
 ];
 
+const navColumns = [
+  { heading: "Shop", links: shopLinks },
+  { heading: "Customer Service", links: customerServiceLinks },
+  { heading: "Company", links: companyLinks },
+  { heading: "Privacy & Legal", links: legalLinks },
+];
+
 const socialLinks = [
   { href: "https://instagram.com", label: "Instagram", src: "/images/instagram-logo.svg" },
   { href: "https://facebook.com", label: "Facebook", src: "/images/facebook-logo.svg" },
@@ -43,74 +58,74 @@ const socialLinks = [
 ];
 
 
-function VisaIcon() {
-  return (
-    <svg width="44" height="28" viewBox="0 0 44 28" fill="none">
-      <rect width="44" height="28" rx="4" fill="#1A1F71" />
-      <text x="22" y="19" textAnchor="middle" fill="white" fontSize="13" fontWeight="700" fontFamily="Arial, sans-serif" fontStyle="italic" letterSpacing="1">VISA</text>
-    </svg>
-  );
-}
-
-function MastercardIcon() {
-  return (
-    <svg width="44" height="28" viewBox="0 0 44 28" fill="none">
-      <rect width="44" height="28" rx="4" fill="#252525" />
-      <circle cx="17" cy="14" r="8" fill="#EB001B" />
-      <circle cx="27" cy="14" r="8" fill="#F79E1B" />
-      <path d="M22 7.67a8 8 0 0 1 0 12.66A8 8 0 0 1 22 7.67z" fill="#FF5F00" />
-    </svg>
-  );
-}
-
-function GooglePayIcon() {
-  return (
-    <svg width="44" height="28" viewBox="0 0 44 28" fill="none">
-      <rect width="44" height="28" rx="4" fill="white" stroke="#E0E0E0" />
-      <text x="7" y="18" fill="#4285F4" fontSize="10" fontWeight="700" fontFamily="Arial, sans-serif">G</text>
-      <text x="14" y="18" fill="#333" fontSize="10" fontWeight="500" fontFamily="Arial, sans-serif">Pay</text>
-    </svg>
-  );
-}
-
-function PayPalIcon() {
-  return (
-    <svg width="44" height="28" viewBox="0 0 44 28" fill="none">
-      <rect width="44" height="28" rx="4" fill="#003087" />
-      <text x="22" y="18" textAnchor="middle" fill="white" fontSize="11" fontWeight="700" fontFamily="Arial, sans-serif">PayPal</text>
-    </svg>
-  );
-}
 
 const jost = { fontFamily: "var(--font-jost)" } as const;
 
 export default function Footer() {
-  const [email, setEmail] = useState("");
+  const [showModal, setShowModal] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<NewsletterFormValues>({
+    resolver: zodResolver(newsletterSchema),
+  });
+
+  function onSubscribe() {
+    setShowModal(true);
+    reset();
+  }
 
   return (
-    <footer className="w-full bg-[#F8F8F8]">
-      <Container>
+    <>
+    {showModal && (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+        onClick={() => setShowModal(false)}
+      >
+        <div
+          className="bg-white px-12 py-10 flex flex-col items-center gap-4 max-w-sm w-full mx-4"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <p
+            className="text-[24px] leading-[1.1] tracking-tight text-black text-center"
+            style={{ fontFamily: "var(--font-cormorant-garamond)" }}
+          >
+            You&apos;re subscribed!
+          </p>
+          <p className="text-[14px] leading-normal text-black/70 text-center" style={jost}>
+            Thank you for signing up. You&apos;ll be the first to hear about new arrivals and exclusive offers.
+          </p>
+          <button
+            onClick={() => setShowModal(false)}
+            className="mt-2 bg-black text-white px-8 py-3 text-[13px] uppercase tracking-widest hover:bg-black/80 transition-colors"
+            style={jost}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    )}
+    <footer className="mb-6.5 w-full bg-[#F8F8F8]">
+      <Container className="px-8">
         {/* Nav columns */}
-        <div className="pt-16 pb-12 grid grid-cols-4 gap-8">
-          {[
-            { heading: "Shop", links: shopLinks },
-            { heading: "Customer Service", links: customerServiceLinks },
-            { heading: "Company", links: companyLinks },
-            { heading: "Privacy & Legal", links: legalLinks },
-          ].map(({ heading, links }) => (
+        <div className="pt-8 pb-6 grid grid-cols-2 gap-6 justify-items-start lg:grid-cols-4 lg:gap-8 xl:pt-12 xl:pb-8 xl:pl-19.25">
+          {navColumns.map(({ heading, links }) => (
             <div key={heading}>
               <p
-                className="mb-6 text-[14px] leading-normal font-semibold text-black uppercase tracking-widest"
+                className="mb-6 text-[16px] leading-[1.3] font-medium text-black tracking-widest"
                 style={jost}
               >
                 {heading}
               </p>
-              <ul className="flex flex-col gap-3">
+              <ul className="flex flex-col gap-2">
                 {links.map(({ label, href }) => (
                   <li key={href}>
                     <Link
                       href={href}
-                      className="text-[14px] leading-normal font-normal text-black hover:underline"
+                      className="text-[14px] leading-normal font-normal text-black hover:opacity-70 transition-opacity"
                       style={jost}
                     >
                       {label}
@@ -122,12 +137,12 @@ export default function Footer() {
           ))}
         </div>
 
-        <hr className="border-t border-black/10" />
+        <hr className="border-0 border-t border-[#B3B3B3] h-px" />
 
         {/* Newsletter + Social */}
-        <div className="py-12 grid grid-cols-[1fr_1fr_auto] gap-16 items-center">
-          <div>
-            <p className="mb-3 text-[14px] leading-normal font-semibold text-black" style={jost}>
+        <div className="py-6 flex flex-col gap-8 xl:py-8 xl:pl-19.25 xl:grid xl:grid-cols-4 xl:gap-6 xl:justify-items-start xl:items-center">
+          <div className="flex flex-col gap-4 xl:min-w-77.75">
+            <p className="text-[16px] leading-[1.3] font-medium text-black tracking-widest" style={jost}>
               Sign up for our newsletter
             </p>
             <p className="text-[14px] leading-normal font-normal text-black" style={jost}>
@@ -135,26 +150,30 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="flex">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="enter your email address"
-              className="flex-1 min-w-0 border border-black/20 bg-transparent px-4 py-3 text-[14px] leading-normal font-normal text-black placeholder:text-black/40 outline-none focus:border-black"
-              style={jost}
-            />
-            <button
-              type="button"
-              className="bg-black text-white px-6 py-3 text-[14px] leading-normal font-normal uppercase tracking-widest whitespace-nowrap hover:bg-black/80 transition-colors"
-              style={jost}
-            >
-              Subscribe
-            </button>
-          </div>
+          <form onSubmit={handleSubmit(onSubscribe)} noValidate className="xl:col-span-2 relative w-full">
+            <div className="flex flex-col sm:flex-row sm:justify-center">
+              <input
+                type="email"
+                placeholder="enter your email address"
+                {...register("email")}
+                className={`w-full sm:w-67 min-w-0 border bg-white px-4 py-3 text-[16px] leading-[1.3] font-normal text-black placeholder:text-[#B3B3B3] outline-none transition-colors ${errors.email ? "border-[#DF4441] focus:border-[#DF4441]" : "border-black/20 focus:border-black"}`}
+                style={jost}
+              />
+              <button
+                type="submit"
+                className="w-full sm:w-47.25 bg-black text-white py-3.75 text-[14px] leading-[1.3] font-medium uppercase tracking-widest whitespace-nowrap hover:bg-black/80 transition-colors"
+                style={jost}
+              >
+                Subscribe
+              </button>
+            </div>
+            <p className="absolute top-full mt-2 h-5 text-[13px] text-[#DF4441]" style={jost}>
+              {errors.email?.message ?? " "}
+            </p>
+          </form>
 
-          <div>
-            <p className="mb-4 text-[14px] leading-normal font-semibold text-black" style={jost}>
+          <div className="flex flex-col gap-4">
+            <p className="text-[16px] leading-[1.3] font-medium text-black tracking-[1%]" style={jost}>
               Follow us
             </p>
             <div className="flex items-center gap-4">
@@ -167,31 +186,35 @@ export default function Footer() {
                   aria-label={label}
                   className="hover:opacity-60 transition-opacity"
                 >
-                  <Image src={src} alt={label} width={20} height={20} />
+                  <Image src={src} alt={label} width={24} height={24} />
                 </a>
               ))}
             </div>
           </div>
         </div>
 
-        <hr className="border-t border-black/10" />
+        <hr className="border-0 border-t border-[#B3B3B3] h-px" />
 
         {/* Bottom bar */}
-        <div className="py-6 flex items-center justify-between">
+        <div className="pt-6 pb-8 flex flex-col items-center gap-6 lg:flex-row lg:justify-between xl:pt-8 xl:pb-12">
           <LogoComponent />
 
-          <p className="text-[14px] leading-normal font-normal text-black" style={jost}>
-            © 2026 &nbsp; Logo &nbsp; All rights reserved
-          </p>
+          <div className="flex items-center gap-2 text-[14px] leading-normal font-normal text-black" style={jost}>
+            <Image src="/images/copyright.svg" alt="Copyright" width={24} height={24} />
+            <span>2026</span>
+            <span>Logo</span>
+            <span>All rights reserved</span>
+          </div>
 
-          <div className="flex items-center gap-2">
-            <VisaIcon />
-            <MastercardIcon />
-            <GooglePayIcon />
-            <PayPalIcon />
+          <div className="flex items-center gap-4">
+            <Image src="/images/visa-icon.svg" alt="Visa" width={50} height={40} />
+            <Image src="/images/mastercard-icon.svg" alt="Mastercard" width={50} height={40} />
+            <Image src="/images/gpay-icon.jpg" alt="Google Pay" width={50} height={40} />
+            <Image src="/images/paypal-icon.svg" alt="PayPal" width={50} height={40} />
           </div>
         </div>
       </Container>
     </footer>
+    </>
   );
 }
