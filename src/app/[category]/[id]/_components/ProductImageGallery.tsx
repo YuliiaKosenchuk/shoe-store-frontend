@@ -8,19 +8,12 @@ interface ProductImageGalleryProps {
 export function ProductImageGallery({ images, productName }: ProductImageGalleryProps) {
   const displayImages = images.length > 0 ? images : [];
 
-  if (displayImages.length === 0) return null;
-
-  if (displayImages.length === 1) {
+  if (displayImages.length === 0) {
     return (
-      <div className="relative w-full aspect-[3/4] bg-[#F8F8F8]">
-        <Image
-          src={displayImages[0]}
-          alt={productName}
-          fill
-          className="object-cover"
-          priority
-          sizes="55vw"
-        />
+      <div className="grid grid-cols-2 gap-6">
+        <div className="relative aspect-3/4 bg-[#F8F8F8] flex items-center justify-center">
+          <span className="text-sm tracking-widest uppercase text-gray-400">No images</span>
+        </div>
       </div>
     );
   }

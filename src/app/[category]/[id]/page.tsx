@@ -1,9 +1,11 @@
 "use client";
 
 import { use, useLayoutEffect, useState } from "react";
+import { BellRing } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ProductsService } from "@/servises/products.service";
+import { NotifyModal } from "./_components/NotifyModal";
 // import { getMockProduct } from "@/servises/products.mock";
 import { WishlistButton } from "@/components/ui/WishlistButton";
 import { useWishlistStore } from "@/store/wishlist.store";
@@ -22,13 +24,22 @@ interface ProductPageProps {
 }
 
 export default function ProductPage({ params }: ProductPageProps) {
-  const { id } = use(params);
+  const { id, category } = use(params);
+  const router = useRouter();
   const searchParams = useSearchParams();
   const colorFromUrl = searchParams.get("color") ?? "";
 
   const [userColor, setUserColor] = useState<string | null>(null);
+
+  function handleColorChange(color: string) {
+    setUserColor(color);
+    const next = new URLSearchParams(searchParams.toString());
+    next.set("color", color);
+    router.replace(`/${category}/${id}?${next.toString()}`);
+  }
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [inBag, setInBag] = useState(false);
+  const [notifyColorModal, setNotifyColorModal] = useState<string | null>(null);
   const { hasHydrated, items: wishlistItems } = useWishlistStore();
   const { setPageTitle, clearPageTitle } = useBreadcrumbStore();
 
@@ -65,6 +76,10 @@ export default function ProductPage({ params }: ProductPageProps) {
   const effectiveSelectedSize = sizes.some((s) => s.size === selectedSize && s.available)
     ? selectedSize
     : smallestAvailable;
+
+  const colorVariants = variants.filter((v) => v.color === effectiveColor);
+  const isSelectedColorOOS =
+    colorVariants.length > 0 && colorVariants.every((v) => v.stockQty === 0);
 
   useLayoutEffect(() => {
     if (product) {
@@ -170,7 +185,8 @@ export default function ProductPage({ params }: ProductPageProps) {
             <ColorSelector
               images={uniqueImages}
               selectedColor={effectiveColor}
-              onChange={setUserColor}
+              onChange={handleColorChange}
+              variants={variants}
             />
           )}
 
@@ -183,15 +199,24 @@ export default function ProductPage({ params }: ProductPageProps) {
 
           {/* Add to bag + wishlist */}
           <div className="mb-2 flex gap-px">
-            <button
-              className={`flex-1 flex items-center justify-center gap-3 h-13 text-white font-(family-name:--font-jost) text-sm tracking-widest uppercase transition-colors duration-200 ${
-                inBag ? "bg-[#7A2633]" : "bg-[#010101] hover:bg-[#7A2633]"
-              }`}
-              onClick={() => setInBag(true)}
-            >
-
-              {inBag ? "In Bag" : "Add to Bag"}
-            </button>
+            {isSelectedColorOOS ? (
+              <button
+                className="flex-1 flex items-center justify-center gap-2 h-13 bg-[#010101] text-white font-(family-name:--font-jost) text-sm tracking-widest uppercase transition-colors duration-200 hover:bg-[#7A2633]"
+                onClick={() => setNotifyColorModal(effectiveColor)}
+              >
+                <BellRing size={15} strokeWidth={1.25} />
+                Notify me
+              </button>
+            ) : (
+              <button
+                className={`flex-1 flex items-center justify-center gap-3 h-13 text-white font-(family-name:--font-jost) text-sm tracking-widest uppercase transition-colors duration-200 ${
+                  inBag ? "bg-[#7A2633]" : "bg-[#010101] hover:bg-[#7A2633]"
+                }`}
+                onClick={() => setInBag(true)}
+              >
+                {inBag ? "In Bag" : "Add to Bag"}
+              </button>
+            )}
             <div
               className={`w-13 h-13 flex items-center justify-center border transition-colors duration-200 ${
                 wishlisted
@@ -220,6 +245,10 @@ export default function ProductPage({ params }: ProductPageProps) {
           <ProductAccordion sections={accordionSections} />
         </div>
       </Container>
+
+      {notifyColorModal !== null && (
+        <NotifyModal color={notifyColorModal} onClose={() => setNotifyColorModal(null)} />
+      )}
 
       <YouMayAlsoLikeSection excludeId={Number(id)} />
       <SocialSection />

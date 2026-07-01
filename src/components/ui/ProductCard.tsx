@@ -211,7 +211,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
       <div className="mt-3 space-y-1.5">
         <Link
           href={`/${product.category.toLowerCase()}/${product.id}?color=${encodeURIComponent(activeColor)}`}
-          className="font-(family-name:--font-jost) text-base font-normal leading-snug text-gray-900 hover:text-[#7A2633] transition-colors"
+          className="font-(family-name:--font-jost) text-base font-normal leading-snug text-gray-900 hover:text-[#7A2633] transition-colors truncate block"
         >
           {product.name}
         </Link>

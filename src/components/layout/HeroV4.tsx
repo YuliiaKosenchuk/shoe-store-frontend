@@ -64,10 +64,9 @@ export default function HeroV4() {
         />
       </motion.div>
 
-      {/* Layer 4 — UI overlays: constrained by Container */}
-      <motion.div className="absolute top-24 inset-0 z-30 pointer-events-none" style={{ y: modelY }}>
+      {/* Layer 4 — UI overlays: constrained by Container, no parallax */}
+      <div className="absolute top-24 inset-0 z-30 pointer-events-none">
         <Container className="h-full relative px-8">
-          {/* Top-left category labels */}
           <motion.div
             className="absolute top-14 left-8 flex gap-3 items-start pointer-events-auto"
             initial={{ opacity: 0 }}
@@ -85,28 +84,27 @@ export default function HeroV4() {
             </div>
           </motion.div>
 
-          {/* Bottom-right CTA */}
           <motion.div
-            className="absolute bottom-25 right-0 2xl:right-6 2xl:bottom-[35%] pointer-events-auto"
+            className="absolute bottom-12 right-7 pointer-events-auto"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "easeOut", delay: 0.55 }}
           >
             <Link
               href="/new-arrivals"
-              className="inline-flex items-center gap-5 font-(--font-jost) text-[#010101]/90 text-[24px] uppercase leading-normal tracking-widest hover:opacity-70 transition-opacity"
+              className="inline-flex items-center gap-6 font-(--font-jost) text-[#010101]/90 text-[24px] uppercase leading-normal tracking-widest hover:opacity-70 transition-opacity"
             >
               Discover Collection
               <Image
                 src="/images/arrow-right-hero.svg"
                 alt="arrow right"
-                width={40}
-                height={40}
+                width={53}
+                height={53}
               />
             </Link>
           </motion.div>
         </Container>
-      </motion.div>
+      </div>
     </section>
   );
 }

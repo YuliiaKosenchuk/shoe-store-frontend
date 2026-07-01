@@ -13,11 +13,15 @@ const notifySchema = z.object({
 type NotifyFormData = z.infer<typeof notifySchema>;
 
 interface NotifyModalProps {
-  size: number;
+  size?: number;
+  color?: string;
   onClose: () => void;
 }
 
-export function NotifyModal({ size, onClose }: NotifyModalProps) {
+export function NotifyModal({ size, color, onClose }: NotifyModalProps) {
+  const label = color
+    ? `colour ${color.charAt(0).toUpperCase() + color.slice(1).toLowerCase()}`
+    : `size ${size}`;
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -55,7 +59,7 @@ export function NotifyModal({ size, onClose }: NotifyModalProps) {
               You&apos;re on the list!
             </p>
             <p className="font-(family-name:--font-jost) text-sm text-[#4E4E4E] leading-relaxed">
-              We&apos;ll let you know as soon as size {size} is back in stock.
+              We&apos;ll let you know as soon as {label} is back in stock.
             </p>
           </div>
         ) : (
@@ -65,7 +69,7 @@ export function NotifyModal({ size, onClose }: NotifyModalProps) {
                 Notify me when available
               </h2>
               <p className="font-(family-name:--font-jost) text-sm text-[#4E4E4E]">
-                Size {size} is currently out of stock. Enter your email and we&apos;ll notify you as soon as it&apos;s available again.
+                {label.charAt(0).toUpperCase() + label.slice(1)} is currently out of stock. Enter your email and we&apos;ll notify you as soon as it&apos;s available again.
               </p>
             </div>
 

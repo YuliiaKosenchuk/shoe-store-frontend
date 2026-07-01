@@ -54,7 +54,7 @@ export function SizeSelector({ sizes, selectedSize, onChange }: SizeSelectorProp
                   <button
                     type="button"
                     onClick={() => setNotifySize(item.size)}
-                    className="absolute -top-1 -right-3 -translate-x-1/2 text-[#818181] transition-colors"
+                    className="absolute -top-1 -right-3 -translate-x-1/2 text-[#818181] hover:text-[#010101] transition-colors"
                     aria-label={`Notify me when size ${item.size} is available`}
                   >
                     <BellRing size={11} strokeWidth={1.25} />

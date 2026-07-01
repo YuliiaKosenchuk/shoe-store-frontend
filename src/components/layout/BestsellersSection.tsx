@@ -10,6 +10,7 @@ import { ProductsService } from "@/servises/products.service";
 // import { MOCK_PRODUCTS } from "@/servises/products.mock";
 
 const SCROLL_SPEED = 3;
+const AUTO_SCROLL_SPEED = 1;
 const HOVER_ZONE = 0.18;
 
 export default function BestsellersSection() {
@@ -21,11 +22,19 @@ export default function BestsellersSection() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     dragFree: true,
-    loop: false,
+    loop: true,
   });
 
   const rafRef = useRef<number | null>(null);
   const carouselZoneRef = useRef<HTMLDivElement | null>(null);
+
+  const setCarouselRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      carouselZoneRef.current = node;
+      emblaRef(node);
+    },
+    [emblaRef]
+  );
 
   const stopScroll = useCallback(() => {
     if (rafRef.current !== null) {
@@ -41,19 +50,18 @@ export default function BestsellersSection() {
 
       const engine = emblaApi.internalEngine();
 
-      const tick = () => {
-        const current = engine.location.get();
-        const next = current + speed;
-        const min = engine.limit.min;
-        const max = engine.limit.max;
+      const direction = speed > 0 ? 1 : -1;
 
-        if (next < min || next > max) {
-          stopScroll();
-          return;
-        }
+      const tick = () => {
+        const next = engine.offsetLocation.get() + speed;
 
         engine.location.set(next);
-        engine.translate.to(next);
+        engine.offsetLocation.set(next);
+        engine.previousLocation.set(next);
+        engine.target.set(next);
+        engine.scrollLooper.loop(direction);
+        engine.slideLooper.loop();
+        engine.translate.to(engine.offsetLocation.get());
         rafRef.current = requestAnimationFrame(tick);
       };
 
@@ -80,10 +88,24 @@ export default function BestsellersSection() {
     [startScroll, stopScroll]
   );
 
-  const handleMouseLeave = useCallback(() => {
+  const startAutoScroll = useCallback(() => {
+    startScroll(-AUTO_SCROLL_SPEED);
+  }, [startScroll]);
+
+  const handleMouseEnter = useCallback(() => {
     stopScroll();
-    emblaApi?.scrollTo(emblaApi.selectedScrollSnap());
-  }, [emblaApi, stopScroll]);
+  }, [stopScroll]);
+
+  const handleMouseLeave = useCallback(() => {
+    startAutoScroll();
+  }, [startAutoScroll]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on("reInit", startAutoScroll);
+    startAutoScroll();
+    return () => { emblaApi.off("reInit", startAutoScroll); };
+  }, [emblaApi, startAutoScroll]);
 
   useEffect(() => () => stopScroll(), [stopScroll]);
 
@@ -107,26 +129,21 @@ export default function BestsellersSection() {
         </Link>
       </div>
 
-      {/* Full-width carousel — hover zones only here */}
+      {/* Carousel — clipped from container left edge, extends full width to the right */}
       <div
-        ref={carouselZoneRef}
+        ref={setCarouselRef}
+        className="overflow-hidden"
+        style={{ marginLeft: "max(2rem, calc((100vw - 1344px) / 2 + 2rem))" }}
+        onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
-        <div ref={emblaRef} className="overflow-hidden">
-          <div
-            className="flex gap-6"
-            style={{
-              paddingLeft: "max(2rem, calc((100vw - 1344px) / 2 + 2rem))",
-              paddingRight: "max(2rem, calc((100vw - 1344px) / 2 + 2rem))",
-            }}
-          >
-            {products.map((product, i) => (
-              <div key={product.id} className="flex-none w-74.5">
-                <ProductCard product={product} priority={i < 4} />
-              </div>
-            ))}
-          </div>
+        <div className="flex">
+          {products.map((product, i) => (
+            <div key={product.id} className="flex-none w-74.5 mr-6">
+              <ProductCard product={product} priority={i < 4} />
+            </div>
+          ))}
         </div>
       </div>
     </section>
