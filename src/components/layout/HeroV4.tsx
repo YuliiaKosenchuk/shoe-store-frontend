@@ -17,7 +17,7 @@ export default function HeroV4() {
   return (
     <section
       ref={ref}
-      className="relative w-full h-screen -mt-18 z-0 overflow-hidden"
+      className="relative w-full h-screen -mt-24 z-0 overflow-hidden"
     >
       {/* Layer 1 — background: full viewport width */}
       <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>

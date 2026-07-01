@@ -35,8 +35,10 @@ export default function RootLayout({
     >
       <body className="flex flex-col min-h-screen">
         <QueryProvider>
-          <TopBar />
-          <Header />
+          <div className="sticky top-0 z-50">
+            <TopBar />
+            <Header />
+          </div>
           <Breadcrumbs />
           <div className="flex-1">{children}</div>
           <Footer />
