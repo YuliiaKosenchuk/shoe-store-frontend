@@ -220,6 +220,7 @@ export default function NewProductPage() {
         loading={variantLoading}
         serverError={variantError}
         productName={product?.name ?? ""}
+        productCategory={product?.category ?? ""}
         existingSkus={variants.map((v) => v.sku).filter(Boolean)}
         onSubmit={handleVariantSubmit}
         onClose={() => { setVariantModalOpen(false); setEditingVariant(null); setVariantError(null); }}

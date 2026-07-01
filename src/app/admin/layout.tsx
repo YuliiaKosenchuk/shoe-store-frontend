@@ -80,7 +80,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
       </aside>
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         <nav className="md:hidden flex gap-1 px-4 pt-6 pb-0 border-b border-gray-100">
           {navItems.map((item) => {
             const active = pathname.startsWith(item.href);
@@ -100,7 +100,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        <main className="flex-1 px-6 py-10">{children}</main>
+        <main className="flex-1 px-6 py-10 min-w-0">{children}</main>
       </div>
       </Container>
     </div>

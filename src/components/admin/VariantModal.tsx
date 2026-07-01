@@ -10,6 +10,7 @@ import type { ProductVariantDto } from "@/shemas/product.shema";
 import { AdminSelect } from "@/components/admin/AdminSelect";
 
 const COLORS = ["blue", "white", "brown", "red", "grey", "beige", "black"];
+const SIZES = ["35", "36", "37", "38", "39", "40", "41", "42"];
 
 function buildSku(productName: string, color: string, size: string | undefined, existingSkus: string[]): string {
   const model = productName.replace(/[^a-zA-Z0-9]/g, "").slice(0, 3).toUpperCase().padEnd(3, "X");
@@ -30,12 +31,13 @@ interface VariantModalProps {
   loading?: boolean;
   serverError?: string | null;
   productName?: string;
+  productCategory?: string;
   existingSkus?: string[];
   onSubmit: (data: CreateVariantFormValues) => Promise<void>;
   onClose: () => void;
 }
 
-export function VariantModal({ open, editing, loading, serverError, productName = "", existingSkus = [], onSubmit, onClose }: VariantModalProps) {
+export function VariantModal({ open, editing, loading, serverError, productName = "", productCategory = "", existingSkus = [], onSubmit, onClose }: VariantModalProps) {
   const {
     register,
     handleSubmit,
@@ -99,12 +101,28 @@ export function VariantModal({ open, editing, loading, serverError, productName 
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <Field label="Size" error={errors.size?.message}>
-                <input
-                  {...register("size")}
-                  type="text"
-                  className={inp(!!errors.size)}
-                  placeholder="38"
-                />
+                {productCategory === "SHOES" ? (
+                  <Controller
+                    control={control}
+                    name="size"
+                    render={({ field }) => (
+                      <AdminSelect
+                        value={field.value ?? ""}
+                        onChange={field.onChange}
+                        options={SIZES.map((s) => ({ value: s, label: s }))}
+                        placeholder="Select size"
+                        error={!!errors.size}
+                      />
+                    )}
+                  />
+                ) : (
+                  <input
+                    {...register("size")}
+                    type="text"
+                    className={inp(!!errors.size)}
+                    placeholder="One Size"
+                  />
+                )}
               </Field>
 
               <Field label="Color" error={errors.color?.message}>

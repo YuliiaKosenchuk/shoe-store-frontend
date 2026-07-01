@@ -241,6 +241,7 @@ export default function EditProductPage() {
         editing={editingVariant}
         loading={variantLoading}
         serverError={variantError}
+        productCategory={product.category}
         onSubmit={handleVariantSubmit}
         onClose={() => { setVariantModalOpen(false); setEditingVariant(null); setVariantError(null); }}
       />

@@ -11,9 +11,9 @@ import type { Product, ProductVariantDto, ProductImageDto } from "@/shemas/produ
 
 function InfoRow({ label, value }: { label: string; value: string | number | undefined | null }) {
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 min-w-0">
       <span className="text-[10px] tracking-widest text-gray-400 uppercase">{label}</span>
-      <span className="text-sm text-gray-900">{value ?? "—"}</span>
+      <span className="text-sm text-gray-900 wrap-break-word">{value ?? "—"}</span>
     </div>
   );
 }
@@ -69,19 +69,19 @@ export default function ViewProductPage() {
   return (
     <>
       <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-3">
-          <Link href="/admin/catalog" className="text-gray-400 hover:text-gray-700 transition-colors">
+        <div className="flex flex-1 items-center gap-3 min-w-0">
+          <Link href="/admin/catalog" className="text-gray-400 hover:text-gray-700 transition-colors shrink-0">
             <ChevronLeft size={18} strokeWidth={1.25} />
           </Link>
-          <div>
+          <div className="min-w-0 overflow-hidden">
             <p className="text-[10px] tracking-widest text-gray-400 uppercase mb-0.5">Admin / Catalog</p>
-            <h1 className="font-serif text-3xl text-gray-900">{product.name}</h1>
+            <h1 className="font-serif text-3xl text-gray-900 wrap-break-word">{product.name}</h1>
             <p className="text-xs text-gray-400 mt-0.5">#{product.id}</p>
           </div>
         </div>
         <Link
           href={`/admin/catalog/${productId}/edit`}
-          className="flex items-center gap-2 border border-gray-200 px-4 py-2.5 text-xs tracking-widest uppercase text-gray-700 hover:border-gray-400 transition-colors"
+          className="flex shrink-0 items-center gap-2 border border-gray-200 px-4 py-2.5 text-xs tracking-widest uppercase text-gray-700 hover:border-gray-400 transition-colors"
         >
           <Pencil size={13} strokeWidth={1.25} />
           Edit
@@ -91,7 +91,7 @@ export default function ViewProductPage() {
       {/* Basic Info */}
       <section className="mb-12">
         <h2 className="font-serif text-xl text-gray-900 mb-6">Basic Info</h2>
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4 *:min-w-0">
           <InfoRow label="Name" value={product.name} />
           <InfoRow label="Category" value={product.category} />
           <InfoRow label="Gender" value={product.gender} />
@@ -103,7 +103,7 @@ export default function ViewProductPage() {
         {product.description && (
           <div className="mt-6 flex flex-col gap-1">
             <span className="text-[10px] tracking-widest text-gray-400 uppercase">Description</span>
-            <p className="text-sm text-gray-900 leading-relaxed max-w-2xl">{product.description}</p>
+            <p className="text-sm text-gray-900 leading-relaxed max-w-2xl wrap-break-word">{product.description}</p>
           </div>
         )}
       </section>

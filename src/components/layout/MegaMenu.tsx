@@ -34,7 +34,7 @@ export default function MegaMenu({ data, onClose }: Props) {
           {hasSidebar && (
             <div className="flex gap-x-28">
               {/* Categories + secondary */}
-              <div>
+              <div className="min-w-34">
                 {data.categories && (
                   <>
                     <p className="text-[16px] font-medium leading-[1.3] text-black mb-8">{data.categoriesLabel ?? "Categories"}</p>
@@ -60,7 +60,7 @@ export default function MegaMenu({ data, onClose }: Props) {
 
               {/* Handpicked */}
               {data.handpicked && (
-                <div>
+                <div className="min-w-34">
                   <p className="text-[16px] font-medium leading-[1.3] text-black mb-8">Handpicked</p>
                   <div className="flex flex-col gap-4">
                     {data.handpicked.map((link) => (

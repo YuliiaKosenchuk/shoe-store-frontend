@@ -40,6 +40,7 @@ export default function ProductPage({ params }: ProductPageProps) {
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [inBag, setInBag] = useState(false);
   const [notifyColorModal, setNotifyColorModal] = useState<string | null>(null);
+  const [nameExpanded, setNameExpanded] = useState(false);
   const { hasHydrated, items: wishlistItems } = useWishlistStore();
   const { setPageTitle, clearPageTitle } = useBreadcrumbStore();
 
@@ -157,12 +158,21 @@ export default function ProductPage({ params }: ProductPageProps) {
         </div>
 
         {/* Product info panel */}
-        <div className="space-y-6 pt-6 lg:pt-0">
+        <div className="min-w-0 space-y-6 pt-6 lg:pt-0">
           {/* Name & price */}
           <div className="">
-            <h1 className="mb-6 font-(family-name:--font-cormorant-garamond) text-4xl font-semibold leading-[1.1] text-black">
+            <h1 className={`wrap-break-word font-(family-name:--font-cormorant-garamond) text-4xl font-semibold leading-[1.1] text-black ${nameExpanded ? "" : "line-clamp-2"}`}>
               {product.name}
             </h1>
+            {product.name.length > 30 && (
+              <button
+                onClick={() => setNameExpanded((v) => !v)}
+                className="mt-1 mb-6 font-(family-name:--font-jost) text-[14px] tracking-widest text-[#818181] hover:text-black transition-colors duration-200"
+              >
+                {nameExpanded ? "Show less" : "Show more"}
+              </button>
+            )}
+            {product.name.length <= 60 && <div className="mb-6" />}
             <div className="mb-6 flex items-center gap-3">
               <span className="font-(family-name:--font-jost) text-[20px] font-medium">
                 ₴{product.price.toLocaleString()}

@@ -55,8 +55,13 @@ export function Breadcrumbs() {
             <li key={crumb.href} className="flex items-center gap-3">
               <span className="text-black">/</span>
               {crumb.isLast ? (
-                <span className="text-black underline underline-offset-4">
-                  {crumb.label}
+                <span className="relative group">
+                  <span className="text-black underline underline-offset-4 max-w-60 truncate block">
+                    {crumb.label}
+                  </span>
+                  <span className="pointer-events-none absolute left-0 top-full mt-1.5 z-50 whitespace-nowrap bg-white text-black text-[12px] font-light px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                    {crumb.label}
+                  </span>
                 </span>
               ) : (
                 <Link
