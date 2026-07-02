@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { ProductsPageContent } from "@/components/ui/ProductsPageContent";
 
 export const metadata = {
@@ -5,5 +6,9 @@ export const metadata = {
 };
 
 export default function AccessoriesPage() {
-  return <ProductsPageContent filter="accessories" />;
+  return (
+    <Suspense>
+      <ProductsPageContent filter="accessories" />
+    </Suspense>
+  );
 }

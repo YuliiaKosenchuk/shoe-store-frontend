@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { ProductsPageContent } from "@/components/ui/ProductsPageContent";
 
 // import { MOCK_PRODUCTS } from "@/servises/products.mock";
@@ -7,5 +8,9 @@ export const metadata = {
 };
 
 export default function SalePage() {
-  return <ProductsPageContent filter="sale" />;
+  return (
+    <Suspense>
+      <ProductsPageContent filter="sale" />
+    </Suspense>
+  );
 }

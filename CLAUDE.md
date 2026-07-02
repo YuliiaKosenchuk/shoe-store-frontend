@@ -19,7 +19,7 @@ Next.js 16 App Router project (`src/app/`). All routes, layouts, and pages live 
 
 **React Compiler** is enabled (`reactCompiler: true` in `next.config.ts`) — avoid manual `useMemo`/`useCallback` unless there's a specific reason the compiler can't handle the case.
 
-**Styling**: Tailwind CSS v4 via PostCSS. No CSS Modules or styled-components.
+**Styling**: Tailwind CSS v4 via PostCSS. No CSS Modules or styled-components. Prefer Tailwind classes first (including arbitrary values, e.g. `auto-cols-[117px]`) for anything Tailwind can express. Use inline `style` only when a value can't be expressed as a static class — e.g. it's built from a JS variable/constant at runtime, since Tailwind's build-time scanner can't pick up dynamically interpolated class strings.
 
 **Design tokens**: Background color is `#F2EDE6` (warm beige). Accent color for links/focus is `#7A2633`. UI follows a minimal luxury aesthetic — serif headings, uppercase tracking-widest labels, black/gray palette.
 
@@ -117,3 +117,7 @@ All forms use `react-hook-form` with `zodResolver`. Validation mode is `onChange
 ## Code Style
 
 **Commented-out code**: Do not delete commented-out code blocks unless the user explicitly requests removal of comments/commented code. Treat them as intentional drafts or alternatives kept for reference.
+
+## Verification
+
+The user always verifies UI/frontend changes herself in the browser. Do not start the dev server or open a browser to test changes unless explicitly asked — implement the change, confirm it type-checks/lints, and hand it back for her to check visually.

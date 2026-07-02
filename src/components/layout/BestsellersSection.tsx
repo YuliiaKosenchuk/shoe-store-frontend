@@ -129,11 +129,10 @@ export default function BestsellersSection() {
         </Link>
       </div>
 
-      {/* Carousel — clipped from container left edge, extends full width to the right */}
+      {/* Carousel — full viewport width */}
       <div
         ref={setCarouselRef}
         className="overflow-hidden"
-        style={{ marginLeft: "max(2rem, calc((100vw - 1344px) / 2 + 2rem))" }}
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
