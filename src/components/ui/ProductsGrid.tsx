@@ -10,9 +10,10 @@ interface ProductsGridProps {
   isLoading?: boolean;
   selectedColors?: string[];
   selectedSizes?: string[];
+  newestProductIds?: Set<number>;
 }
 
-export function ProductsGrid({ products = [], isLoading, selectedColors, selectedSizes }: ProductsGridProps) {
+export function ProductsGrid({ products = [], isLoading, selectedColors, selectedSizes, newestProductIds }: ProductsGridProps) {
   if (isLoading) {
     return (
       <Container>
@@ -35,7 +36,7 @@ export function ProductsGrid({ products = [], isLoading, selectedColors, selecte
     <Container>
       <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fill,302px)] justify-center gap-x-6 gap-y-10 px-6 py-10">
         {products.map((product, i) => (
-          <ProductCard key={product.id} product={product} priority={i < 4} selectedColors={selectedColors} selectedSizes={selectedSizes} />
+          <ProductCard key={product.id} product={product} priority={i < 4} selectedColors={selectedColors} selectedSizes={selectedSizes} isNew={newestProductIds?.has(product.id)} />
         ))}
       </div>
     </Container>

@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { useQuery } from "@tanstack/react-query";
 import { ProductsService } from "@/servises/products.service";
+import { getNewestProductIds } from "@/components/products/getNewestProductIds";
 // import { MOCK_PRODUCTS } from "@/servises/products.mock";
 
 const SCROLL_SPEED = 3;
@@ -25,6 +26,7 @@ export default function DiscountsSection() {
   const products = allProducts.filter(
     (p) => p.priceOld > 0 && p.priceOld > p.price
   );
+  const newestProductIds = getNewestProductIds(allProducts);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
@@ -129,7 +131,7 @@ export default function DiscountsSection() {
           >
             {products.map((product, i) => (
               <div key={product.id} className="flex-none w-74.5">
-                <ProductCard product={product} priority={i < 4} />
+                <ProductCard product={product} priority={i < 4} isNew={newestProductIds.has(product.id)} />
               </div>
             ))}
           </div>

@@ -5,6 +5,7 @@ import { ProductsService } from "@/servises/products.service";
 import { ProductsGrid } from "@/components/ui/ProductsGrid";
 import { ProductFilterBar } from "@/components/products/ProductFilterBar";
 import { applyProductFilters } from "@/components/products/applyProductFilters";
+import { getNewestProductIds } from "@/components/products/getNewestProductIds";
 import { useProductFilters } from "@/hooks/useProductFilters";
 import { useProductVariantsMap } from "@/hooks/useProductVariantsMap";
 import type { Product } from "@/shemas/product.shema";
@@ -27,6 +28,7 @@ export function ProductsPageContent({ filter }: { filter: ProductPageFilter }) {
   });
 
   const baseProducts = data.filter(FILTERS[filter]);
+  const newestProductIds = getNewestProductIds(data);
   const { filters, sort } = useProductFilters();
   const sizeFilterActive = filters.size.length > 0;
   const { variantsByProductId, isLoading: variantsLoading } = useProductVariantsMap(baseProducts, sizeFilterActive);
@@ -36,7 +38,7 @@ export function ProductsPageContent({ filter }: { filter: ProductPageFilter }) {
   return (
     <>
       <ProductFilterBar baseProducts={baseProducts} filteredCount={products.length} isLoading={combinedLoading} />
-      <ProductsGrid products={products} isLoading={isLoading} selectedColors={filters.colour} selectedSizes={filters.size} />
+      <ProductsGrid products={products} isLoading={isLoading} selectedColors={filters.colour} selectedSizes={filters.size} newestProductIds={newestProductIds} />
     </>
   );
 }

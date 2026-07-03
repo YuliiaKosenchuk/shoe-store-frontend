@@ -38,6 +38,7 @@ interface ProductCardProps {
   priority?: boolean;
   selectedColors?: string[];
   selectedSizes?: string[];
+  isNew?: boolean;
 }
 
 function pickInitialColor(product: Product, selectedColors?: string[]): string {
@@ -51,7 +52,7 @@ function pickInitialColor(product: Product, selectedColors?: string[]): string {
   return product.colors[0] ?? firstImageColor ?? "";
 }
 
-export function ProductCard({ product, priority = false, selectedColors, selectedSizes }: ProductCardProps) {
+export function ProductCard({ product, priority = false, selectedColors, selectedSizes, isNew = false }: ProductCardProps) {
   const router = useRouter();
   const cardId = useId();
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
@@ -181,15 +182,20 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
             </div>
           </div>
         )}
-        {(matchedColorCount > 1 || matchedSizeCount > 1) && (
-          <div className="absolute top-3 left-3 z-10 flex flex-col items-start gap-1">
+        {(isNew || matchedColorCount > 1 || matchedSizeCount > 1) && (
+          <div className="absolute top-4 left-4 z-10 flex flex-col items-start gap-1">
+            {isNew && (
+              <span className="bg-[#010101] px-2.5 py-1 text-[14px] font-(family-name:--font-jost) text-white">
+                New
+              </span>
+            )}
             {matchedColorCount > 1 && (
-              <span className="bg-white/90 px-2 py-1 text-[11px] font-(family-name:--font-jost) uppercase tracking-widest text-black">
+              <span className="bg-white px-1 text-[14px] font-(family-name:--font-jost) text-[#010101]">
                 {matchedColorCount} colours
               </span>
             )}
             {matchedSizeCount > 1 && (
-              <span className="bg-white/90 px-2 py-1 text-[11px] font-(family-name:--font-jost) uppercase tracking-widest text-black">
+              <span className="bg-white px-1 py-1 text-[14px] font-(family-name:--font-jost) text-[#010101]">
                 {matchedSizeCount} sizes
               </span>
             )}

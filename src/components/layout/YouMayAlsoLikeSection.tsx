@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { useQuery } from "@tanstack/react-query";
 import { ProductsService } from "@/servises/products.service";
+import { getNewestProductIds } from "@/components/products/getNewestProductIds";
 
 const SCROLL_SPEED = 3;
 const HOVER_ZONE = 0.18;
@@ -20,6 +21,7 @@ export default function YouMayAlsoLikeSection({ excludeId }: Props) {
   });
 
   const filtered = products.filter((p) => p.id !== excludeId).slice(0, 10);
+  const newestProductIds = getNewestProductIds(products);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
@@ -116,7 +118,7 @@ export default function YouMayAlsoLikeSection({ excludeId }: Props) {
           >
             {filtered.map((product, i) => (
               <div key={product.id} className="flex-none w-74.5">
-                <ProductCard product={product} priority={i < 4} />
+                <ProductCard product={product} priority={i < 4} isNew={newestProductIds.has(product.id)} />
               </div>
             ))}
           </div>
