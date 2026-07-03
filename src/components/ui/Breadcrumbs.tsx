@@ -11,6 +11,8 @@ function isAllowed(pathname: string): boolean {
   return ALLOWED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 }
 
+const ALL_PREFIX_CATEGORIES = ["bags", "shoes", "accessories"];
+
 function formatSegment(segment: string): string {
   return segment
     .split("-")
@@ -31,8 +33,15 @@ export function Breadcrumbs() {
       const isLast = i === segments.length - 1;
       const isDynamicId = /^\d+$/.test(seg);
       if (isDynamicId && !pageTitle) return null;
+      const isTopCategory = i === 0 && ALL_PREFIX_CATEGORIES.includes(seg);
+      const label =
+        isDynamicId && pageTitle
+          ? pageTitle
+          : isTopCategory
+            ? `All ${formatSegment(seg)}`
+            : formatSegment(seg);
       return {
-        label: isDynamicId && pageTitle ? pageTitle : formatSegment(seg),
+        label,
         href: "/" + segments.slice(0, i + 1).join("/"),
         isLast,
       };

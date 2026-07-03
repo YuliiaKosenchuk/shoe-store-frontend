@@ -36,22 +36,37 @@ function toHex(color: string): string {
 interface ProductCardProps {
   product: Product;
   priority?: boolean;
+  selectedColors?: string[];
+  selectedSizes?: string[];
 }
 
-export function ProductCard({ product, priority = false }: ProductCardProps) {
+function pickInitialColor(product: Product, selectedColors?: string[]): string {
+  const filterMatch = selectedColors?.find((c) => product.colors.includes(c));
+  if (filterMatch) return filterMatch;
+
+  const firstImageColor = product.images[0]?.color;
+  if (firstImageColor && product.colors.includes(firstImageColor)) {
+    return firstImageColor;
+  }
+  return product.colors[0] ?? firstImageColor ?? "";
+}
+
+export function ProductCard({ product, priority = false, selectedColors, selectedSizes }: ProductCardProps) {
   const router = useRouter();
   const cardId = useId();
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const [activeColor, setActiveColor] = useState<string>(() => {
-    const firstImageColor = product.images[0]?.color;
-    if (firstImageColor && product.colors.includes(firstImageColor)) {
-      return firstImageColor;
-    }
-    return product.colors[0] ?? firstImageColor ?? "";
-  });
-  
+  const [activeColor, setActiveColor] = useState<string>(() => pickInitialColor(product, selectedColors));
+
+  const selectedColorsKey = selectedColors?.join(",") ?? "";
+  const [syncedKey, setSyncedKey] = useState(selectedColorsKey);
+  if (syncedKey !== selectedColorsKey) {
+    setSyncedKey(selectedColorsKey);
+    const filterMatch = selectedColors?.find((c) => product.colors.includes(c));
+    if (filterMatch) setActiveColor(filterMatch);
+  }
+
   const { data: allImages = null } = useQuery({
     queryKey: ["product-images", product.id],
     queryFn: () => ProductsService.getImages(product.id),
@@ -122,6 +137,18 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
       ? Math.round((1 - product.price / product.priceOld) * 100)
       : null;
 
+  const matchedColorCount = selectedColors
+    ? new Set(product.colors.filter((c) => selectedColors.includes(c))).size
+    : 0;
+
+  const matchedSizeCount = selectedSizes
+    ? new Set(
+        (variants ?? [])
+          .filter((v) => v.stockQty > 0 && selectedSizes.includes(String(v.size)))
+          .map((v) => String(v.size))
+      ).size
+    : 0;
+
   return (
     <div
       className="group flex flex-col cursor-pointer w-full"
@@ -152,6 +179,20 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+        {(matchedColorCount > 1 || matchedSizeCount > 1) && (
+          <div className="absolute top-3 left-3 z-10 flex flex-col items-start gap-1">
+            {matchedColorCount > 1 && (
+              <span className="bg-white/90 px-2 py-1 text-[11px] font-(family-name:--font-jost) uppercase tracking-widest text-black">
+                {matchedColorCount} colours
+              </span>
+            )}
+            {matchedSizeCount > 1 && (
+              <span className="bg-white/90 px-2 py-1 text-[11px] font-(family-name:--font-jost) uppercase tracking-widest text-black">
+                {matchedSizeCount} sizes
+              </span>
+            )}
           </div>
         )}
         <WishlistButton product={product} className="absolute top-3 right-3 z-10" hideWhenInactive />
@@ -188,15 +229,18 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           <div className="flex gap-3 flex-wrap">
             {allSizeNumbers.map((size) => {
               const available = availableSizeSet.has(size);
+              const matchesFilter = available && (selectedSizes?.includes(String(size)) ?? false);
               return (
                 <button
                   key={size}
                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
                   disabled={!available}
-                  className={`text-sm font-sans text-[14px] font-light transition-colors ${
-                    available
-                      ? "text-[#010101]/90 hover:text-[#7A2633] cursor-pointer"
-                      : "text-[#818181] cursor-default pointer-events-none"
+                  className={`text-sm font-sans text-[14px] transition-colors ${
+                    matchesFilter
+                      ? "font-medium text-[#7A2633] cursor-pointer"
+                      : available
+                      ? "font-light text-[#010101]/90 hover:text-[#7A2633] cursor-pointer"
+                      : "font-light text-[#818181] cursor-default pointer-events-none"
                   }`}
                 >
                   {size}
@@ -241,7 +285,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
               title={color}
             >
               <div
-                className="w-10 h-3"
+                className={`w-10 h-3 ${selectedColors?.includes(color) ? "ring-1 ring-offset-1 ring-[#7A2633]" : ""}`}
                 style={{ backgroundColor: toHex(color) }}
               />
               <div className="w-10 h-px">

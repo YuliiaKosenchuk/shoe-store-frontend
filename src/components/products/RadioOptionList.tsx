@@ -23,10 +23,14 @@ export function RadioOptionList({ options, selected, onChange }: RadioOptionList
             onClick={() => onChange(option.value)}
             className="flex items-center gap-3 text-left w-fit"
           >
-            <span className="flex-none w-4 h-4 rounded-full border border-gray-400 flex items-center justify-center">
-              {checked && <span className="w-2 h-2 rounded-full bg-[#7A2633]" />}
+            <span
+              className={`flex-none w-4.5 h-4.5 rounded-full border-[1.25px] border-[#010101] ${
+                checked ? "bg-[#010101]" : ""
+              }`}
+            />
+            <span className="text-[14px] leading-[1.3] text-nrmal text-[#010101]" style={{ fontFamily: "var(--font-jost)" }}>
+              {option.label}
             </span>
-            <span className="text-[14px] text-black">{option.label}</span>
           </button>
         );
       })}

@@ -43,6 +43,12 @@ function matchesFilters(product: Product, filters: ProductFilterState, variantsB
   return true;
 }
 
+function hasSizeInStock(product: Product, filters: ProductFilterState, variantsByProductId: Map<number, ProductVariantDto[]>): boolean {
+  if (filters.size.length === 0) return true;
+  const variants = variantsByProductId.get(product.id) ?? [];
+  return filters.size.some((s) => variants.some((v) => String(v.size) === s && v.stockQty > 0));
+}
+
 function sortProducts(products: Product[], sort: SortOption): Product[] {
   const sorted = products.slice();
   switch (sort) {
@@ -67,5 +73,13 @@ export function applyProductFilters(
   variantsByProductId: Map<number, ProductVariantDto[]> = new Map(),
 ): Product[] {
   const filtered = products.filter((product) => matchesFilters(product, filters, variantsByProductId));
-  return sortProducts(filtered, sort);
+  const sorted = sortProducts(filtered, sort);
+
+  if (filters.size.length === 0) return sorted;
+
+  // Stable sort: products with the selected size actually in stock float to
+  // the top, while preserving the chosen sort order within each group.
+  return sorted
+    .slice()
+    .sort((a, b) => Number(!hasSizeInStock(a, filters, variantsByProductId)) - Number(!hasSizeInStock(b, filters, variantsByProductId)));
 }

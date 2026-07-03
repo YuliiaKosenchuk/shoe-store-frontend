@@ -8,9 +8,11 @@ import { Container } from "./Container";
 interface ProductsGridProps {
   products?: Product[];
   isLoading?: boolean;
+  selectedColors?: string[];
+  selectedSizes?: string[];
 }
 
-export function ProductsGrid({ products = [], isLoading }: ProductsGridProps) {
+export function ProductsGrid({ products = [], isLoading, selectedColors, selectedSizes }: ProductsGridProps) {
   if (isLoading) {
     return (
       <Container>
@@ -33,7 +35,7 @@ export function ProductsGrid({ products = [], isLoading }: ProductsGridProps) {
     <Container>
       <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fill,302px)] justify-center gap-x-6 gap-y-10 px-6 py-10">
         {products.map((product, i) => (
-          <ProductCard key={product.id} product={product} priority={i < 4} />
+          <ProductCard key={product.id} product={product} priority={i < 4} selectedColors={selectedColors} selectedSizes={selectedSizes} />
         ))}
       </div>
     </Container>

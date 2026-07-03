@@ -10,12 +10,19 @@ import LogoComponent from "../ui/LogoComponent";
 import { Container } from "../ui/Container";
 import MegaMenu, { MegaMenuData } from "./MegaMenu";
 
-type NavItem = { label: string; href: string; menu?: MegaMenuData };
+type NavItem = {
+  label: string;
+  href: string;
+  menu?: MegaMenuData;
+  /** When false, the top-level label doesn't navigate on click — only the mega menu links do. */
+  navigatesOnClick?: boolean;
+};
 
 const navItems: NavItem[] = [
   {
     label: "Bags",
     href: "/bags",
+    navigatesOnClick: false,
     menu: {
       categories: [
         { label: "All bags", href: "/bags" },
@@ -41,6 +48,7 @@ const navItems: NavItem[] = [
   {
     label: "Shoes",
     href: "/shoes",
+    navigatesOnClick: false,
     menu: {
       categories: [
         { label: "All shoes", href: "/shoes" },
@@ -73,6 +81,7 @@ const navItems: NavItem[] = [
   {
     label: "Accessories",
     href: "/accessories",
+    navigatesOnClick: false,
     menu: {
       categories: [
         { label: "All accessories", href: "/accessories" },
@@ -254,9 +263,17 @@ export default function Header() {
                       item.menu ? openDropdown(item.label) : setHoveredNav(null)
                     }
                   >
-                    <Link href={item.href} className={navLinkCls(isActive)}>
-                      {item.label}
-                    </Link>
+                    {item.navigatesOnClick === false ? (
+                      <span
+                        className={`cursor-default ${navLinkCls(isActive)}`}
+                      >
+                        {item.label}
+                      </span>
+                    ) : (
+                      <Link href={item.href} className={navLinkCls(isActive)}>
+                        {item.label}
+                      </Link>
+                    )}
                   </div>
                 );
               })}

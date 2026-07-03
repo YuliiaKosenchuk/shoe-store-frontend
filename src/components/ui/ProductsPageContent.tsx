@@ -36,7 +36,7 @@ export function ProductsPageContent({ filter }: { filter: ProductPageFilter }) {
   return (
     <>
       <ProductFilterBar baseProducts={baseProducts} filteredCount={products.length} isLoading={combinedLoading} />
-      <ProductsGrid products={products} isLoading={isLoading} />
+      <ProductsGrid products={products} isLoading={isLoading} selectedColors={filters.colour} selectedSizes={filters.size} />
     </>
   );
 }
