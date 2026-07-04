@@ -1,11 +1,17 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useSyncCartOnAuth } from "@/hooks/useCart";
 
 function OAuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const syncCartOnAuth = useSyncCartOnAuth();
+  // syncCartOnAuth gets a new identity whenever the cart store updates
+  // (e.g. after setCartId inside it runs) — this ref stops that from
+  // re-triggering the effect and re-running the sync/redirect.
+  const syncStartedRef = useRef(false);
 
   // Derive synchronously from URL params — no setState needed
   const oauthError = searchParams.get("error");
@@ -24,13 +30,17 @@ function OAuthCallbackContent() {
 
   // Side effects only: save token and navigate
   useEffect(() => {
-    if (!token) return;
+    if (!token || syncStartedRef.current) return;
+    syncStartedRef.current = true;
 
     console.log("[OAuthCallback] Token received, length:", token.length);
     localStorage.setItem("token", token);
-    console.log("[OAuthCallback] Token saved to localStorage, navigating to /cabinet");
-    router.replace("/cabinet");
-  }, [token, router]);
+    console.log("[OAuthCallback] Token saved to localStorage, syncing cart");
+    syncCartOnAuth().finally(() => {
+      console.log("[OAuthCallback] Navigating to /cabinet");
+      router.replace("/cabinet");
+    });
+  }, [token, router, syncCartOnAuth]);
 
   useEffect(() => {
     if (oauthError) {

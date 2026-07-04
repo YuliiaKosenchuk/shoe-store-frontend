@@ -1,7 +1,18 @@
 import axios from 'axios';
 
+const SENSITIVE_FIELDS = ['password', 'repeatedPassword', 'confirmPassword', 'token', 'newPassword'];
+
+function redact(data: unknown): unknown {
+  if (!data || typeof data !== 'object') return data;
+  const clone: Record<string, unknown> = { ...(data as Record<string, unknown>) };
+  for (const key of Object.keys(clone)) {
+    if (SENSITIVE_FIELDS.includes(key)) clone[key] = '***';
+  }
+  return clone;
+}
+
 export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080', 
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -15,7 +26,7 @@ apiClient.interceptors.request.use(
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
-    console.log(`[API] → ${config.method?.toUpperCase()} ${config.url}`);
+    console.log(`[API] → ${config.method?.toUpperCase()} ${config.url}`, redact(config.data));
     return config;
   },
   (error) => {
@@ -26,7 +37,7 @@ apiClient.interceptors.request.use(
 
 apiClient.interceptors.response.use(
   (response) => {
-    console.log(`[API] ← ${response.status} ${response.config.url}`);
+    console.log(`[API] ← ${response.status} ${response.config.url}`, response.data);
     return response;
   },
   (error) => {

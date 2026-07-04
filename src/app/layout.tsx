@@ -5,6 +5,7 @@ import TopBar from "@/components/layout/TopBar";
 import Footer from "@/components/layout/Footer";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CookieBanner } from "@/components/ui/CookieBanner";
+import { AnalyticsBootstrap } from "@/components/layout/AnalyticsBootstrap";
 import QueryProvider from "@/components/providers/QueryProvider";
 import "./globals.css";
 
@@ -43,6 +44,7 @@ export default function RootLayout({
           <div className="flex-1">{children}</div>
           <Footer />
           <CookieBanner />
+          <AnalyticsBootstrap />
         </QueryProvider>
       </body>
     </html>

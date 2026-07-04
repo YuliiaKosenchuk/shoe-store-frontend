@@ -8,6 +8,7 @@ import axios from "axios";
 import Link from "next/link";
 import { LoginFormValues, loginSchema } from "@/shemas/login.shema";
 import { AuthService } from "@/servises/auth.service";
+import { useSyncCartOnAuth } from "@/hooks/useCart";
 import { Field } from "./Field";
 import { PasswordField } from "./PasswordField";
 // import { BackButton } from "@/components/ui/BackButton";
@@ -17,6 +18,7 @@ export default function LoginForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const syncCartOnAuth = useSyncCartOnAuth();
 
   const {
     register,
@@ -32,6 +34,7 @@ export default function LoginForm() {
     setServerError(null);
     try {
       await AuthService.login(data);
+      await syncCartOnAuth();
       router.push("/cabinet");
     } catch (error) {
       if (axios.isAxiosError(error)) {

@@ -6,9 +6,11 @@ import { usePathname } from "next/navigation";
 import { Search, User, Heart, Menu, X, Handbag } from "lucide-react";
 import { UsersService } from "@/servises/users.service";
 import { useWishlistStore } from "@/store/wishlist.store";
+import { useCart } from "@/hooks/useCart";
 import LogoComponent from "../ui/LogoComponent";
 import { Container } from "../ui/Container";
 import MegaMenu, { MegaMenuData } from "./MegaMenu";
+import { CartDrawer } from "./CartDrawer";
 
 type NavItem = {
   label: string;
@@ -159,6 +161,7 @@ const navItems: NavItem[] = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [initials, setInitials] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
@@ -167,6 +170,8 @@ export default function Header() {
   const wishlistCount = useWishlistStore((state) =>
     state.hasHydrated ? state.items.length : 0,
   );
+  const { cart, hasHydrated: cartHydrated } = useCart();
+  const cartCount = cartHydrated ? (cart?.productsCount ?? 0) : 0;
 
   const openDropdown = (label: string) => {
     if (closeTimeout.current) clearTimeout(closeTimeout.current);
@@ -330,7 +335,21 @@ export default function Header() {
                 </span>
               )}
             </Link>
-            <Handbag size={24} strokeWidth={1.25} className={iconCls} />
+            <button
+              type="button"
+              onClick={() => setCartDrawerOpen(true)}
+              aria-label="Cart"
+              className={`relative ${iconCls}`}
+            >
+              <Handbag size={24} strokeWidth={1.25} />
+              {cartCount > 0 && (
+                <span
+                  className={`absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full font-(family-name:--font-jost) text-[8px] font-medium leading-none ${isTransparent ? "bg-white text-black" : "bg-black text-white"}`}
+                >
+                  {cartCount}
+                </span>
+              )}
+            </button>
           </div>
         </div>
       </Container>
@@ -364,6 +383,8 @@ export default function Header() {
           })}
         </nav>
       )}
+
+      <CartDrawer isOpen={cartDrawerOpen} onClose={() => setCartDrawerOpen(false)} />
     </header>
   );
 }

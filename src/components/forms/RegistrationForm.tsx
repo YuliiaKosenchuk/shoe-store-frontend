@@ -13,6 +13,7 @@ import { PasswordField } from "./PasswordField";
 import { Field } from "./Field";
 import { PhoneField } from "./PhoneField";
 import { AuthService } from "@/servises/auth.service";
+import { useSyncCartOnAuth } from "@/hooks/useCart";
 // import { BackButton } from "@/components/ui/BackButton";
 import { PolicyModal } from "@/components/ui/PolicyModal";
 
@@ -22,6 +23,7 @@ export default function RegistrationForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [policyModal, setPolicyModal] = useState<"terms" | "privacy" | null>(null);
+  const syncCartOnAuth = useSyncCartOnAuth();
 
   const {
     register,
@@ -38,6 +40,7 @@ export default function RegistrationForm() {
     setServerError(null);
     try {
       await AuthService.register(data);
+      await syncCartOnAuth();
       router.push("/cabinet");
     } catch (error) {
       if (axios.isAxiosError(error)) {

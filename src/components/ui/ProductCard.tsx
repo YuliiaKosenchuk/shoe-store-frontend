@@ -132,7 +132,6 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
       .filter((v) => v.color === activeColor && v.stockQty > 0)
       .map((v) => Number(v.size))
   );
-
   const discount =
     product.priceOld > 0 && product.priceOld > product.price
       ? Math.round((1 - product.price / product.priceOld) * 100)
@@ -183,14 +182,14 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
           </div>
         )}
         {(isNew || matchedColorCount > 1 || matchedSizeCount > 1) && (
-          <div className="absolute top-4 left-4 z-10 flex flex-col items-start gap-1">
+          <div className="absolute top-4 left-4 z-10 flex flex-col items-start gap-2">
             {isNew && (
               <span className="bg-[#010101] px-2.5 py-1 text-[14px] font-(family-name:--font-jost) text-white">
                 New
               </span>
             )}
             {matchedColorCount > 1 && (
-              <span className="bg-white px-1 text-[14px] font-(family-name:--font-jost) text-[#010101]">
+              <span className="bg-white px-1 py-1 text-[14px] font-(family-name:--font-jost) text-[#010101]">
                 {matchedColorCount} colours
               </span>
             )}
@@ -235,16 +234,13 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
           <div className="flex gap-3 flex-wrap">
             {allSizeNumbers.map((size) => {
               const available = availableSizeSet.has(size);
-              const matchesFilter = available && (selectedSizes?.includes(String(size)) ?? false);
               return (
                 <button
                   key={size}
                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
                   disabled={!available}
                   className={`text-sm font-sans text-[14px] transition-colors ${
-                    matchesFilter
-                      ? "font-medium text-[#7A2633] cursor-pointer"
-                      : available
+                    available
                       ? "font-light text-[#010101]/90 hover:text-[#7A2633] cursor-pointer"
                       : "font-light text-[#818181] cursor-default pointer-events-none"
                   }`}
@@ -291,7 +287,7 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
               title={color}
             >
               <div
-                className={`w-10 h-3 ${selectedColors?.includes(color) ? "ring-1 ring-offset-1 ring-[#7A2633]" : ""}`}
+                className="w-10 h-3"
                 style={{ backgroundColor: toHex(color) }}
               />
               <div className="w-10 h-px">

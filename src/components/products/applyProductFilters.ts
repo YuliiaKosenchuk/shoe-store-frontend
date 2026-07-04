@@ -57,10 +57,10 @@ function sortProducts(products: Product[], sort: SortOption): Product[] {
     case "price-asc":
       return sorted.sort((a, b) => a.price - b.price);
     case "newest":
+    case "featured":
       return sorted.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     case "most-popular":
-    case "featured":
-      // No popularity/featured signal from the backend yet; keep fetched order
+      // No popularity signal from the backend yet; keep fetched order
       // until that data exists.
       return sorted;
   }

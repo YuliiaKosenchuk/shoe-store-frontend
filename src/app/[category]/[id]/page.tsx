@@ -10,6 +10,7 @@ import { NotifyModal } from "./_components/NotifyModal";
 import { WishlistButton } from "@/components/ui/WishlistButton";
 import { useWishlistStore } from "@/store/wishlist.store";
 import { useBreadcrumbStore } from "@/store/breadcrumb.store";
+import { useCart, useAddCartItem } from "@/hooks/useCart";
 import { ProductImageGallery } from "./_components/ProductImageGallery";
 import { ColorSelector } from "./_components/ColorSelector";
 import { SizeSelector } from "./_components/SizeSelector";
@@ -38,11 +39,12 @@ export default function ProductPage({ params }: ProductPageProps) {
     router.replace(`/${category}/${id}?${next.toString()}`);
   }
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
-  const [inBag, setInBag] = useState(false);
   const [notifyColorModal, setNotifyColorModal] = useState<string | null>(null);
   const [nameExpanded, setNameExpanded] = useState(false);
   const { hasHydrated, items: wishlistItems } = useWishlistStore();
   const { setPageTitle, clearPageTitle } = useBreadcrumbStore();
+  const { cart } = useCart();
+  const addItem = useAddCartItem();
 
   // Fetch all images separately — avoids the backend JOIN bug on GET /api/products/:id (no params)
   const { data: allImages = [], isError: imagesError } = useQuery({
@@ -81,6 +83,19 @@ export default function ProductPage({ params }: ProductPageProps) {
   const colorVariants = variants.filter((v) => v.color === effectiveColor);
   const isSelectedColorOOS =
     colorVariants.length > 0 && colorVariants.every((v) => v.stockQty === 0);
+
+  // Cart doesn't expose productVariantId on line items — match on (color, size),
+  // safe here since this page is scoped to a single product.
+  const matchedVariant = variants.find(
+    (v) => v.color === effectiveColor && Number(v.size) === effectiveSelectedSize
+  );
+  const inBag = matchedVariant
+    ? (cart?.cartItems ?? []).some(
+        (item) =>
+          item.color === matchedVariant.color &&
+          Number(item.size) === Number(matchedVariant.size)
+      )
+    : false;
 
   useLayoutEffect(() => {
     if (product) {
@@ -219,12 +234,16 @@ export default function ProductPage({ params }: ProductPageProps) {
               </button>
             ) : (
               <button
-                className={`flex-1 flex items-center justify-center gap-3 h-13 text-white font-(family-name:--font-jost) text-sm tracking-widest uppercase transition-colors duration-200 ${
+                className={`flex-1 flex items-center justify-center gap-3 h-13 text-white font-(family-name:--font-jost) text-sm tracking-widest uppercase transition-colors duration-200 disabled:cursor-not-allowed ${
                   inBag ? "bg-[#7A2633]" : "bg-[#010101] hover:bg-[#7A2633]"
                 }`}
-                onClick={() => setInBag(true)}
+                disabled={!matchedVariant || addItem.isPending}
+                onClick={() => {
+                  if (!matchedVariant) return;
+                  addItem.mutate({ productVariantId: matchedVariant.id, quantity: 1 });
+                }}
               >
-                {inBag ? "In Bag" : "Add to Bag"}
+                {addItem.isPending ? "Adding…" : inBag ? "In Bag" : "Add to Bag"}
               </button>
             )}
             <div

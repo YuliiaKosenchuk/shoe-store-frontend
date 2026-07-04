@@ -1,5 +1,6 @@
 import { apiClient } from '@/lib/apiClient';
 import { RegistrationFormValues } from '@/shemas/registration.shema';
+import { useCartStore } from '@/store/cart.store';
 
 type RegisterPayload = Omit<RegistrationFormValues, 'confirmPassword'> & {
   repeatedPassword: string;
@@ -82,7 +83,8 @@ export const AuthService = {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      console.log('[Auth] Logout: session cleared');
+      useCartStore.getState().logoutClearCart();
+      console.log('[Auth] Logout: session cleared, cart hidden until this user logs back in');
       window.location.href = '/login';
     }
   }

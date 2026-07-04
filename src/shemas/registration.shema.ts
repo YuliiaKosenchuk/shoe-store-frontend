@@ -33,7 +33,7 @@ export const registrationSchema = z
       .string()
       .trim()
       .min(1, "Phone number is required")
-      .regex(/^\+[0-9]{7,15}$/, "Please enter a valid phone number"),
+      .regex(/^\+[1-9][0-9]{9,14}$/, "Please enter a valid phone number"),
 
     password: z
       .string()

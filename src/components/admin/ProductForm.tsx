@@ -101,7 +101,7 @@ export function ProductForm({
           <input {...register("price", { valueAsNumber: true })} type="number" step="0.01" className={inputCls(!!errors.price)} placeholder="0.00" />
         </FormField>
 
-        <FormField label="Old Price (optional)" error={errors.priceOld?.message}>
+        <FormField label="Old Price" error={errors.priceOld?.message}>
           <input {...register("priceOld", { valueAsNumber: true })} type="number" step="0.01" className={inputCls(!!errors.priceOld)} placeholder="0.00" />
         </FormField>
 
