@@ -6,7 +6,11 @@ export function GET(request: NextRequest): NextResponse<GeoLocation> {
   // Note: geolocation().region is the Vercel *compute* region (e.g. "dev1"
   // locally, "iad1" in prod) — not the visitor's location. The visitor's
   // state/province is countryRegion, from the x-vercel-ip-country-region header.
-  const { city, country, countryRegion, latitude, longitude } = geolocation(request);
+  const { city, country, countryRegion, latitude, longitude } =
+    geolocation(request);
+  console.log("[api/geo] raw geolocation() result:", {
+    country,
+  });
   const geo: GeoLocation = {
     city: city ?? null,
     country: country ?? null,
@@ -14,6 +18,6 @@ export function GET(request: NextRequest): NextResponse<GeoLocation> {
     latitude: latitude ?? null,
     longitude: longitude ?? null,
   };
-  console.log("[api/geo] resolved from request headers:", geo);
+  console.log("[api/geo] resolved from request headers:", geo.country);
   return NextResponse.json(geo);
 }

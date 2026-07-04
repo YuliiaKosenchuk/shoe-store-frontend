@@ -14,7 +14,7 @@ export const AnalyticsService = {
         return null;
       }
       const geo = await response.json();
-      console.log("[Analytics] getGeo received:", geo);
+      console.log("[Analytics] getGeo received:", geo.country);
       return geo;
     } catch (error) {
       console.error("[Analytics] getGeo failed:", error);

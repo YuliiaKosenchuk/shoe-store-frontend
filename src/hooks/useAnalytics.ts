@@ -8,7 +8,7 @@ import type { GeoLocation } from "@/shemas/analytics.shema";
 // once and reused rather than hitting /api/geo per tracked event.
 let geoPromise: Promise<GeoLocation | null> | null = null;
 
-function getGeoOnce(): Promise<GeoLocation | null> {
+export function getGeoOnce(): Promise<GeoLocation | null> {
   if (!geoPromise) {
     geoPromise = AnalyticsService.getGeo();
   }
@@ -25,7 +25,7 @@ export function useAnalytics() {
       geo,
       data,
     };
-    console.log("[useAnalytics] sending event:", payload);
+    console.log("[useAnalytics] sending event:", { ...payload, geo: geo?.country });
     try {
       await AnalyticsService.trackEvent(payload);
     } catch (error) {
