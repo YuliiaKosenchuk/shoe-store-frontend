@@ -41,7 +41,7 @@ export default function RegistrationForm() {
     try {
       await AuthService.register(data);
       await syncCartOnAuth();
-      router.push("/cabinet");
+      router.push("/");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 409) {

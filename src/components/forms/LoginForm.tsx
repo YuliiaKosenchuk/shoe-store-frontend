@@ -35,7 +35,7 @@ export default function LoginForm() {
     try {
       await AuthService.login(data);
       await syncCartOnAuth();
-      router.push("/cabinet");
+      router.push("/");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;

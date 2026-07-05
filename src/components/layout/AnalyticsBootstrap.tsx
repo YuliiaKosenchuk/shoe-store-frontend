@@ -10,6 +10,18 @@ import { getCookie, setSessionCookie } from "@/lib/cookies";
 // once the browser is fully closed.
 const SESSION_TRACKED_KEY = "session_tracked";
 
+// Only the origin, not the full referrer URL — the path/query can carry
+// search terms, campaign params, or tokens from the referring site that we
+// don't want to store.
+function getReferrerOrigin(): string | null {
+  if (!document.referrer) return null;
+  try {
+    return new URL(document.referrer).origin;
+  } catch {
+    return null;
+  }
+}
+
 // Fires once per real entry (fresh page load / new tab) — layout doesn't
 // remount on client-side navigation, so this won't refire per page view.
 export function AnalyticsBootstrap() {
@@ -34,8 +46,8 @@ export function AnalyticsBootstrap() {
         console.log("[AnalyticsBootstrap] geo received for session:", geo?.country);
 
         const payload = {
-          referrer: document.referrer || null,
-          country: geo?.country ?? null,
+          referrer: getReferrerOrigin(),
+          countryCode: geo?.country ?? null,
         };
         console.log("[AnalyticsBootstrap] sending createSession payload:", payload);
 
