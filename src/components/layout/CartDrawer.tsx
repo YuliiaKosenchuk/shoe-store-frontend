@@ -141,7 +141,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         </button>
                       </div>
                       <span className="font-(family-name:--font-jost) text-sm text-black">
-                        ₴{item.subtotal.toLocaleString()}
+                        €{item.subtotal.toLocaleString()}
                       </span>
                     </div>
                     {updateItem.isError && updateItem.variables?.cartItemId === item.id && (
@@ -162,7 +162,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               <span>
                 {productsCount} item{productsCount !== 1 ? "s" : ""}
               </span>
-              <span>₴{cartSubtotal.toLocaleString()}</span>
+              <span>€{cartSubtotal.toLocaleString()}</span>
             </div>
             <div className="mt-2 flex justify-between font-(family-name:--font-jost) text-sm text-black">
               <span>Shipping</span>
@@ -170,7 +170,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             </div>
             <div className="mt-4 flex justify-between border-t border-gray-300/60 pt-4 font-(family-name:--font-jost) text-base font-medium text-black">
               <span>TOTAL</span>
-              <span>₴{cartSubtotal.toLocaleString()}</span>
+              <span>€{cartSubtotal.toLocaleString()}</span>
             </div>
 
             <Link

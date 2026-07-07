@@ -37,7 +37,7 @@ const sections = [
       },
       {
         heading: "Free Shipping",
-        text: "We offer free standard shipping on all orders over 5000 UAH. This threshold applies to the order subtotal after any discounts are applied. Free shipping is not available for express delivery or international orders.",
+        text: "We offer free standard shipping on all orders over 5000 EUR. This threshold applies to the order subtotal after any discounts are applied. Free shipping is not available for express delivery or international orders.",
       },
       {
         heading: "Shipping Carriers",

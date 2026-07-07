@@ -79,7 +79,7 @@ export function ProductFilterBar({ baseProducts, filteredCount, isLoading }: Pro
   if (filters.priceMin != null || filters.priceMax != null) {
     const min = filters.priceMin ?? priceBounds.min;
     const max = filters.priceMax ?? priceBounds.max;
-    pins.push({ key: "price", label: `₴${min.toLocaleString()} - ₴${max.toLocaleString()}` });
+    pins.push({ key: "price", label: `€${min.toLocaleString()} - €${max.toLocaleString()}` });
   }
 
   return (

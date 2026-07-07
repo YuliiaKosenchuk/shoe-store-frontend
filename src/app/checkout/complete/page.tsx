@@ -61,7 +61,7 @@ export default function CheckoutCompletePage() {
                     </p>
                   </div>
                   <span className="shrink-0 font-(family-name:--font-jost) text-sm text-black">
-                    ₴{item.subtotal.toLocaleString()}
+                    €{item.subtotal.toLocaleString()}
                   </span>
                 </div>
               ))}
@@ -69,7 +69,7 @@ export default function CheckoutCompletePage() {
 
             <div className="mt-6 flex justify-between font-(family-name:--font-jost) text-base font-medium text-black">
               <span>Total</span>
-              <span>₴{lastOrder.totalAmound.toLocaleString()}</span>
+              <span>€{lastOrder.totalAmound.toLocaleString()}</span>
             </div>
 
             <div className="mt-8 text-left font-(family-name:--font-jost) text-sm text-gray-600">

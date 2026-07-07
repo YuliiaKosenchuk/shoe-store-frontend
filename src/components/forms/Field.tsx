@@ -1,7 +1,7 @@
 import { UseFormRegisterReturn } from "react-hook-form";
 
 export const inputBase =
-  "w-full border bg-white px-[16px] py-[13px] text-[16px] text-[#010101] placeholder:text-[16px] placeholder:text-[#9a9a9a] outline-none transition-colors focus:border-[#7A2633]";
+  "w-full border-[0.5px] bg-white px-[16px] py-[13px] text-[16px] text-[#010101] placeholder:text-[16px] placeholder:text-[#9a9a9a] outline-none transition-colors focus:border-[#7A2633]";
 
 export type FieldProps = {
   label: string;

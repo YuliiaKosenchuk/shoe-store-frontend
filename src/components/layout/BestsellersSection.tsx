@@ -13,6 +13,8 @@ import { getNewestProductIds } from "@/components/products/getNewestProductIds";
 const SCROLL_SPEED = 3;
 const AUTO_SCROLL_SPEED = 1;
 const HOVER_ZONE = 0.18;
+const MIN_LOOP_SLIDES = 16;
+const MAX_REPEATS = 4;
 
 export default function BestsellersSection() {
   const { data: products = [] } = useQuery({
@@ -21,6 +23,17 @@ export default function BestsellersSection() {
   });
 
   const newestProductIds = getNewestProductIds(products);
+
+  // Embla's loop mode needs the slide track to be at least ~2 viewports wide,
+  // otherwise the wrap point sits too close and slides snap out of view abruptly.
+  // Repeating the list guarantees that regardless of how many products the API returns.
+  const repeatCount =
+    products.length > 0
+      ? Math.min(MAX_REPEATS, Math.max(1, Math.ceil(MIN_LOOP_SLIDES / products.length)))
+      : 1;
+  const loopSlides = Array.from({ length: repeatCount }, (_, set) =>
+    products.map((product) => ({ product, key: `${product.id}-${set}` }))
+  ).flat();
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
@@ -140,9 +153,9 @@ export default function BestsellersSection() {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="flex">
-          {products.map((product, i) => (
-            <div key={product.id} className="flex-none w-74.5 mr-6">
+        <div className="flex gap-6">
+          {loopSlides.map(({ product, key }, i) => (
+            <div key={key} className="flex-none w-74.5">
               <ProductCard product={product} priority={i < 4} isNew={newestProductIds.has(product.id)} />
             </div>
           ))}

@@ -10,7 +10,7 @@ const features = [
   {
     icon: "/images/shipping-icon.svg",
     title: "Free shipping",
-    subtitle: "On all orders over 5000₴",
+    subtitle: "On all orders over 5000€",
   },
   {
     icon: "/images/returns-icon.svg",

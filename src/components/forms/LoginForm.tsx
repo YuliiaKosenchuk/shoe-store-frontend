@@ -23,7 +23,7 @@ export default function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     mode: "onChange",
@@ -109,11 +109,7 @@ export default function LoginForm() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full mb-4 py-3.75 text-[14px] font-medium tracking-wide leading-[1.4] uppercase transition-colors ${
-                isValid
-                  ? "bg-black text-white hover:bg-gray-900"
-                  : "bg-black/30 text-white cursor-default"
-              } disabled:cursor-not-allowed`}
+              className="w-full mb-4 py-3.75 text-[14px] font-medium tracking-wide leading-[1.4] uppercase transition-colors bg-black text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:opacity-70"
             >
               {isSubmitting ? "Signing in…" : "Sign In"}
             </button>

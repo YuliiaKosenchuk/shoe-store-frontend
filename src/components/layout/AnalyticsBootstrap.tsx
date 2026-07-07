@@ -43,7 +43,7 @@ export function AnalyticsBootstrap() {
     (async () => {
       try {
         const geo = await getGeoOnce();
-        console.log("[AnalyticsBootstrap] geo received for session:", geo?.country);
+        console.log("[AnalyticsBootstrap] geo received for session (countryCode):", geo?.country);
 
         const payload = {
           referrer: getReferrerOrigin(),

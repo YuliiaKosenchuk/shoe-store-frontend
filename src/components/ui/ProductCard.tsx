@@ -264,12 +264,12 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
 
         <div className="flex items-center gap-2.5">
           <span className="font-(family-name:--font-jost) text-[20px] font-medium">
-            ₴{product.price.toLocaleString()}
+            €{product.price.toLocaleString()}
           </span>
-          {discount !== null && (
+          {discount !== null && discount > 0 && (
             <>
               <span className="font-(family-name:--font-jost) text-base font-normal text-[#818181] line-through">
-                ₴{product.priceOld.toLocaleString()}
+                €{product.priceOld.toLocaleString()}
               </span>
               <span className="font-(family-name:--font-jost) text-base font-normal text-[#DF4441]">
                 {discount}%

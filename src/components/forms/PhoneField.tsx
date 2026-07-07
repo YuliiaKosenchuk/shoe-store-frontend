@@ -67,7 +67,7 @@ export function PhoneField({ label, value, onChange, onBlur, error, id = "phone"
         {label}
       </label>
       <div
-        className={`flex w-full items-stretch border bg-white transition-colors focus-within:border-[#7a2633] ${
+        className={`flex w-full items-stretch border-[0.5px] bg-white transition-colors focus-within:border-[#7a2633] ${
           error ? "border-[#df4441]" : "border-[#4e4e4e]"
         }`}
       >

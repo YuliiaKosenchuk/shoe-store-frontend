@@ -47,7 +47,7 @@ export function OrderSummaryPanel({ children, showItems = true }: OrderSummaryPa
                 </p>
               </div>
               <span className="shrink-0 font-(family-name:--font-jost) text-sm text-black">
-                ₴{item.subtotal.toLocaleString()}
+                €{item.subtotal.toLocaleString()}
               </span>
             </div>
           ))}
@@ -77,7 +77,7 @@ export function OrderSummaryPanel({ children, showItems = true }: OrderSummaryPa
       <div className="space-y-2 border-t border-gray-200 pt-4 font-(family-name:--font-jost) text-sm text-black">
         <div className="flex justify-between">
           <span>Subtotal · {productsCount} items</span>
-          <span>₴{cartSubtotal.toLocaleString()}</span>
+          <span>€{cartSubtotal.toLocaleString()}</span>
         </div>
         <div className="flex justify-between">
           <span>Shipping</span>
@@ -85,7 +85,7 @@ export function OrderSummaryPanel({ children, showItems = true }: OrderSummaryPa
         </div>
         <div className="flex justify-between border-t border-gray-200 pt-3 text-base font-medium">
           <span>Total</span>
-          <span>₴{cartSubtotal.toLocaleString()}</span>
+          <span>€{cartSubtotal.toLocaleString()}</span>
         </div>
       </div>
 

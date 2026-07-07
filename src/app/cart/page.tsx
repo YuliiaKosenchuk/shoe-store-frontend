@@ -81,11 +81,11 @@ export default function CartPage() {
                     </p>
                     <div className="mt-2 flex items-center gap-3">
                       <span className="font-(family-name:--font-jost) text-base text-black">
-                        ₴{item.price.toLocaleString()}
+                        €{item.price.toLocaleString()}
                       </span>
                       {item.priceOld > item.price && (
                         <span className="font-(family-name:--font-jost) text-sm text-[#818181] line-through">
-                          ₴{item.priceOld.toLocaleString()}
+                          €{item.priceOld.toLocaleString()}
                         </span>
                       )}
                     </div>

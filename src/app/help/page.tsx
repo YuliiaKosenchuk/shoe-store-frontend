@@ -33,7 +33,7 @@ const faqs = [
       },
       {
         question: "Do you offer free shipping?",
-        answer: "Yes — free standard shipping is available on all orders over 5000 UAH. The threshold applies to the subtotal after discounts.",
+        answer: "Yes — free standard shipping is available on all orders over 5000 EUR. The threshold applies to the subtotal after discounts.",
       },
       {
         question: "How can I track my order?",

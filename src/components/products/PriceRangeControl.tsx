@@ -73,8 +73,8 @@ export function PriceRangeControl({
           fontFamily: "var(--font-jost)",
         }}
       >
-        <span>₴{bounds.min.toLocaleString()}</span>
-        <span>₴{bounds.max.toLocaleString()}+</span>
+        <span>€{bounds.min.toLocaleString()}</span>
+        <span>€{bounds.max.toLocaleString()}+</span>
       </div>
 
       <div className="relative h-6 mb-12">
@@ -124,7 +124,7 @@ export function PriceRangeControl({
           </span>
           <div className="relative">
             <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[16px] leading-[1.3] font-normal text-[#010101]">
-              ₴
+              €
             </span>
             <input
               type="text"
@@ -146,7 +146,7 @@ export function PriceRangeControl({
           </span>
           <div className="relative">
             <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[16px] leading-[1.3] font-normal text-[#010101]">
-              ₴
+              €
             </span>
             <input
               type="text"

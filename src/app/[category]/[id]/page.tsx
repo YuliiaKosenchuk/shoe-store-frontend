@@ -190,12 +190,12 @@ export default function ProductPage({ params }: ProductPageProps) {
             {product.name.length <= 60 && <div className="mb-6" />}
             <div className="mb-6 flex items-center gap-3">
               <span className="font-(family-name:--font-jost) text-[20px] font-medium">
-                ₴{product.price.toLocaleString()}
+                €{product.price.toLocaleString()}
               </span>
-              {discount !== null && (
+              {discount !== null && discount > 0 && (
                 <>
                   <span className="font-(family-name:--font-jost) text-base font-normal text-[#818181] line-through">
-                    ₴{product.priceOld.toLocaleString()}
+                    €{product.priceOld.toLocaleString()}
                   </span>
                   <span className="font-(family-name:--font-jost) text-base font-normal text-[#DF4441]">
                     -{discount}%
