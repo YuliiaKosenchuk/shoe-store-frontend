@@ -14,6 +14,7 @@ import {
 import { useCheckoutStore } from "@/store/checkout.store";
 import { useCart } from "@/hooks/useCart";
 import { useCartStore } from "@/store/cart.store";
+import { saveOrderItemImages } from "@/lib/orderImageCache";
 import { CheckoutContainer } from "@/components/ui/CheckoutContainer";
 import { CheckoutStepper } from "@/components/checkout/CheckoutStepper";
 import { OrderSummaryPanel } from "@/components/checkout/OrderSummaryPanel";
@@ -24,7 +25,7 @@ function PaymentPageContent() {
   const deliveryDetails = useCheckoutStore((s) => s.deliveryDetails);
   const shipping = useCheckoutStore((s) => s.shipping);
   const setLastOrder = useCheckoutStore((s) => s.setLastOrder);
-  const { cartId } = useCart();
+  const { cart, cartId } = useCart();
   const clearCartId = useCartStore((s) => s.clearCartId);
 
   const [paymentType, setPaymentType] = useState<PaymentType>("CARD");
@@ -84,6 +85,7 @@ function PaymentPageContent() {
         order.status
       );
       setLastOrder(order);
+      if (cart?.cartItems) saveOrderItemImages(cart.cartItems);
       clearCartId();
 
       if (paymentType !== "CARD") {

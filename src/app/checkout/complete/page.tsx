@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useCheckoutStore } from "@/store/checkout.store";
 import { OrderService } from "@/servises/order.service";
+import { getOrderItemImage } from "@/lib/orderImageCache";
 import type { DeliveryType, OrderResponseDto } from "@/shemas/checkout.shema";
 import { paymentTypeOptions } from "@/shemas/checkout.shema";
 import { CheckoutContainer } from "@/components/ui/CheckoutContainer";
@@ -84,36 +85,49 @@ function OrderDetails({ order }: { order: OrderResponseDto }) {
         </div>
       </div>
 
-      <div className="space-y-4 border-t border-b border-gray-200 py-6 text-left">
-        {order.orderItems.map((item) => (
-          <div key={item.id} className="flex items-center gap-4">
-            <div className="relative h-16 w-13 shrink-0 bg-[#F8F8F8]">
-              {item.imageUrl && (
-                <Image
-                  src={item.imageUrl}
-                  alt={item.name}
-                  fill
-                  sizes="52px"
-                  className="object-cover"
-                />
-              )}
-              <span className="absolute top-0 left-0 flex h-5 w-5 items-center justify-center bg-black font-(family-name:--font-jost) text-xs text-white">
-                {item.quantity}
-              </span>
+      <div className="space-y-4 border-t border-b border-[#B3B3B3] py-6 text-left">
+        {order.orderItems.map((item) => {
+          const imageUrl =
+            item.imageUrl || getOrderItemImage(item.name, item.color, item.size);
+          return (
+            <div key={item.id} className="flex items-stretch gap-3">
+              <div className="relative h-21.5 w-21.5 shrink-0 bg-[#F8F8F8]">
+                {imageUrl && (
+                  <Image
+                    src={imageUrl}
+                    alt={item.name}
+                    fill
+                    sizes="86px"
+                    className="object-cover"
+                  />
+                )}
+                <span className="absolute top-0 right-0 flex h-6 w-6 items-center justify-center bg-black font-(family-name:--font-jost) text-base text-white leading-[1.3]">
+                  <span className="inline-block" style={{ transform: "translateY(0.5px)" }}>
+                    {item.quantity}
+                  </span>
+                </span>
+              </div>
+              <div className="flex min-w-0 flex-1 flex-col justify-between">
+                <div className="flex items-start justify-between gap-3">
+                  <p className="truncate font-(family-name:--font-cormorant-garamond) text-[20px] font-semibold leading-[1.3] text-black">
+                    {item.name}
+                  </p>
+                  <span className="shrink-0 font-(family-name:--font-jost) text-base text-[#010101] leading-[1.3] font-medium">
+                    € {item.subtotal.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-1 font-(family-name:--font-jost) text-sm text-[#4E4E4E] leading-normal font-normal">
+                  <p>
+                    Size: <span className="text-[#010101] font-light">{item.size}</span>
+                  </p>
+                  <p>
+                    Colour: <span className="text-[#010101] font-light">{item.color}</span>
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="font-(family-name:--font-jost) text-sm text-black">{item.name}</p>
-              <p className="font-(family-name:--font-jost) text-xs text-gray-500">
-                {[item.size && `Size: ${item.size}`, item.color && `Colour: ${item.color}`]
-                  .filter(Boolean)
-                  .join(" | ")}
-              </p>
-            </div>
-            <span className="shrink-0 font-(family-name:--font-jost) text-sm text-black">
-              € {item.subtotal.toLocaleString()}
-            </span>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="space-y-2 py-6 font-(family-name:--font-jost) text-sm">
@@ -178,6 +192,10 @@ function CheckoutCompleteContent() {
       }
       return false;
     },
+    // Guest orders can't be fetched by GET /api/orders/{id} at all (backend
+    // requires an owner match) — don't burn 3 retries on a failure that will
+    // never succeed, just settle into the fallback UI immediately.
+    retry: false,
   });
 
   const order = lastOrder ?? orderQuery.data ?? null;
