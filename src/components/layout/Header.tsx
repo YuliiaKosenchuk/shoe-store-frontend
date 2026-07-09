@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, User, Heart, Menu, X, Handbag } from "lucide-react";
+import { Search, User, Heart, Menu, X } from "lucide-react";
+import { CartIcon } from "@/components/ui/CartIcon";
 import { UsersService } from "@/servises/users.service";
 import { useWishlistStore } from "@/store/wishlist.store";
 import { useCart } from "@/hooks/useCart";
@@ -152,9 +153,7 @@ const navItems: NavItem[] = [
         { label: "New collection", href: "#" },
         { label: "Gift card", href: "#" },
       ],
-      featured: [
-        { name: "Gift cards", image: "/images/gift.png", href: "#" },
-      ],
+      featured: [{ name: "Gift cards", image: "/images/gift.png", href: "#" }],
     },
   },
 ];
@@ -171,7 +170,9 @@ export default function Header() {
     state.hasHydrated ? state.items.length : 0,
   );
   const { cart, hasHydrated: cartHydrated } = useCart();
-  const cartCount = cartHydrated ? (cart?.productsCount ?? 0) : 0;
+  const cartCount = cartHydrated
+    ? (cart?.cartItems?.reduce((sum, item) => sum + item.quantity, 0) ?? 0)
+    : 0;
 
   const openDropdown = (label: string) => {
     if (closeTimeout.current) clearTimeout(closeTimeout.current);
@@ -329,9 +330,9 @@ export default function Header() {
               <Heart size={24} strokeWidth={1.25} />
               {wishlistCount > 0 && (
                 <span
-                  className={`absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full font-(family-name:--font-jost) text-[8px] font-medium leading-none ${isTransparent ? "bg-white text-black" : "bg-black text-white"}`}
+                  className="absolute -top-2 -right-2 flex h-3.25 min-w-3.25 items-center justify-center rounded-full bg-[#7A2633] px-0.75 font-(family-name:--font-jost) text-[10px] font-normal leading-[1.3] text-white"
                 >
-                  {wishlistCount}
+                  <span className="">{wishlistCount}</span>
                 </span>
               )}
             </Link>
@@ -341,12 +342,12 @@ export default function Header() {
               aria-label="Cart"
               className={`relative ${iconCls}`}
             >
-              <Handbag size={24} strokeWidth={1.25} />
+              <CartIcon className="" />
               {cartCount > 0 && (
                 <span
-                  className={`absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full font-(family-name:--font-jost) text-[8px] font-medium leading-none ${isTransparent ? "bg-white text-black" : "bg-black text-white"}`}
+                  className="absolute -top-2 -right-2 flex h-3.25 min-w-3.25 items-center justify-center rounded-full bg-[#7A2633] px-0.75 font-(family-name:--font-jost) text-[10px] font-normal leading-[1.3] text-white"
                 >
-                  {cartCount}
+                  <span className="">{cartCount}</span>
                 </span>
               )}
             </button>
@@ -384,7 +385,10 @@ export default function Header() {
         </nav>
       )}
 
-      <CartDrawer isOpen={cartDrawerOpen} onClose={() => setCartDrawerOpen(false)} />
+      <CartDrawer
+        isOpen={cartDrawerOpen}
+        onClose={() => setCartDrawerOpen(false)}
+      />
     </header>
   );
 }

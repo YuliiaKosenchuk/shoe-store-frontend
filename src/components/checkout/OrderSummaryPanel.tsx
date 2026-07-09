@@ -15,77 +15,94 @@ export function OrderSummaryPanel({ children, showItems = true }: OrderSummaryPa
   const cartSubtotal = cart?.cartSubtotal ?? 0;
 
   return (
-    <div className="h-fit border border-gray-200 p-6">
-      <h2 className="mb-5 font-(family-name:--font-cormorant-garamond) text-2xl text-black">
+    <div className="h-fit">
+      <h2 className="mb-6 font-(family-name:--font-cormorant-garamond) text-xl text-black sm:text-[26px] leading-[1.2] font-semibold">
         Order summary
       </h2>
 
       {showItems && items.length > 0 && (
-        <div className="mb-5 space-y-4">
+        <div className="mb-6 space-y-4 border-t border-b border-[#B3B3B3] py-6">
           {items.map((item) => (
-            <div key={item.id} className="flex items-center gap-3">
-              <div className="relative h-12 w-10 shrink-0 bg-[#F8F8F8]">
+            <div key={item.id} className="flex items-stretch gap-3">
+              <div className="relative h-21.5 w-21.5 shrink-0 bg-[#F8F8F8]">
                 {item.imageUrl && (
                   <Image
                     src={item.imageUrl}
                     alt={item.name}
                     fill
-                    sizes="40px"
+                    sizes="86px"
                     className="object-cover"
                   />
                 )}
-                <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-black font-(family-name:--font-jost) text-[9px] text-white">
-                  {item.quantity}
+                <span className="absolute top-0 right-0 flex h-6 w-6 items-center justify-center bg-black font-(family-name:--font-jost) text-base text-white leading-[1.3]">
+                  <span className="inline-block" style={{ transform: "translateY(0.5px)" }}>
+                    {item.quantity}
+                  </span>
                 </span>
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate font-(family-name:--font-jost) text-sm text-black">
-                  {item.name}
-                </p>
-                <p className="font-(family-name:--font-jost) text-xs text-gray-500">
-                  Size: {item.size} | Colour: {item.color}
-                </p>
+              <div className="flex min-w-0 flex-1 flex-col justify-between">
+                <div className="flex items-start justify-between gap-3">
+                  <p className="truncate font-(family-name:--font-cormorant-garamond) text-[20px] font-semibold leading-[1.3] text-black">
+                    {item.name}
+                  </p>
+                  <span className="shrink-0 font-(family-name:--font-jost) text-base text-[#010101] leading-[1.3] font-medium">
+                    € {item.subtotal.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-1 font-(family-name:--font-jost) text-sm text-[#4E4E4E] leading-normal font-normal">
+                  <p>
+                    Size: <span className="text-[#010101] font-light">{item.size}</span>
+                  </p>
+                  <p>
+                    Colour: <span className="text-[#010101] font-light">{item.color}</span>
+                  </p>
+                </div>
               </div>
-              <span className="shrink-0 font-(family-name:--font-jost) text-sm text-black">
-                €{item.subtotal.toLocaleString()}
-              </span>
             </div>
           ))}
         </div>
       )}
 
       <div className="mb-5">
-        <label className="mb-2 block font-(family-name:--font-jost) text-[13px] text-[#343434]">
+        <label className="mb-2 block font-(family-name:--font-jost) text-[14px] text-[#343434] font-medium leading-normal">
           Discount code
         </label>
-        <div className="flex gap-2">
+        <div className="flex gap-6">
           <input
             type="text"
             placeholder="discount code"
-            disabled
-            className="w-full border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-[#9a9a9a] outline-none"
+            className="w-full border border-[#4E4E4E] bg-white px-4 py-3 text-[16px] text-[#010101] outline-none placeholder:font-(family-name:--font-jost) placeholder:text-[16px] placeholder:leading-[1.3] placeholder:font-normal placeholder:text-[#B3B3B3]"
           />
-          <button
-            disabled
-            className="shrink-0 border border-gray-300 px-4 py-2.5 text-sm text-gray-400 cursor-not-allowed"
-          >
+          <button className="group flex shrink-0 items-center gap-2 font-(family-name:--font-cormorant-garamond) text-[20px] text-[#010101] font-semibold leading-[1.3] transition-colors hover:text-[#7A2633]">
             Apply
+            <Image
+              src="/images/arrow-right-hero.svg"
+              alt=""
+              aria-hidden
+              width={24}
+              height={24}
+              className="transition-transform duration-200 group-hover:translate-x-1"
+            />
           </button>
         </div>
       </div>
 
-      <div className="space-y-2 border-t border-gray-200 pt-4 font-(family-name:--font-jost) text-sm text-black">
-        <div className="flex justify-between">
-          <span>Subtotal · {productsCount} items</span>
-          <span>€{cartSubtotal.toLocaleString()}</span>
+      <div className="pt-4 font-(family-name:--font-jost) text-sm text-[#4E4E4E]">
+        <div className="mb-4 flex justify-between">
+          <span className="inline-flex items-center">
+            Subtotal
+            <span className="mx-2 size-0.75 rounded-full shrink-0 bg-black text-base" />
+            {productsCount} items
+          </span>
+          <span className="text-base text-black font-medium">€ {cartSubtotal.toLocaleString()}</span>
         </div>
-        <div className="flex justify-between">
+        <div className="mb-4 flex justify-between">
           <span>Shipping</span>
-          <span>Free</span>
+          <span className="text-base text-black font-medium">€ 5</span>
         </div>
-        <div className="flex justify-between border-t border-gray-200 pt-3 text-base font-medium">
-          <span>Total</span>
-          <span>€{cartSubtotal.toLocaleString()}</span>
+        <div className="flex justify-between border-t border-[#B3B3B3] pt-4 text-base font-medium leading-[1.3]">
+          <span className="text-base text-black font-medium">Total</span>
+          <span className="text-base text-black font-medium">€ {cartSubtotal.toLocaleString()}</span>
         </div>
       </div>
 

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -61,7 +62,14 @@ const socialLinks = [
 
 const jost = { fontFamily: "var(--font-jost)" } as const;
 
+const minimalFooterRoutes = ["/cart", "/checkout"];
+
 export default function Footer() {
+  const pathname = usePathname();
+  const isMinimal = minimalFooterRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
+
   const [showModal, setShowModal] = useState(false);
 
   const {
@@ -76,6 +84,32 @@ export default function Footer() {
   function onSubscribe() {
     setShowModal(true);
     reset();
+  }
+
+  if (isMinimal) {
+    return (
+      <footer className="w-full bg-[#F8F8F8]">
+        <Container className="px-8">
+          <div className="py-3 flex flex-col items-center gap-6 lg:flex-row lg:justify-between">
+            <LogoComponent />
+
+            <div className="flex items-center gap-2 text-[14px] leading-normal font-normal text-black" style={jost}>
+              <Image src="/images/copyright.svg" alt="Copyright" width={24} height={24} />
+              <span>2026</span>
+              <span>Logo</span>
+              <span>All rights reserved</span>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <Image src="/images/visa-icon.svg" alt="Visa" width={50} height={40} />
+              <Image src="/images/mastercard-icon.svg" alt="Mastercard" width={50} height={40} />
+              <Image src="/images/gpay-icon.jpg" alt="Google Pay" width={50} height={40} />
+              <Image src="/images/paypal-icon.svg" alt="PayPal" width={50} height={40} />
+            </div>
+          </div>
+        </Container>
+      </footer>
+    );
   }
 
   return (

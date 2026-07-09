@@ -5,6 +5,7 @@ import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useRef } from "react";
 import { ProductCard } from "@/components/ui/ProductCard";
+import { ProductCardSkeleton } from "@/components/ui/ProductCardSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { ProductsService } from "@/servises/products.service";
 import { getNewestProductIds } from "@/components/products/getNewestProductIds";
@@ -15,9 +16,10 @@ const AUTO_SCROLL_SPEED = 1;
 const HOVER_ZONE = 0.18;
 const MIN_LOOP_SLIDES = 16;
 const MAX_REPEATS = 4;
+const SKELETON_COUNT = 8;
 
 export default function BestsellersSection() {
-  const { data: products = [] } = useQuery({
+  const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: ProductsService.getProducts,
   });
@@ -117,11 +119,18 @@ export default function BestsellersSection() {
   }, [startAutoScroll]);
 
   useEffect(() => {
-    if (!emblaApi) return;
+    if (!emblaApi || isLoading) return;
     emblaApi.on("reInit", startAutoScroll);
     startAutoScroll();
     return () => { emblaApi.off("reInit", startAutoScroll); };
-  }, [emblaApi, startAutoScroll]);
+  }, [emblaApi, startAutoScroll, isLoading]);
+
+  // Slides go from skeleton placeholders to real product cards once loaded —
+  // Embla measured the placeholders at mount, so it needs to re-measure the new slides.
+  useEffect(() => {
+    if (!emblaApi || isLoading) return;
+    emblaApi.reInit();
+  }, [emblaApi, isLoading, loopSlides.length]);
 
   useEffect(() => () => stopScroll(), [stopScroll]);
 
@@ -153,12 +162,22 @@ export default function BestsellersSection() {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="flex gap-6">
-          {loopSlides.map(({ product, key }, i) => (
-            <div key={key} className="flex-none w-74.5">
-              <ProductCard product={product} priority={i < 4} isNew={newestProductIds.has(product.id)} />
-            </div>
-          ))}
+        <div className="flex -ml-6">
+          {isLoading
+            ? Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+                <div key={i} className="flex-none pl-6">
+                  <div className="w-74.5">
+                    <ProductCardSkeleton />
+                  </div>
+                </div>
+              ))
+            : loopSlides.map(({ product, key }, i) => (
+                <div key={key} className="flex-none pl-6">
+                  <div className="w-74.5">
+                    <ProductCard product={product} priority={i < 4} isNew={newestProductIds.has(product.id)} />
+                  </div>
+                </div>
+              ))}
         </div>
       </div>
     </section>

@@ -1,10 +1,11 @@
+import { Fragment } from "react";
 import { Check } from "lucide-react";
 
 const STEPS = [
   { step: 1, label: "Cart" },
   { step: 2, label: "Delivery Details" },
   { step: 3, label: "Payment" },
-  { step: 4, label: "Complete" },
+  { step: 4, label: "Confirmation" },
 ] as const;
 
 interface CheckoutStepperProps {
@@ -13,36 +14,46 @@ interface CheckoutStepperProps {
 
 export function CheckoutStepper({ activeStep }: CheckoutStepperProps) {
   return (
-    <div className="flex items-center justify-center gap-3 py-8">
+    <div className="flex w-full items-center py-6 sm:py-8 lg:pb-16">
       {STEPS.map(({ step, label }, i) => {
         const isDone = step < activeStep;
         const isActive = step === activeStep;
         return (
-          <div key={step} className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
+          <Fragment key={step}>
+            <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
               <span
-                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-(family-name:--font-jost) text-[11px] ${
+                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-(family-name:--font-jost) font-normal text-[16px] leading-[1.3] ${
                   isDone
-                    ? "bg-black text-white"
+                    ? "border border-black text-black"
                     : isActive
-                      ? "border border-black text-black"
-                      : "border border-gray-300 text-gray-400"
+                      ? "bg-[#010101] text-white"
+                      : "border border-[#B3B3B3] text-[#B3B3B3]"
                 }`}
               >
-                {isDone ? <Check size={13} strokeWidth={2} /> : step}
+                {isDone ? (
+                  <Check size={16} strokeWidth={2} />
+                ) : (
+                  <span className="inline-block" style={{ transform: "translateY(0.5px)" }}>
+                    {step}
+                  </span>
+                )}
               </span>
               <span
-                className={`font-(family-name:--font-jost) text-[13px] tracking-wide ${
-                  isActive || isDone ? "text-black" : "text-gray-400"
+                className={`hidden font-(family-name:--font-cormorant-garamond) text-[20px] font-semibold sm:inline ${
+                  isActive || isDone ? "text-black" : "text-[#B3B3B3]"
                 }`}
               >
                 {label}
               </span>
             </div>
             {i < STEPS.length - 1 && (
-              <span className="h-px w-8 bg-gray-300 sm:w-16" />
+              <span
+                className={`mx-1.5 h-px flex-1 sm:mx-3 ${
+                  isDone ? "bg-black" : "bg-[#B3B3B3]"
+                }`}
+              />
             )}
-          </div>
+          </Fragment>
         );
       })}
     </div>

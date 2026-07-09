@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import Header from "@/components/layout/Header";
-import TopBar from "@/components/layout/TopBar";
+// import TopBar from "@/components/layout/TopBar";
 import Footer from "@/components/layout/Footer";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CookieBanner } from "@/components/ui/CookieBanner";
@@ -37,7 +37,7 @@ export default function RootLayout({
       <body className="flex flex-col min-h-screen">
         <QueryProvider>
           <div className="sticky top-0 z-50">
-            <TopBar />
+            {/* <TopBar /> */}
             <Header />
           </div>
           <Breadcrumbs />

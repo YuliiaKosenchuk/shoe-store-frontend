@@ -5,6 +5,7 @@ import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useRef } from "react";
 import { ProductCard } from "@/components/ui/ProductCard";
+import { ProductCardSkeleton } from "@/components/ui/ProductCardSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { ProductsService } from "@/servises/products.service";
 import { getNewestProductIds } from "@/components/products/getNewestProductIds";
@@ -12,13 +13,14 @@ import { getNewestProductIds } from "@/components/products/getNewestProductIds";
 
 const SCROLL_SPEED = 3;
 const HOVER_ZONE = 0.18;
+const SKELETON_COUNT = 8;
 
 // const DISCOUNTED_PRODUCTS = MOCK_PRODUCTS.filter(
 //   (p) => p.priceOld > 0 && p.priceOld > p.price
 // );
 
 export default function DiscountsSection() {
-  const { data: allProducts = [] } = useQuery({
+  const { data: allProducts = [], isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: ProductsService.getProducts,
   });
@@ -95,6 +97,13 @@ export default function DiscountsSection() {
     emblaApi?.scrollTo(emblaApi.selectedScrollSnap());
   }, [emblaApi, stopScroll]);
 
+  // Slides go from skeleton placeholders to real product cards once loaded —
+  // Embla measured the placeholders at mount, so it needs to re-measure the new slides.
+  useEffect(() => {
+    if (!emblaApi || isLoading) return;
+    emblaApi.reInit();
+  }, [emblaApi, isLoading, products.length]);
+
   useEffect(() => () => stopScroll(), [stopScroll]);
 
   return (
@@ -129,11 +138,17 @@ export default function DiscountsSection() {
               paddingRight: "max(2rem, calc((100vw - 1344px) / 2 + 2rem))",
             }}
           >
-            {products.map((product, i) => (
-              <div key={product.id} className="flex-none w-74.5">
-                <ProductCard product={product} priority={i < 4} isNew={newestProductIds.has(product.id)} />
-              </div>
-            ))}
+            {isLoading
+              ? Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+                  <div key={i} className="flex-none w-74.5">
+                    <ProductCardSkeleton />
+                  </div>
+                ))
+              : products.map((product, i) => (
+                  <div key={product.id} className="flex-none w-74.5">
+                    <ProductCard product={product} priority={i < 4} isNew={newestProductIds.has(product.id)} />
+                  </div>
+                ))}
           </div>
         </div>
       </div>

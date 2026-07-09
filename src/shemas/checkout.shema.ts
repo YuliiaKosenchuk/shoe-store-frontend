@@ -52,6 +52,14 @@ export interface CreateOrderRequestDto {
   ignoreOutOfStockItems?: boolean;
 }
 
+export interface CreatePaymentRequestDto {
+  orderId: number;
+}
+
+export interface PaymentDto {
+  sessionUrl: string;
+}
+
 export const deliveryDetailsSchema = z.object({
   email: z.string().trim().email("Invalid email address"),
   firstName: z.string().trim().min(1, "First name is required"),
@@ -60,17 +68,41 @@ export const deliveryDetailsSchema = z.object({
   city: z.string().trim().min(1, "City is required"),
   address: z.string().trim().min(1, "Address is required"),
   houseNumber: z.string().trim().min(1, "House number is required"),
+  postalCode: z.string().trim().min(1, "Postal code is required"),
   phone: z.string().trim().min(1, "Phone number is required"),
 });
 
 export type DeliveryDetailsFormValues = z.infer<typeof deliveryDetailsSchema>;
 
-export const deliveryTypeOptions: { value: DeliveryType; label: string }[] = [
-  { value: "COURIER", label: "Courier" },
-  { value: "PARCEL_LOCKER", label: "Parcel locker" },
-  { value: "PICKUP_POINT", label: "Pickup point" },
-  { value: "PERSONAL_PICKUP", label: "Personal pickup" },
-];
+export type ShippingMethod = "DHL" | "DPD" | "STORE_PICKUP";
+
+export interface ServicePoint {
+  id: number;
+  name: string;
+  carrierCode: string;
+  carrierName: string;
+  carrierLogoUrl: string;
+  street: string;
+  houseNumber: string;
+  postalCode: string;
+  city: string;
+  countryCode: string;
+  distance: number | null;
+  generalShopType: string;
+}
+
+export interface StoreLocation {
+  id: string;
+  name: string;
+  address: string;
+  city: string;
+}
+
+export interface ShippingSelection {
+  method: ShippingMethod;
+  servicePoint: ServicePoint | null;
+  store: StoreLocation | null;
+}
 
 export const paymentTypeOptions: { value: PaymentType; label: string }[] = [
   { value: "CARD", label: "Card" },
