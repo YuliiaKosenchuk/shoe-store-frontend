@@ -42,7 +42,7 @@ export function ServicePointPicker({
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const timeout = setTimeout(() => setDebouncedQuery(addressQuery), 400);
+    const timeout = setTimeout(() => setDebouncedQuery(addressQuery), 500);
     return () => clearTimeout(timeout);
   }, [addressQuery]);
 

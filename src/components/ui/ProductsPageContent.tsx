@@ -10,7 +10,7 @@ import { useProductFilters } from "@/hooks/useProductFilters";
 import { useProductVariantsMap } from "@/hooks/useProductVariantsMap";
 import type { Product } from "@/shemas/product.shema";
 
-export type ProductPageFilter = "shoes" | "bags" | "accessories" | "sale" | "bestsellers";
+export type ProductPageFilter = "shoes" | "bags" | "accessories" | "sale" | "bestsellers" | "new-arrivals";
 
 const FILTERS: Record<ProductPageFilter, (p: Product) => boolean> = {
   shoes: (p) => p.category.toLowerCase() === "shoes",
@@ -18,6 +18,7 @@ const FILTERS: Record<ProductPageFilter, (p: Product) => boolean> = {
   accessories: (p) => p.category.toLowerCase() === "accessories",
   sale: (p) => p.priceOld > 0 && p.priceOld > p.price,
   bestsellers: () => true,
+  "new-arrivals": () => true,
 };
 
 export function ProductsPageContent({ filter }: { filter: ProductPageFilter }) {
@@ -27,8 +28,8 @@ export function ProductsPageContent({ filter }: { filter: ProductPageFilter }) {
     staleTime: 1000 * 60 * 5,
   });
 
-  const baseProducts = data.filter(FILTERS[filter]);
   const newestProductIds = getNewestProductIds(data);
+  const baseProducts = filter === "new-arrivals" ? data.filter((p) => newestProductIds.has(p.id)) : data.filter(FILTERS[filter]);
   const { filters, sort } = useProductFilters();
   const sizeFilterActive = filters.size.length > 0;
   const { variantsByProductId, isLoading: variantsLoading } = useProductVariantsMap(baseProducts, sizeFilterActive);

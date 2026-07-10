@@ -78,16 +78,10 @@ export default function MaterialsPage() {
         <div className="px-8">
 
           {/* Header */}
-          <h1
-            className="text-black text-[48px] sm:text-[60px] leading-[1.05] tracking-tight mb-4 font-light"
-            style={{ fontFamily: "var(--font-cormorant-garamond)" }}
-          >
+          <h1 className="mb-4 font-(family-name:--font-cormorant-garamond) text-[48px] font-semibold leading-[1.05] tracking-tight text-black sm:text-[60px]">
             Our Materials
           </h1>
-          <p
-            className="text-[#666] text-[14px] leading-relaxed mb-16 max-w-xl"
-            style={{ fontFamily: "var(--font-jost)" }}
-          >
+          <p className="mb-16 max-w-xl font-(family-name:--font-jost) text-[14px] leading-relaxed text-[#4E4E4E]">
             Every material we use is chosen with intention. We source only from
             suppliers who share our commitment to quality, transparency, and
             responsible production.
@@ -101,16 +95,10 @@ export default function MaterialsPage() {
 
                   {/* Text */}
                   <div>
-                    <h2
-                      className="text-[36px] leading-[1.1] tracking-tight text-black mb-5"
-                      style={{ fontFamily: "var(--font-cormorant-garamond)" }}
-                    >
+                    <h2 className="mb-5 font-(family-name:--font-cormorant-garamond) text-[36px] font-semibold leading-[1.1] tracking-tight text-black">
                       {material.title}
                     </h2>
-                    <p
-                      className="text-[14px] text-[#555] leading-relaxed mb-8"
-                      style={{ fontFamily: "var(--font-jost)" }}
-                    >
+                    <p className="mb-8 font-(family-name:--font-jost) text-[14px] leading-relaxed text-[#4E4E4E]">
                       {material.description}
                     </p>
 
@@ -120,16 +108,10 @@ export default function MaterialsPage() {
                           key={prop.label}
                           className="grid grid-cols-[160px_1fr] gap-4 py-3 border-b border-[#D8D2CB]"
                         >
-                          <span
-                            className="text-[12px] uppercase tracking-widest text-[#888]"
-                            style={{ fontFamily: "var(--font-jost)" }}
-                          >
+                          <span className="font-(family-name:--font-jost) text-[12px] uppercase tracking-widest text-[#4E4E4E]">
                             {prop.label}
                           </span>
-                          <span
-                            className="text-[14px] text-black"
-                            style={{ fontFamily: "var(--font-jost)" }}
-                          >
+                          <span className="font-(family-name:--font-jost) text-[14px] text-black">
                             {prop.value}
                           </span>
                         </div>
@@ -156,25 +138,16 @@ export default function MaterialsPage() {
 
           {/* Values section */}
           <div className="border-t border-[#D8D2CB] pt-16 mb-16">
-            <h2
-              className="text-[36px] leading-[1.1] tracking-tight text-black mb-12"
-              style={{ fontFamily: "var(--font-cormorant-garamond)" }}
-            >
+            <h2 className="mb-12 font-(family-name:--font-cormorant-garamond) text-[36px] font-semibold leading-[1.1] tracking-tight text-black">
               Our Commitment
             </h2>
             <div className="grid md:grid-cols-3 gap-10">
               {values.map((v) => (
                 <div key={v.title}>
-                  <h3
-                    className="text-[12px] uppercase tracking-widest text-black mb-3"
-                    style={{ fontFamily: "var(--font-jost)" }}
-                  >
+                  <h3 className="mb-3 font-(family-name:--font-jost) text-[12px] uppercase tracking-widest text-black">
                     {v.title}
                   </h3>
-                  <p
-                    className="text-[14px] text-[#555] leading-relaxed"
-                    style={{ fontFamily: "var(--font-jost)" }}
-                  >
+                  <p className="font-(family-name:--font-jost) text-[14px] leading-relaxed text-[#4E4E4E]">
                     {v.text}
                   </p>
                 </div>
@@ -184,14 +157,11 @@ export default function MaterialsPage() {
 
           {/* Footer note */}
           <div className="border-t border-[#D8D2CB] pt-8">
-            <p
-              className="text-[13px] text-[#AAA]"
-              style={{ fontFamily: "var(--font-jost)" }}
-            >
+            <p className="font-(family-name:--font-jost) text-[13px] text-gray-500">
               Questions about our materials or sourcing?{" "}
               <a
                 href="mailto:support@atelier.ua"
-                className="text-[#7A2633] hover:underline"
+                className="underline underline-offset-4 text-[#7A2633] hover:opacity-70 transition-opacity"
               >
                 Contact us
               </a>

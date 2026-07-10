@@ -27,14 +27,14 @@ function OrderDetails({ order }: { order: OrderResponseDto }) {
   const itemsCount = order.orderItems.reduce((sum, item) => sum + item.quantity, 0);
   const itemsSubtotal = order.orderItems.reduce((sum, item) => sum + item.subtotal, 0);
   // Backend doesn't return a separate shipping-fee field, so it's derived from
-  // the authoritative total — matches today's reality where pickup/delivery is free.
+  // the pre-discount total — matches today's reality where pickup/delivery is free.
   const shippingFee = Math.round((order.totalAmound - itemsSubtotal) * 100) / 100;
   const paymentMethodLabel =
     paymentTypeOptions.find((opt) => opt.value === order.paymentType)?.label ?? order.paymentType;
 
   return (
     <div className="mx-auto max-w-157 py-6 text-center">
-      <h1 className="mb-3 font-(family-name:--font-cormorant-garamond) text-2xl font-light tracking-widest uppercase text-black sm:text-3xl lg:text-4xl">
+      <h1 className="mb-3 font-(family-name:--font-cormorant-garamond) text-[36px] font-semibold leading-[1.1] text-black">
         Thank you for your order
       </h1>
       <p className="font-(family-name:--font-jost) text-sm text-gray-500">
@@ -139,24 +139,30 @@ function OrderDetails({ order }: { order: OrderResponseDto }) {
           <span>{deliveryTypeLabels[order.deliveryType]}</span>
           <span className="text-black">{shippingFee <= 0 ? "Free" : `€ ${shippingFee.toLocaleString()}`}</span>
         </div>
+        {order.discountAmount > 0 && (
+          <div className="flex justify-between text-gray-500">
+            <span>Discount code</span>
+            <span className="text-[#DF4441]">− € {order.discountAmount.toLocaleString()}</span>
+          </div>
+        )}
       </div>
 
       <div className="flex justify-between border-t border-gray-200 pt-6 font-(family-name:--font-jost) text-base font-medium text-black">
         <span>Total</span>
-        <span>€ {order.totalAmound.toLocaleString()}</span>
+        <span>€ {order.finalAmount.toLocaleString()}</span>
       </div>
 
       <div className="mt-8 space-y-3">
         <Link
           href="/"
-          className="block w-full bg-black py-3.75 text-center font-(family-name:--font-jost) text-sm font-medium tracking-widest uppercase text-white transition-colors hover:bg-gray-900"
+          className="block w-full bg-black py-3.75 text-center font-(family-name:--font-jost) text-[14px] font-medium tracking-wide leading-[1.4] uppercase text-white transition-colors hover:bg-gray-900"
         >
           Continue shopping
         </Link>
         {/* Not wired up yet — no customer-facing order history page exists */}
         <button
           type="button"
-          className="block w-full border border-black py-3.75 text-center font-(family-name:--font-jost) text-sm font-medium tracking-widest uppercase text-black transition-colors hover:bg-black/5"
+          className="block w-full border border-black py-3.75 text-center font-(family-name:--font-jost) text-[14px] font-medium tracking-wide leading-[1.4] uppercase text-black transition-colors hover:bg-black/5"
         >
           View shopping
         </button>
@@ -213,7 +219,7 @@ function CheckoutCompleteContent() {
           </div>
         ) : !order ? (
           <div className="flex flex-col items-center gap-4 py-16 text-center sm:py-24">
-            <h1 className="font-(family-name:--font-cormorant-garamond) text-2xl font-light tracking-widest uppercase text-black sm:text-3xl lg:text-4xl">
+            <h1 className="font-(family-name:--font-cormorant-garamond) text-[36px] font-semibold leading-[1.1] text-black">
               Thank you
             </h1>
             <p className="font-(family-name:--font-jost) text-sm font-light text-gray-500">
@@ -221,7 +227,7 @@ function CheckoutCompleteContent() {
             </p>
             <Link
               href="/"
-              className="font-(family-name:--font-jost) text-sm font-light tracking-widest uppercase underline underline-offset-4 text-[#7A2633] hover:opacity-70 transition-opacity"
+              className="mt-2 inline-block bg-black px-8 py-3.75 text-center font-(family-name:--font-jost) text-[14px] font-medium tracking-wide leading-[1.4] uppercase text-white transition-colors hover:bg-gray-900"
             >
               Back to home
             </Link>

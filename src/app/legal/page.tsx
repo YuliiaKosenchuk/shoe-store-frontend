@@ -74,10 +74,10 @@ export default function LegalPage() {
     <main className="py-16">
       <Container>
         <div className="px-8">
-          <h1 className="font-(family-name:--font-cormorant-garamond) text-5xl font-light tracking-wide mb-4">
+          <h1 className="mb-4 font-(family-name:--font-cormorant-garamond) text-5xl font-semibold tracking-wide text-black">
             Privacy &amp; Legal
           </h1>
-          <p className="font-(family-name:--font-jost) text-[14px] text-[#888] mb-16 max-w-2xl">
+          <p className="font-(family-name:--font-jost) text-[14px] text-[#4E4E4E] mb-16 max-w-2xl">
             Please read the following policies carefully. By using our website and services, you agree to the terms outlined below.
           </p>
 
@@ -86,7 +86,7 @@ export default function LegalPage() {
               <a
                 key={s.id}
                 href={`#${s.id}`}
-                className="font-(family-name:--font-jost) text-[13px] uppercase tracking-widest text-[#888] hover:text-black transition-colors"
+                className="font-(family-name:--font-jost) text-[13px] uppercase tracking-widest text-[#4E4E4E] hover:text-black transition-colors"
               >
                 {s.title}
               </a>
@@ -96,7 +96,7 @@ export default function LegalPage() {
           <div className="flex flex-col gap-20">
             {sections.map((section) => (
               <section key={section.id} id={section.id}>
-                <h2 className="font-(family-name:--font-cormorant-garamond) text-3xl font-light mb-10 pb-4 border-b border-[#E8E8E8]">
+                <h2 className="font-(family-name:--font-cormorant-garamond) text-3xl font-semibold mb-10 pb-4 border-b border-[#E8E8E8] text-black">
                   {section.title}
                 </h2>
                 <div className="grid gap-8">
@@ -105,7 +105,7 @@ export default function LegalPage() {
                       <h3 className="font-(family-name:--font-jost) text-[13px] uppercase tracking-widest text-black pt-0.5">
                         {block.heading}
                       </h3>
-                      <p className="font-(family-name:--font-jost) text-[14px] text-[#555] leading-relaxed">
+                      <p className="font-(family-name:--font-jost) text-[14px] text-[#4E4E4E] leading-relaxed">
                         {block.text}
                       </p>
                     </div>
@@ -116,9 +116,9 @@ export default function LegalPage() {
           </div>
 
           <div className="mt-20 pt-8 border-t border-[#E8E8E8]">
-            <p className="font-(family-name:--font-jost) text-[13px] text-[#AAA]">
+            <p className="font-(family-name:--font-jost) text-[13px] text-gray-500">
               Last updated: June 2026. For any questions regarding these policies, contact us at{" "}
-              <a href="mailto:support@atelier.ua" className="text-[#7A2633] hover:underline">
+              <a href="mailto:support@atelier.ua" className="underline underline-offset-4 text-[#7A2633] hover:opacity-70 transition-opacity">
                 support@atelier.ua
               </a>
             </p>

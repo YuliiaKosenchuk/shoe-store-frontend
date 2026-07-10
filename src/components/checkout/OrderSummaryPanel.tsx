@@ -1,6 +1,9 @@
 import Image from "next/image";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
+import { Check } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
+import { useCheckoutStore } from "@/store/checkout.store";
+import { getDiscountPercent } from "@/lib/discountCodes";
 
 interface OrderSummaryPanelProps {
   children?: ReactNode;
@@ -9,10 +12,43 @@ interface OrderSummaryPanelProps {
 
 export function OrderSummaryPanel({ children, showItems = true }: OrderSummaryPanelProps) {
   const { cart } = useCart();
+  const discountCode = useCheckoutStore((s) => s.discountCode);
+  const discountPercent = useCheckoutStore((s) => s.discountPercent);
+  const setDiscount = useCheckoutStore((s) => s.setDiscount);
+  const clearDiscount = useCheckoutStore((s) => s.clearDiscount);
+
+  const [codeInput, setCodeInput] = useState(discountCode ?? "");
+  const [error, setError] = useState<string | null>(null);
+
   // Sort by id (= order added to cart) for a stable, predictable display order.
   const items = [...(cart?.cartItems ?? [])].sort((a, b) => a.id - b.id);
   const productsCount = cart?.productsCount ?? 0;
   const cartSubtotal = cart?.cartSubtotal ?? 0;
+  const shippingCost = 5;
+  const discountAmount = discountPercent ? Math.round((cartSubtotal * discountPercent) / 100) : 0;
+  const total = cartSubtotal + shippingCost - discountAmount;
+
+  const handleApply = () => {
+    const trimmed = codeInput.trim();
+    if (!trimmed) return;
+
+    const percent = getDiscountPercent(trimmed);
+    if (percent === null) {
+      clearDiscount();
+      setError("Invalid discount code");
+      return;
+    }
+
+    setError(null);
+    setCodeInput(trimmed.toUpperCase());
+    setDiscount(trimmed.toUpperCase(), percent);
+  };
+
+  const handleCodeChange = (value: string) => {
+    setCodeInput(value);
+    if (error) setError(null);
+    if (discountCode) clearDiscount();
+  };
 
   return (
     <div className="h-fit">
@@ -68,12 +104,35 @@ export function OrderSummaryPanel({ children, showItems = true }: OrderSummaryPa
           Discount code
         </label>
         <div className="flex gap-6">
-          <input
-            type="text"
-            placeholder="discount code"
-            className="w-full border border-[#4E4E4E] bg-white px-4 py-3 text-[16px] text-[#010101] outline-none placeholder:font-(family-name:--font-jost) placeholder:text-[16px] placeholder:leading-[1.3] placeholder:font-normal placeholder:text-[#B3B3B3]"
-          />
-          <button className="group flex shrink-0 items-center gap-2 font-(family-name:--font-cormorant-garamond) text-[20px] text-[#010101] font-semibold leading-[1.3] transition-colors hover:text-[#7A2633]">
+          <div className="relative w-full">
+            <input
+              type="text"
+              placeholder="discount code"
+              value={codeInput}
+              onChange={(e) => handleCodeChange(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleApply();
+                }
+              }}
+              className={`w-full border bg-white px-4 py-3 pr-10 text-[16px] text-[#010101] outline-none placeholder:font-(family-name:--font-jost) placeholder:text-[16px] placeholder:leading-[1.3] placeholder:font-normal placeholder:text-[#B3B3B3] ${
+                error ? "border-[#DF4441]" : "border-[#4E4E4E]"
+              }`}
+            />
+            {discountCode && (
+              <Check
+                size={24}
+                strokeWidth={1.5}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-green-600"
+              />
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={handleApply}
+            className="group flex shrink-0 items-center gap-2 font-(family-name:--font-cormorant-garamond) text-[20px] text-[#010101] font-semibold leading-[1.3] transition-colors hover:text-[#7A2633]"
+          >
             Apply
             <Image
               src="/images/arrow-right-hero.svg"
@@ -85,9 +144,16 @@ export function OrderSummaryPanel({ children, showItems = true }: OrderSummaryPa
             />
           </button>
         </div>
+        <p
+          className={`h-5 text-[14px] leading-normal font-normal ${
+            error ? "text-[#DF4441]" : "text-[#010101]"
+          }`}
+        >
+          {error || (discountCode ? `${discountPercent}% discount applied` : " ")}
+        </p>
       </div>
 
-      <div className="pt-4 font-(family-name:--font-jost) text-sm text-[#4E4E4E]">
+      <div className="mt-4 font-(family-name:--font-jost) text-sm text-[#4E4E4E]">
         <div className="mb-4 flex justify-between">
           <span className="inline-flex items-center">
             Subtotal
@@ -98,11 +164,19 @@ export function OrderSummaryPanel({ children, showItems = true }: OrderSummaryPa
         </div>
         <div className="mb-4 flex justify-between">
           <span>Shipping</span>
-          <span className="text-base text-black font-medium">€ 5</span>
+          <span className="text-base text-black font-medium">€ {shippingCost}</span>
         </div>
+        {discountCode && (
+          <div className="mb-4 flex justify-between">
+            <span>Discount code</span>
+            <span className="text-base font-medium text-[#DF4441]">
+              − € {discountAmount.toLocaleString()}
+            </span>
+          </div>
+        )}
         <div className="flex justify-between border-t border-[#B3B3B3] pt-4 text-base font-medium leading-[1.3]">
           <span className="text-base text-black font-medium">Total</span>
-          <span className="text-base text-black font-medium">€ {cartSubtotal.toLocaleString()}</span>
+          <span className="text-base text-black font-medium">€ {total.toLocaleString()}</span>
         </div>
       </div>
 

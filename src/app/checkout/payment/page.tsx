@@ -1,23 +1,69 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState, type ReactNode } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
+import Image from "next/image";
 import { OrderService } from "@/servises/order.service";
 import { PaymentService } from "@/servises/payment.service";
-import {
-  DeliveryType,
-  PaymentType,
-  paymentTypeOptions,
-} from "@/shemas/checkout.shema";
+import { DeliveryType, PaymentType } from "@/shemas/checkout.shema";
+import type { CartItemDto } from "@/shemas/cart.shema";
 import { useCheckoutStore } from "@/store/checkout.store";
 import { useCart } from "@/hooks/useCart";
 import { useCartStore } from "@/store/cart.store";
+import { useCartStockCheck } from "@/hooks/useCartStockCheck";
 import { saveOrderItemImages } from "@/lib/orderImageCache";
 import { CheckoutContainer } from "@/components/ui/CheckoutContainer";
 import { CheckoutStepper } from "@/components/checkout/CheckoutStepper";
 import { OrderSummaryPanel } from "@/components/checkout/OrderSummaryPanel";
+import { StockUnavailableModal } from "@/components/cart/StockUnavailableModal";
+
+const paymentIcons = [
+  { src: "/images/klarna-icon.svg", alt: "Klarna", width: 47, height: 28 },
+  { src: "/images/visa-icon.svg", alt: "Visa", width: 35, height: 28 },
+  { src: "/images/mastercard-icon.svg", alt: "Mastercard", width: 35, height: 28 },
+  { src: "/images/gpay-icon.jpg", alt: "Google Pay", width: 35, height: 28 },
+  { src: "/images/paypal-icon.svg", alt: "PayPal", width: 35, height: 28 },
+];
+
+const paymentMethods: {
+  value: PaymentType;
+  label: ReactNode;
+  description: string;
+  extra: ReactNode;
+}[] = [
+  {
+    value: "CARD",
+    label: (
+      <>
+        Pay online by<Image src="/images/stripe.svg" alt="Stripe" width={29} height={24} className="relative top-px" />
+      </>
+    ),
+    description:
+      "Secure online payment via our trusted payment partner. You'll be redirected to a secure payment page after placing your order.",
+    extra: (
+      <div className="flex items-center gap-4">
+        {paymentIcons.map((icon) => (
+          <Image key={icon.alt} src={icon.src} alt={icon.alt} width={icon.width} height={icon.height} />
+        ))}
+      </div>
+    ),
+  },
+  {
+    value: "CASH_ON_DELIVERY",
+    label: "Pay on pickup",
+    description:
+      "Pay when collecting your order at the selected pickup location. Payment can be made by cash or card.",
+    extra: (
+      <p className="flex items-center font-(family-name:--font-jost) text-sm text-[#343434] leading-normal font-medium">
+        Cash
+        <span className="mx-0.5 inline-flex size-6 items-center justify-center text-[#343434]">/</span>
+        Card
+      </p>
+    ),
+  },
+];
 
 function PaymentPageContent() {
   const router = useRouter();
@@ -25,10 +71,15 @@ function PaymentPageContent() {
   const deliveryDetails = useCheckoutStore((s) => s.deliveryDetails);
   const shipping = useCheckoutStore((s) => s.shipping);
   const setLastOrder = useCheckoutStore((s) => s.setLastOrder);
+  const discountCode = useCheckoutStore((s) => s.discountCode);
   const { cart, cartId } = useCart();
   const clearCartId = useCartStore((s) => s.clearCartId);
+  const { checkStock } = useCartStockCheck();
 
   const [paymentType, setPaymentType] = useState<PaymentType>("CARD");
+  const [isCheckingStock, setIsCheckingStock] = useState(false);
+  const [unavailableItems, setUnavailableItems] = useState<CartItemDto[]>([]);
+  const [showStockModal, setShowStockModal] = useState(false);
 
   const orderIdParam = searchParams.get("orderId");
   // Returning from a cancelled (or failed-to-start) Stripe Checkout session:
@@ -75,6 +126,7 @@ function PaymentPageContent() {
         deliveryType,
         paymentType,
         ignoreOutOfStockItems: false,
+        discountCode: discountCode ?? undefined,
       });
     },
     onSuccess: async (order) => {
@@ -162,14 +214,14 @@ function PaymentPageContent() {
           </div>
         ) : (
           <>
-            <h1 className="mb-6 font-(family-name:--font-cormorant-garamond) text-2xl font-light tracking-widest uppercase text-black sm:text-3xl lg:mb-10 lg:text-4xl">
-              Payment
-            </h1>
-
             <div className="grid grid-cols-1 gap-8 md:gap-10 lg:grid-cols-[519px_410px] lg:justify-between">
-              <div className="space-y-8">
-                <div>
-                  <p className="mb-1 font-(family-name:--font-jost) text-[13px] tracking-widest uppercase text-[#343434]">
+              <div className="space-y-4">
+                <h1 className="font-(family-name:--font-cormorant-garamond) text-[36px] font-semibold text-black leading-[1.1]">
+                  Payment
+                </h1>
+
+                {/* <div>
+                  <p className="mb-2 font-(family-name:--font-jost) text-[14px] font-medium leading-normal text-[#343434]">
                     Shipping to
                   </p>
                   <p className="font-(family-name:--font-jost) text-sm text-black">
@@ -177,30 +229,34 @@ function PaymentPageContent() {
                       ? `${shipping!.store!.name} — ${shipping!.store!.address}, ${shipping!.store!.city}`
                       : `${shipping!.servicePoint!.carrierName} — ${shipping!.servicePoint!.street} ${shipping!.servicePoint!.houseNumber}, ${shipping!.servicePoint!.postalCode} ${shipping!.servicePoint!.city}`}
                   </p>
-                </div>
+                </div> */}
 
                 <fieldset>
-                  <legend className="mb-3 font-(family-name:--font-jost) text-[13px] tracking-widest uppercase text-[#343434]">
-                    Payment method
+                  <legend className="mb-8 font-(family-name:--font-jost) text-base font-normal leading-[1.3] text-black">
+                    Choose your payment method
                   </legend>
-                  <div className="space-y-2">
-                    {paymentTypeOptions.map((opt) => (
+                  <div className="divide-y divide-[#B3B3B3]">
+                    {paymentMethods.map((opt) => (
                       <label
                         key={opt.value}
-                        className={`flex cursor-pointer items-center gap-3 border px-4 py-3 font-(family-name:--font-jost) text-sm transition-colors ${
-                          paymentType === opt.value
-                            ? "border-black text-black"
-                            : "border-gray-300 text-gray-600"
-                        }`}
+                        className="flex cursor-pointer flex-col gap-3 py-4"
                       >
-                        <input
-                          type="radio"
-                          name="paymentType"
-                          checked={paymentType === opt.value}
-                          onChange={() => setPaymentType(opt.value)}
-                          className="accent-black"
-                        />
-                        {opt.label}
+                        <span className="flex items-center gap-3">
+                          <input
+                            type="radio"
+                            name="paymentType"
+                            checked={paymentType === opt.value}
+                            onChange={() => setPaymentType(opt.value)}
+                            className="size-4.5 shrink-0 appearance-none rounded-full border border-black checked:border-black checked:bg-black"
+                          />
+                          <span className="flex items-center gap-2 font-(family-name:--font-jost) text-base font-medium text-black">
+                            {opt.label}
+                          </span>
+                        </span>
+                        <p className="pl-7 font-(family-name:--font-jost) text-sm text-[#4E4E4E] leading-normal font-normal">
+                          {opt.description}
+                        </p>
+                        <div className="pl-7">{opt.extra}</div>
                       </label>
                     ))}
                   </div>
@@ -213,11 +269,36 @@ function PaymentPageContent() {
                 )}
 
                 <button
-                  onClick={() => placeOrder.mutate()}
-                  disabled={placeOrder.isPending || !cartId}
+                  onClick={async () => {
+                    // Pay on pickup isn't wired up to the backend yet — stub so the
+                    // button stays clickable without sending the shopper anywhere.
+                    if (paymentType !== "CARD") return;
+
+                    console.log("[Stock] payment page: checking stock before submit");
+                    setIsCheckingStock(true);
+                    const result = await checkStock(cart?.cartItems ?? []);
+                    setIsCheckingStock(false);
+
+                    if (!result.ok) {
+                      console.log("[Stock] payment page: blocked, redirecting to cart", result.unavailableItems);
+                      setUnavailableItems(result.unavailableItems);
+                      setShowStockModal(true);
+                      return;
+                    }
+
+                    console.log("[Stock] payment page: check passed, placing order");
+                    placeOrder.mutate();
+                  }}
+                  disabled={placeOrder.isPending || isCheckingStock || !cartId}
                   className="w-full bg-black py-3.75 font-(family-name:--font-jost) text-sm font-medium tracking-widest uppercase text-white transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-black/30"
                 >
-                  {placeOrder.isPending ? "Placing order…" : "Place Order"}
+                  {placeOrder.isPending
+                    ? "Placing order…"
+                    : isCheckingStock
+                      ? "Checking availability…"
+                      : paymentType === "CARD"
+                        ? "Proceed to Payment"
+                        : "Place Order"}
                 </button>
               </div>
 
@@ -226,6 +307,15 @@ function PaymentPageContent() {
           </>
         )}
       </CheckoutContainer>
+
+      <StockUnavailableModal
+        open={showStockModal}
+        unavailableItems={unavailableItems}
+        onClose={() => {
+          setShowStockModal(false);
+          router.push("/cart");
+        }}
+      />
     </main>
   );
 }

@@ -109,10 +109,7 @@ export default async function EditorialArticlePage({
       <Container>
         <div className="px-8">
           {/* Breadcrumb */}
-          <nav
-            className="flex items-center gap-2 text-[12px] uppercase tracking-widest text-black/50 mb-10"
-            style={{ fontFamily: "var(--font-jost)" }}
-          >
+          <nav className="flex items-center gap-2 font-(family-name:--font-jost) text-[12px] uppercase tracking-widest text-[#4E4E4E] mb-10">
             <Link href="/" className="hover:text-black transition-colors">
               Home
             </Link>
@@ -122,22 +119,13 @@ export default async function EditorialArticlePage({
 
           {/* Article header */}
           <div className="max-w-2xl mb-10">
-            <p
-              className="text-[12px] uppercase tracking-widest text-black/50 mb-4"
-              style={{ fontFamily: "var(--font-jost)" }}
-            >
+            <p className="font-(family-name:--font-jost) text-[12px] uppercase tracking-widest text-[#4E4E4E] mb-4">
               {article.date}
             </p>
-            <h1
-              className="text-[48px] md:text-[64px] leading-[1.05] tracking-tight text-black mb-4"
-              style={{ fontFamily: "var(--font-cormorant-garamond)" }}
-            >
+            <h1 className="font-(family-name:--font-cormorant-garamond) text-[48px] md:text-[64px] font-semibold leading-[1.05] tracking-tight text-black mb-4">
               {article.title}
             </h1>
-            <p
-              className="text-[18px] leading-[1.5] text-black/60"
-              style={{ fontFamily: "var(--font-jost)" }}
-            >
+            <p className="font-(family-name:--font-jost) text-[18px] leading-[1.5] text-[#4E4E4E]">
               {article.subtitle}
             </p>
           </div>
@@ -158,17 +146,11 @@ export default async function EditorialArticlePage({
             {article.body.map((block, i) => (
               <div key={i} className="mb-8">
                 {block.heading && (
-                  <h2
-                    className="text-[28px] leading-[1.2] tracking-tight text-black mb-4"
-                    style={{ fontFamily: "var(--font-cormorant-garamond)" }}
-                  >
+                  <h2 className="font-(family-name:--font-cormorant-garamond) text-[28px] font-semibold leading-[1.2] tracking-tight text-black mb-4">
                     {block.heading}
                   </h2>
                 )}
-                <p
-                  className="text-[16px] leading-[1.75] text-black/80"
-                  style={{ fontFamily: "var(--font-jost)" }}
-                >
+                <p className="font-(family-name:--font-jost) text-[16px] leading-[1.75] text-[#4E4E4E]">
                   {block.text}
                 </p>
               </div>
@@ -180,8 +162,7 @@ export default async function EditorialArticlePage({
           <div className="max-w-2xl mx-auto mt-16 pt-8 border-t border-black/10">
             <Link
               href="/"
-              className="text-[12px] uppercase tracking-widest text-black hover:text-[#7A2633] transition-colors"
-              style={{ fontFamily: "var(--font-jost)" }}
+              className="font-(family-name:--font-jost) text-[12px] uppercase tracking-widest text-black hover:text-[#7A2633] transition-colors"
             >
               ← Back to home
             </Link>

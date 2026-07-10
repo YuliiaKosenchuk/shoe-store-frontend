@@ -101,6 +101,7 @@ export default function Footer() {
             </div>
 
             <div className="flex items-center gap-4">
+              <Image src="/images/klarna-icon.svg" alt="Klarna" width={67} height={40} />
               <Image src="/images/visa-icon.svg" alt="Visa" width={50} height={40} />
               <Image src="/images/mastercard-icon.svg" alt="Mastercard" width={50} height={40} />
               <Image src="/images/gpay-icon.jpg" alt="Google Pay" width={50} height={40} />
@@ -241,6 +242,7 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center gap-4">
+            <Image src="/images/klarna-icon.svg" alt="Klarna" width={67} height={40} />
             <Image src="/images/visa-icon.svg" alt="Visa" width={50} height={40} />
             <Image src="/images/mastercard-icon.svg" alt="Mastercard" width={50} height={40} />
             <Image src="/images/gpay-icon.jpg" alt="Google Pay" width={50} height={40} />

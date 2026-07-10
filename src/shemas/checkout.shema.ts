@@ -25,6 +25,8 @@ export interface OrderResponseDto {
   orderId: number;
   status: OrderStatus;
   totalAmound: number;
+  discountAmount: number;
+  finalAmount: number;
   customerFirstName: string;
   customerLastName: string;
   customerPhone: string;
@@ -50,6 +52,7 @@ export interface CreateOrderRequestDto {
   deliveryType: DeliveryType;
   paymentType: PaymentType;
   ignoreOutOfStockItems?: boolean;
+  discountCode?: string;
 }
 
 export interface CreatePaymentRequestDto {

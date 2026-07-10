@@ -1,20 +1,25 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart, useRemoveCartItem, useUpdateCartItem, getCartErrorMessage } from "@/hooks/useCart";
 import { useCartItemsStock } from "@/hooks/useCartItemsStock";
 import { useCartItemsProducts } from "@/hooks/useCartItemsProducts";
+import { useCartStockCheck } from "@/hooks/useCartStockCheck";
 import { CheckoutContainer } from "@/components/ui/CheckoutContainer";
 import { CheckoutStepper } from "@/components/checkout/CheckoutStepper";
 import { OrderSummaryPanel } from "@/components/checkout/OrderSummaryPanel";
 import { CartPageItem } from "@/components/cart/CartPageItem";
+import { StockUnavailableModal } from "@/components/cart/StockUnavailableModal";
+import type { CartItemDto } from "@/shemas/cart.shema";
 
 export default function CartPage() {
   const router = useRouter();
   const { cart, isLoading, hasHydrated } = useCart();
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveCartItem();
+  const { checkStock } = useCartStockCheck();
 
   // Sort by id (= order added to cart) — the backend doesn't guarantee stable
   // ordering across mutations, which would otherwise shift rows under the
@@ -24,6 +29,29 @@ export default function CartPage() {
   const productByCartItemId = useCartItemsProducts(items);
   const productsCount = cart?.productsCount ?? 0;
   const showEmpty = hasHydrated && !isLoading && items.length === 0;
+
+  // Runs once per visit to this page (covers the drawer → cart-page
+  // transition, plus direct navigation/refresh/back) rather than on every
+  // cart refetch, so the modal doesn't reappear after every quantity edit.
+  const stockCheckedRef = useRef(false);
+  const [unavailableItems, setUnavailableItems] = useState<CartItemDto[]>([]);
+  const [showStockModal, setShowStockModal] = useState(false);
+
+  useEffect(() => {
+    if (!hasHydrated || isLoading) return;
+    if (!cart?.cartItems?.length) return;
+    if (stockCheckedRef.current) return;
+    stockCheckedRef.current = true;
+
+    console.log("[Stock] cart page: running stock check on mount");
+    checkStock(cart.cartItems).then((result) => {
+      if (!result.ok) {
+        console.log("[Stock] cart page: unavailable items found, showing modal", result.unavailableItems);
+        setUnavailableItems(result.unavailableItems);
+        setShowStockModal(true);
+      }
+    });
+  }, [hasHydrated, isLoading, cart?.cartItems, checkStock]);
 
   return (
     <main>
@@ -90,6 +118,12 @@ export default function CartPage() {
           </div>
         )}
       </CheckoutContainer>
+
+      <StockUnavailableModal
+        open={showStockModal}
+        unavailableItems={unavailableItems}
+        onClose={() => setShowStockModal(false)}
+      />
     </main>
   );
 }
