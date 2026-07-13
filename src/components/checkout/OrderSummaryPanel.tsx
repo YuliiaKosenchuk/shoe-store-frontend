@@ -2,8 +2,11 @@ import Image from "next/image";
 import { useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
+import { useCartItemsStock } from "@/hooks/useCartItemsStock";
 import { useCheckoutStore } from "@/store/checkout.store";
 import { getDiscountPercent } from "@/lib/discountCodes";
+import { isCartItemOutOfStock } from "@/lib/cartStock";
+import { OutOfStockBadge } from "@/components/cart/OutOfStockBadge";
 
 interface OrderSummaryPanelProps {
   children?: ReactNode;
@@ -22,11 +25,14 @@ export function OrderSummaryPanel({ children, showItems = true }: OrderSummaryPa
 
   // Sort by id (= order added to cart) for a stable, predictable display order.
   const items = [...(cart?.cartItems ?? [])].sort((a, b) => a.id - b.id);
+  const { stockByCartItemId, isLoading: isStockLoading } = useCartItemsStock(items);
   const productsCount = cart?.productsCount ?? 0;
   const cartSubtotal = cart?.cartSubtotal ?? 0;
   const shippingCost = 5;
-  const discountAmount = discountPercent ? Math.round((cartSubtotal * discountPercent) / 100) : 0;
-  const total = cartSubtotal + shippingCost - discountAmount;
+  const discountAmount = discountPercent
+    ? Math.round(((cartSubtotal * discountPercent) / 100) * 100) / 100
+    : 0;
+  const total = Math.round((cartSubtotal + shippingCost - discountAmount) * 100) / 100;
 
   const handleApply = () => {
     const trimmed = codeInput.trim();
@@ -61,6 +67,7 @@ export function OrderSummaryPanel({ children, showItems = true }: OrderSummaryPa
           {items.map((item) => (
             <div key={item.id} className="flex items-stretch gap-3">
               <div className="relative h-21.5 w-21.5 shrink-0 bg-[#F8F8F8]">
+                {isCartItemOutOfStock(stockByCartItemId.get(item.id), item.quantity, isStockLoading) && <OutOfStockBadge />}
                 {item.imageUrl && (
                   <Image
                     src={item.imageUrl}
@@ -78,7 +85,10 @@ export function OrderSummaryPanel({ children, showItems = true }: OrderSummaryPa
               </div>
               <div className="flex min-w-0 flex-1 flex-col justify-between">
                 <div className="flex items-start justify-between gap-3">
-                  <p className="truncate font-(family-name:--font-cormorant-garamond) text-[20px] font-semibold leading-[1.3] text-black">
+                  <p
+                    className="truncate font-(family-name:--font-cormorant-garamond) text-[20px] font-semibold leading-[1.3] text-black"
+                    title={item.name}
+                  >
                     {item.name}
                   </p>
                   <span className="shrink-0 font-(family-name:--font-jost) text-base text-[#010101] leading-[1.3] font-medium">

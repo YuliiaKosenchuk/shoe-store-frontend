@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { BellRing } from "lucide-react";
 import type { ProductImage, ProductVariantDto } from "@/shemas/product.shema";
-import { NotifyModal } from "./NotifyModal";
+import { NotifyModal } from "@/components/products/NotifyModal";
 
 interface ColorSelectorProps {
   images: ProductImage[];

@@ -40,8 +40,18 @@ export function RemoveItemModal({
             exit={{ opacity: 0, y: 12 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <p className="mt-2 font-(family-name:--font-jost) font-semibold text-[20px] leading-[1.3] text-black">
-              Are you sure you want to remove &quot;{itemName}&quot; from your cart?
+            <p
+              className={
+                variant === "page"
+                  ? "mt-2 font-(family-name:--font-jost) font-semibold text-[20px] leading-[1.3] text-black"
+                  : "mt-2 font-(family-name:--font-jost) font-semibold text-[16px] leading-[1.3] text-black"
+              }
+            >
+              Are you sure you want to remove{" "}
+              <span className="inline-block max-w-60 truncate align-bottom" title={itemName}>
+                &quot;{itemName}&quot;
+              </span>{" "}
+              from your cart?
             </p>
 
             <div className="mt-8 flex gap-3">

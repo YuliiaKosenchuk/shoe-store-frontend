@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useCart, useRemoveCartItem, useUpdateCartItem, getCartErrorMessage } from "@/hooks/useCart";
 import { useCartItemsStock } from "@/hooks/useCartItemsStock";
+import { useCartItemsProducts } from "@/hooks/useCartItemsProducts";
+import { isCartItemOutOfStock } from "@/lib/cartStock";
 import { CartDrawerItem } from "@/components/cart/CartDrawerItem";
 
 interface CartDrawerProps {
@@ -29,7 +31,8 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   // ordering across mutations, which would otherwise shift rows under the
   // user's cursor mid-click and risk bumping the wrong item's quantity.
   const items = [...(cart?.cartItems ?? [])].sort((a, b) => a.id - b.id);
-  const stockByCartItemId = useCartItemsStock(items);
+  const { stockByCartItemId, isLoading: isStockLoading } = useCartItemsStock(items);
+  const productByCartItemId = useCartItemsProducts(items);
   const productsCount = cart?.productsCount ?? 0;
   const cartSubtotal = cart?.cartSubtotal ?? 0;
 
@@ -84,6 +87,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     <CartDrawerItem
                       key={item.id}
                       item={item}
+                      product={productByCartItemId.get(item.id)}
                       onRemove={() => removeItem.mutate(item.id)}
                       onDecrease={() =>
                         item.quantity <= 1
@@ -101,6 +105,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                           : undefined
                       }
                       maxQuantity={stockByCartItemId.get(item.id)}
+                      outOfStock={isCartItemOutOfStock(stockByCartItemId.get(item.id), item.quantity, isStockLoading)}
                     />
                   ))}
                 </ul>

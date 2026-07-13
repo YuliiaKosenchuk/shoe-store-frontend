@@ -19,9 +19,9 @@ interface NotifyModalProps {
 }
 
 export function NotifyModal({ size, color, onClose }: NotifyModalProps) {
-  const label = color
-    ? `colour ${color.charAt(0).toUpperCase() + color.slice(1).toLowerCase()}`
-    : `size ${size}`;
+  const colorLabel = color ? `colour ${color.charAt(0).toUpperCase() + color.slice(1).toLowerCase()}` : undefined;
+  const sizeLabel = size !== undefined ? `size ${size}` : undefined;
+  const label = [sizeLabel, colorLabel].filter(Boolean).join(", ");
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -63,7 +63,7 @@ export function NotifyModal({ size, color, onClose }: NotifyModalProps) {
             </p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="">
             <div className="space-y-2">
               <h2 className="font-(family-name:--font-cormorant-garamond) text-2xl font-semibold text-[#010101]">
                 Notify me when available
@@ -80,7 +80,7 @@ export function NotifyModal({ size, color, onClose }: NotifyModalProps) {
               <div className="space-y-1.5">
                 <label
                   htmlFor="notify-email"
-                  className="block font-(family-name:--font-jost) text-xs tracking-widest uppercase text-[#4E4E4E]"
+                  className="block font-(family-name:--font-jost) text-xs tracking-widest text-[#4E4E4E]"
                 >
                   Email address
                 </label>

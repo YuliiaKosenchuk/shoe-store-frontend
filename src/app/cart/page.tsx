@@ -1,18 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart, useRemoveCartItem, useUpdateCartItem, getCartErrorMessage } from "@/hooks/useCart";
 import { useCartItemsStock } from "@/hooks/useCartItemsStock";
 import { useCartItemsProducts } from "@/hooks/useCartItemsProducts";
 import { useCartStockCheck } from "@/hooks/useCartStockCheck";
+import { isCartItemOutOfStock } from "@/lib/cartStock";
 import { CheckoutContainer } from "@/components/ui/CheckoutContainer";
 import { CheckoutStepper } from "@/components/checkout/CheckoutStepper";
 import { OrderSummaryPanel } from "@/components/checkout/OrderSummaryPanel";
 import { CartPageItem } from "@/components/cart/CartPageItem";
-import { StockUnavailableModal } from "@/components/cart/StockUnavailableModal";
-import type { CartItemDto } from "@/shemas/cart.shema";
 
 export default function CartPage() {
   const router = useRouter();
@@ -25,17 +24,21 @@ export default function CartPage() {
   // ordering across mutations, which would otherwise shift rows under the
   // user's cursor mid-click and risk bumping the wrong item's quantity.
   const items = [...(cart?.cartItems ?? [])].sort((a, b) => a.id - b.id);
-  const stockByCartItemId = useCartItemsStock(items);
+  const { stockByCartItemId, isLoading: isStockLoading } = useCartItemsStock(items);
   const productByCartItemId = useCartItemsProducts(items);
   const productsCount = cart?.productsCount ?? 0;
   const showEmpty = hasHydrated && !isLoading && items.length === 0;
+  const hasOutOfStockItem = items.some((item) =>
+    isCartItemOutOfStock(stockByCartItemId.get(item.id), item.quantity, isStockLoading)
+  );
 
   // Runs once per visit to this page (covers the drawer → cart-page
   // transition, plus direct navigation/refresh/back) rather than on every
-  // cart refetch, so the modal doesn't reappear after every quantity edit.
+  // cart refetch. Forces a fresh network fetch into the shared query cache
+  // so the inline out-of-stock badges below are accurate on landing —
+  // the result itself isn't read, the badges pick up the refreshed cache
+  // reactively via useCartItemsStock.
   const stockCheckedRef = useRef(false);
-  const [unavailableItems, setUnavailableItems] = useState<CartItemDto[]>([]);
-  const [showStockModal, setShowStockModal] = useState(false);
 
   useEffect(() => {
     if (!hasHydrated || isLoading) return;
@@ -43,14 +46,7 @@ export default function CartPage() {
     if (stockCheckedRef.current) return;
     stockCheckedRef.current = true;
 
-    console.log("[Stock] cart page: running stock check on mount");
-    checkStock(cart.cartItems).then((result) => {
-      if (!result.ok) {
-        console.log("[Stock] cart page: unavailable items found, showing modal", result.unavailableItems);
-        setUnavailableItems(result.unavailableItems);
-        setShowStockModal(true);
-      }
-    });
+    checkStock(cart.cartItems);
   }, [hasHydrated, isLoading, cart?.cartItems, checkStock]);
 
   return (
@@ -101,13 +97,14 @@ export default function CartPage() {
                         : undefined
                     }
                     maxQuantity={stockByCartItemId.get(item.id)}
+                    outOfStock={isCartItemOutOfStock(stockByCartItemId.get(item.id), item.quantity, isStockLoading)}
                   />
                 </div>
               ))}
 
               <button
                 onClick={() => router.push("/checkout/delivery")}
-                disabled={items.length === 0}
+                disabled={items.length === 0 || hasOutOfStockItem}
                 className="mt-6 w-full bg-black py-3.75 font-(family-name:--font-jost) text-sm font-medium leading-[1.3] uppercase text-white transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-black/30"
               >
                 Place order
@@ -118,12 +115,6 @@ export default function CartPage() {
           </div>
         )}
       </CheckoutContainer>
-
-      <StockUnavailableModal
-        open={showStockModal}
-        unavailableItems={unavailableItems}
-        onClose={() => setShowStockModal(false)}
-      />
     </main>
   );
 }

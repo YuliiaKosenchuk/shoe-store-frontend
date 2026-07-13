@@ -5,7 +5,7 @@ import { BellRing } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ProductsService } from "@/servises/products.service";
-import { NotifyModal } from "./_components/NotifyModal";
+import { NotifyModal } from "@/components/products/NotifyModal";
 // import { getMockProduct } from "@/servises/products.mock";
 import { WishlistButton } from "@/components/ui/WishlistButton";
 import { useWishlistStore } from "@/store/wishlist.store";

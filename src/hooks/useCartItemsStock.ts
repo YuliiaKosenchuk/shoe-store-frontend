@@ -9,7 +9,7 @@ import type { CartItemDto } from "@/shemas/cart.shema";
 import type { Product } from "@/shemas/product.shema";
 
 export function useCartItemsStock(items: CartItemDto[]) {
-  const { data: products = [] } = useQuery({
+  const { data: products = [], isLoading: isProductsLoading } = useQuery({
     queryKey: ["products"],
     queryFn: () => ProductsService.getProducts(),
     staleTime: 5 * 60 * 1000,
@@ -24,14 +24,19 @@ export function useCartItemsStock(items: CartItemDto[]) {
     return Array.from(byId.values());
   }, [items, products]);
 
-  const { variantsByProductId } = useProductVariantsMap(matchedProducts, matchedProducts.length > 0);
+  const { variantsByProductId, isLoading: isVariantsLoading } = useProductVariantsMap(
+    matchedProducts,
+    matchedProducts.length > 0
+  );
 
-  return useMemo(() => {
-    const stockByCartItemId = new Map<number, number | undefined>();
+  const stockByCartItemId = useMemo(() => {
+    const map = new Map<number, number | undefined>();
     items.forEach((item) => {
       const variant = findVariantForCartItem(item, products, variantsByProductId);
-      stockByCartItemId.set(item.id, variant?.stockQty);
+      map.set(item.id, variant?.stockQty);
     });
-    return stockByCartItemId;
+    return map;
   }, [items, products, variantsByProductId]);
+
+  return { stockByCartItemId, isLoading: isProductsLoading || isVariantsLoading };
 }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { BellRing } from "lucide-react";
 import type { ProductSize } from "@/shemas/product.shema";
-import { NotifyModal } from "./NotifyModal";
+import { NotifyModal } from "@/components/products/NotifyModal";
 import { SizeGuideModal } from "./SizeGuideModal";
 
 interface SizeSelectorProps {

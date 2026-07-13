@@ -15,3 +15,18 @@ export function findVariantForCartItem(
   const variants = variantsByProductId.get(product.id) ?? [];
   return variants.find((v) => v.color === item.color && String(v.size) === String(item.size));
 }
+
+// Mirrors the hard gate in useCartStockCheck (`!variant || variant.stockQty <
+// item.quantity`) so the inline badge agrees with what actually blocks
+// checkout — a cart holding more units than are left in stock is exactly as
+// "unavailable" as a fully zero-stock item. Only true once the stock query
+// has actually resolved — while it's still loading, `stockQty` is
+// indistinguishable from "no variant found", and we don't want the badge to
+// flash on for every cold page load.
+export function isCartItemOutOfStock(
+  stockQty: number | undefined,
+  quantity: number,
+  isLoading: boolean
+): boolean {
+  return !isLoading && (stockQty === undefined || stockQty < quantity);
+}

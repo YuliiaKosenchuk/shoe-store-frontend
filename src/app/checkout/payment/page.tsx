@@ -8,16 +8,16 @@ import Image from "next/image";
 import { OrderService } from "@/servises/order.service";
 import { PaymentService } from "@/servises/payment.service";
 import { DeliveryType, PaymentType } from "@/shemas/checkout.shema";
-import type { CartItemDto } from "@/shemas/cart.shema";
 import { useCheckoutStore } from "@/store/checkout.store";
 import { useCart } from "@/hooks/useCart";
 import { useCartStore } from "@/store/cart.store";
 import { useCartStockCheck } from "@/hooks/useCartStockCheck";
+import { useCartItemsStock } from "@/hooks/useCartItemsStock";
+import { isCartItemOutOfStock } from "@/lib/cartStock";
 import { saveOrderItemImages } from "@/lib/orderImageCache";
 import { CheckoutContainer } from "@/components/ui/CheckoutContainer";
 import { CheckoutStepper } from "@/components/checkout/CheckoutStepper";
 import { OrderSummaryPanel } from "@/components/checkout/OrderSummaryPanel";
-import { StockUnavailableModal } from "@/components/cart/StockUnavailableModal";
 
 const paymentIcons = [
   { src: "/images/klarna-icon.svg", alt: "Klarna", width: 47, height: 28 },
@@ -75,11 +75,13 @@ function PaymentPageContent() {
   const { cart, cartId } = useCart();
   const clearCartId = useCartStore((s) => s.clearCartId);
   const { checkStock } = useCartStockCheck();
+  const { stockByCartItemId, isLoading: isStockLoading } = useCartItemsStock(cart?.cartItems ?? []);
+  const hasOutOfStockItem = (cart?.cartItems ?? []).some((item) =>
+    isCartItemOutOfStock(stockByCartItemId.get(item.id), item.quantity, isStockLoading)
+  );
 
   const [paymentType, setPaymentType] = useState<PaymentType>("CARD");
   const [isCheckingStock, setIsCheckingStock] = useState(false);
-  const [unavailableItems, setUnavailableItems] = useState<CartItemDto[]>([]);
-  const [showStockModal, setShowStockModal] = useState(false);
 
   const orderIdParam = searchParams.get("orderId");
   // Returning from a cancelled (or failed-to-start) Stripe Checkout session:
@@ -274,22 +276,18 @@ function PaymentPageContent() {
                     // button stays clickable without sending the shopper anywhere.
                     if (paymentType !== "CARD") return;
 
-                    console.log("[Stock] payment page: checking stock before submit");
                     setIsCheckingStock(true);
                     const result = await checkStock(cart?.cartItems ?? []);
                     setIsCheckingStock(false);
 
                     if (!result.ok) {
-                      console.log("[Stock] payment page: blocked, redirecting to cart", result.unavailableItems);
-                      setUnavailableItems(result.unavailableItems);
-                      setShowStockModal(true);
+                      router.push("/cart");
                       return;
                     }
 
-                    console.log("[Stock] payment page: check passed, placing order");
                     placeOrder.mutate();
                   }}
-                  disabled={placeOrder.isPending || isCheckingStock || !cartId}
+                  disabled={placeOrder.isPending || isCheckingStock || !cartId || hasOutOfStockItem}
                   className="w-full bg-black py-3.75 font-(family-name:--font-jost) text-sm font-medium tracking-widest uppercase text-white transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-black/30"
                 >
                   {placeOrder.isPending
@@ -307,15 +305,6 @@ function PaymentPageContent() {
           </>
         )}
       </CheckoutContainer>
-
-      <StockUnavailableModal
-        open={showStockModal}
-        unavailableItems={unavailableItems}
-        onClose={() => {
-          setShowStockModal(false);
-          router.push("/cart");
-        }}
-      />
     </main>
   );
 }

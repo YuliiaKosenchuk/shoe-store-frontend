@@ -1,11 +1,12 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
 interface ConfirmModalProps {
   open: boolean;
   title: string;
-  description?: string;
+  description?: ReactNode;
   confirmLabel?: string;
   loading?: boolean;
   onConfirm: () => void;

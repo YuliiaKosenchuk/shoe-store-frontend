@@ -181,7 +181,14 @@ export default function CatalogPage() {
       <ConfirmModal
         open={!!deleteTarget}
         title="Delete product?"
-        description={`"${deleteTarget?.name}" will be permanently removed.`}
+        description={
+          <>
+            <span className="inline-block max-w-60 truncate align-bottom" title={deleteTarget?.name}>
+              &quot;{deleteTarget?.name}&quot;
+            </span>{" "}
+            will be permanently removed.
+          </>
+        }
         confirmLabel="Delete"
         loading={deleting}
         onConfirm={handleDelete}
