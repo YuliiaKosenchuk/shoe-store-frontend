@@ -26,11 +26,11 @@ const InstagramIcon = (
 );
 
 const stylePhotos = [
-  { id: 1, src: "/images/style-1.png", username: "@emmaslife" },
-  { id: 2, src: "/images/style-2.png", username: "@styledbynico" },
-  { id: 3, src: "/images/style-3.png", username: "@foxy" },
-  { id: 4, src: "/images/style-4.png", username: "@emmaslife" },
-  { id: 5, src: "/images/style-5.png", username: "@styledbynico" },
+  { id: 1, src: "/images/style-111.jpg", username: "@emmaslife" },
+  { id: 2, src: "/images/style-222.jpg", username: "@styledbynico" },
+  { id: 3, src: "/images/style-333.jpg", username: "@foxy" },
+  { id: 4, src: "/images/style-444.jpg", username: "@emmaslife" },
+  { id: 5, src: "/images/style-555.jpg", username: "@styledbynico" },
 ];
 
 export default function SocialSection() {
@@ -87,7 +87,9 @@ export default function SocialSection() {
               alt={`Style photo by ${photo.username}`}
               fill
               className="object-cover object-top"
-              sizes="(max-width: 768px) 50vw, 20vw"
+              sizes="(max-width: 768px) 90vw, 40vw"
+              quality={90}
+              priority={photo.id === 3}
             />
 
             {/* Username badge */}

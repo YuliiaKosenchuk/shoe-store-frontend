@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   images: {
     // formats: ["image/webp"],
+    qualities: [75, 90],
     remotePatterns: [
       { protocol: "https", hostname: "**" },
       { protocol: "http", hostname: "**" },

@@ -44,8 +44,7 @@ export function StorePickupList({ selectedStoreId, onSelect }: StorePickupListPr
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex items-center gap-2 pl-7 font-(family-name:--font-jost) text-sm text-black hover:opacity-70 transition-opacity"
-      >
+        className="inline-flex items-center gap-2 pl-7 font-(family-name:--font-jost) text-sm text-black hover:opacity-70 transition-opacity"      >
         <span className="truncate">
           {selectedStore ? formatStoreLabel(selectedStore) : ""}
         </span>
