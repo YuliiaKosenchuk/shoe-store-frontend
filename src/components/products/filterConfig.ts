@@ -1,3 +1,4 @@
+import type { ProductPageFilter } from "@/components/ui/ProductsPageContent";
 import type { FilterDef, FilterOption, SortOption } from "./ProductFilters.types";
 import { deriveColourOptions, deriveMaterialOptions, deriveSeasonOptions } from "./deriveFilterOptions";
 
@@ -12,6 +13,22 @@ export const STYLE_OPTIONS: FilterOption[] = [
   { value: "SNEAKERS", label: "Sneakers" },
   { value: "BOOTS", label: "Boots" },
   { value: "FLATS", label: "Flats" },
+];
+
+// Same rationale as STYLE_OPTIONS above, but for the bags category.
+export const BAG_STYLE_OPTIONS: FilterOption[] = [
+  { value: "TOP_HANDLES", label: "Top handles" },
+  { value: "TOTES", label: "Totes" },
+  { value: "BACKPACKS", label: "Backpacks" },
+  { value: "BUCKETS", label: "Buckets" },
+];
+
+// Same rationale as STYLE_OPTIONS above, but for the accessories category.
+export const ACCESSORY_STYLE_OPTIONS: FilterOption[] = [
+  { value: "JEWELRY", label: "Jewelry" },
+  { value: "BELTS", label: "Belts" },
+  { value: "SUNGLASSES", label: "Sunglasses" },
+  { value: "WRAPS", label: "Wraps" },
 ];
 
 // Fixed EU size range 35–42, per store requirements — not derived from product data.
@@ -35,19 +52,34 @@ export const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: "featured", label: "Featured" },
 ];
 
-export const FILTER_DEFS: FilterDef[] = [
-  { key: "style", label: "Style", control: "checkbox-list-2col", getOptions: () => STYLE_OPTIONS },
-  { key: "size", label: "Size", control: "checkbox-list-2col", getOptions: () => SIZE_OPTIONS },
-  { key: "colour", label: "Colour", control: "checkbox-list-2col", getOptions: deriveColourOptions },
-  // Price has no discrete option list — PriceRangeControl derives min/max bounds
-  // directly from baseProducts, so getOptions is unused for this entry.
-  { key: "price", label: "Price", control: "price-range", getOptions: () => [] },
-  { key: "material", label: "Material", control: "checkbox-list", getOptions: deriveMaterialOptions },
-  { key: "season", label: "Season", control: "checkbox-list", getOptions: deriveSeasonOptions },
-  {
-    key: "discount",
-    label: "Discount",
-    control: "checkbox-list",
-    getOptions: () => DISCOUNT_TIERS.map(({ value, label }) => ({ value, label })),
-  },
-];
+// Bags and accessories have no sizes to filter by — the size range below is shoe-specific.
+const CATEGORIES_WITHOUT_SIZE: ProductPageFilter[] = ["bags", "accessories"];
+
+const STYLE_OPTIONS_BY_CATEGORY: Partial<Record<ProductPageFilter, FilterOption[]>> = {
+  bags: BAG_STYLE_OPTIONS,
+  accessories: ACCESSORY_STYLE_OPTIONS,
+};
+
+export function getFilterDefs(category: ProductPageFilter): FilterDef[] {
+  const hasSize = !CATEGORIES_WITHOUT_SIZE.includes(category);
+  const styleOptions = STYLE_OPTIONS_BY_CATEGORY[category] ?? STYLE_OPTIONS;
+
+  return [
+    { key: "style", label: "Style", control: "checkbox-list-2col", getOptions: () => styleOptions },
+    ...(hasSize
+      ? [{ key: "size" as const, label: "Size", control: "checkbox-list-2col" as const, getOptions: () => SIZE_OPTIONS }]
+      : []),
+    { key: "colour", label: "Colour", control: "checkbox-list-2col", getOptions: deriveColourOptions },
+    // Price has no discrete option list — PriceRangeControl derives min/max bounds
+    // directly from baseProducts, so getOptions is unused for this entry.
+    { key: "price", label: "Price", control: "price-range", getOptions: () => [] },
+    { key: "material", label: "Material", control: "checkbox-list", getOptions: deriveMaterialOptions },
+    { key: "season", label: "Season", control: "checkbox-list", getOptions: deriveSeasonOptions },
+    {
+      key: "discount",
+      label: "Discount",
+      control: "checkbox-list",
+      getOptions: () => DISCOUNT_TIERS.map(({ value, label }) => ({ value, label })),
+    },
+  ];
+}

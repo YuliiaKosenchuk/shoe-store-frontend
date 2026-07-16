@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence } from "motion/react";
 import type { Product } from "@/shemas/product.shema";
 import { Container } from "@/components/ui/Container";
+import type { ProductPageFilter } from "@/components/ui/ProductsPageContent";
 import { useProductFilters } from "@/hooks/useProductFilters";
 import { DEFAULT_SORT } from "./ProductFilters.types";
-import { FILTER_DEFS, SORT_OPTIONS } from "./filterConfig";
+import { getFilterDefs, SORT_OPTIONS } from "./filterConfig";
 import { FilterDropdownButton } from "./FilterDropdownButton";
 import { SortByButton } from "./SortByButton";
 import { FilterPanel } from "./FilterPanel";
@@ -20,14 +21,17 @@ interface ProductFilterBarProps {
   baseProducts: Product[];
   filteredCount: number;
   isLoading?: boolean;
+  category: ProductPageFilter;
 }
 
-export function ProductFilterBar({ baseProducts, filteredCount, isLoading }: ProductFilterBarProps) {
+export function ProductFilterBar({ baseProducts, filteredCount, isLoading, category }: ProductFilterBarProps) {
   const [openKey, setOpenKey] = useState<OpenKey>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { filters, sort, activeCount, totalActiveCount, toggleValue, setPriceRange, setSort, removeValue, clearAll } =
     useProductFilters();
+
+  const filterDefs = getFilterDefs(category);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -61,14 +65,14 @@ export function ProductFilterBar({ baseProducts, filteredCount, isLoading }: Pro
   const prices = baseProducts.map((p) => p.price);
   const priceBounds = prices.length > 0 ? { min: Math.min(...prices), max: Math.max(...prices) } : { min: 0, max: 0 };
 
-  const optionsByKey = Object.fromEntries(FILTER_DEFS.map((def) => [def.key, def.getOptions(baseProducts)]));
+  const optionsByKey = Object.fromEntries(filterDefs.map((def) => [def.key, def.getOptions(baseProducts)]));
 
-  const activeDef = FILTER_DEFS.find((def) => def.key === openKey);
+  const activeDef = filterDefs.find((def) => def.key === openKey);
 
   const sortLabel = sort === DEFAULT_SORT ? "Sort by" : (SORT_OPTIONS.find((o) => o.value === sort)?.label ?? "Sort by");
 
   const pins: FilterPin[] = [];
-  for (const def of FILTER_DEFS) {
+  for (const def of filterDefs) {
     if (def.key === "price") continue;
     const values = filters[def.key as MultiSelectFilterKey];
     for (const value of values) {
@@ -87,7 +91,7 @@ export function ProductFilterBar({ baseProducts, filteredCount, isLoading }: Pro
       <div className="relative">
         <Container>
           <div className="flex flex-wrap items-center gap-8 px-8 pt-6 pb-3.25">
-            {FILTER_DEFS.map((def) => (
+            {filterDefs.map((def) => (
               <FilterDropdownButton
                 key={def.key}
                 label={def.label}
