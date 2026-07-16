@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, User, Heart, Menu, X } from "lucide-react";
+import { Search, User, Heart, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import { CartIcon } from "@/components/ui/CartIcon";
 import { UsersService } from "@/servises/users.service";
 import { useWishlistStore } from "@/store/wishlist.store";
@@ -160,6 +161,7 @@ const navItems: NavItem[] = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set());
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [initials, setInitials] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -181,6 +183,15 @@ export default function Header() {
 
   const scheduleClose = () => {
     closeTimeout.current = setTimeout(() => setHoveredNav(null), 100);
+  };
+
+  const toggleSection = (label: string) => {
+    setOpenSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(label)) next.delete(label);
+      else next.add(label);
+      return next;
+    });
   };
 
   useEffect(() => {
@@ -234,57 +245,84 @@ export default function Header() {
       ? `text-[14px] font-normal text-white relative after:absolute after:-bottom-[2px] after:left-0 after:h-px after:w-full after:bg-current after:origin-left after:transition-transform after:duration-300${isActive ? " after:scale-x-100" : " after:scale-x-0 hover:after:scale-x-100"}`
       : `text-[14px] font-normal text-black relative after:absolute after:-bottom-[2px] after:left-0 after:h-px after:w-full after:bg-current after:origin-left after:transition-transform after:duration-300${isActive ? " after:scale-x-100" : " after:scale-x-0 hover:after:scale-x-100"}`;
 
+  const userIcon = initials ? (
+    <Link
+      href="/cabinet"
+      aria-label="My cabinet"
+      className="hover:opacity-70 transition-opacity"
+    >
+      <div
+        className={`flex h-4.5 w-4.5 items-center justify-center rounded-full ${isTransparent ? "bg-white text-black" : "bg-black text-white"}`}
+      >
+        <span className="font-(family-name:--font-jost) text-[8px] font-medium tracking-wide leading-none">
+          {initials}
+        </span>
+      </div>
+    </Link>
+  ) : (
+    <Link href="/login" aria-label="Sign in" className={iconCls}>
+      <User size={24} strokeWidth={1.25} />
+    </Link>
+  );
+
+  const wishlistIcon = (
+    <Link href="/wishlist" aria-label="Wishlist" className={`relative ${iconCls}`}>
+      <Heart size={24} strokeWidth={1.25} />
+      {wishlistCount > 0 && (
+        <span className="absolute -top-2 -right-2 flex h-3.25 min-w-3.25 items-center justify-center rounded-full bg-[#7A2633] px-0.75 font-(family-name:--font-jost) text-[10px] font-normal leading-[1.3] text-white">
+          <span className="">{wishlistCount}</span>
+        </span>
+      )}
+    </Link>
+  );
+
+  const cartButton = (
+    <button
+      type="button"
+      onClick={() => setCartDrawerOpen(true)}
+      aria-label="Cart"
+      className={`relative ${iconCls}`}
+    >
+      <CartIcon className="" />
+      {cartCount > 0 && (
+        <span className="absolute -top-2 -right-2 flex h-3.25 min-w-3.25 items-center justify-center rounded-full bg-[#7A2633] px-0.75 font-(family-name:--font-jost) text-[10px] font-normal leading-[1.3] text-white">
+          <span className="">{cartCount}</span>
+        </span>
+      )}
+    </button>
+  );
+
   return (
     <header
       onMouseLeave={scheduleClose}
       className={`relative w-full z-10 h-18 ${isTransparent ? "bg-transparent" : "bg-white"}`}
     >
       <Container className="h-full">
-        <div className="grid grid-cols-3 h-full items-center px-8">
-          {/* Left — nav (desktop) / hamburger (mobile) */}
-          <div className="flex items-center gap-7">
-            <button
-              className={
-                isTransparent
-                  ? "lg:hidden text-white hover:opacity-70 transition-opacity"
-                  : "lg:hidden hover:text-[#7A2633] transition-colors"
-              }
-              onClick={() => setMenuOpen((prev) => !prev)}
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-            >
-              {menuOpen ? (
-                <X size={24} strokeWidth={1.25} />
-              ) : (
-                <Menu size={24} strokeWidth={1.25} />
-              )}
-            </button>
-
-            <nav className="hidden lg:flex items-center gap-7">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <div
-                    key={item.label}
-                    onMouseEnter={() =>
-                      item.menu ? openDropdown(item.label) : setHoveredNav(null)
-                    }
-                  >
-                    {item.navigatesOnClick === false ? (
-                      <span
-                        className={`cursor-default ${navLinkCls(isActive)}`}
-                      >
-                        {item.label}
-                      </span>
-                    ) : (
-                      <Link href={item.href} className={navLinkCls(isActive)}>
-                        {item.label}
-                      </Link>
-                    )}
-                  </div>
-                );
-              })}
-            </nav>
-          </div>
+        {/* Desktop layout (>=1115px) */}
+        <div className="hidden min-[1115px]:grid grid-cols-3 h-full items-center px-8">
+          <nav className="flex items-center gap-7">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <div
+                  key={item.label}
+                  onMouseEnter={() =>
+                    item.menu ? openDropdown(item.label) : setHoveredNav(null)
+                  }
+                >
+                  {item.navigatesOnClick === false ? (
+                    <span className={`cursor-default ${navLinkCls(isActive)}`}>
+                      {item.label}
+                    </span>
+                  ) : (
+                    <Link href={item.href} className={navLinkCls(isActive)}>
+                      {item.label}
+                    </Link>
+                  )}
+                </div>
+              );
+            })}
+          </nav>
 
           <div
             onMouseEnter={scheduleClose}
@@ -301,55 +339,52 @@ export default function Header() {
             className="flex items-center justify-end gap-5"
           >
             <Search size={24} strokeWidth={1.25} className={iconCls} />
+            {userIcon}
+            {wishlistIcon}
+            {cartButton}
+          </div>
+        </div>
 
-            {initials ? (
-              <Link
-                href="/cabinet"
-                aria-label="My cabinet"
-                className="hover:opacity-70 transition-opacity"
-              >
-                <div
-                  className={`flex h-4.5 w-4.5 items-center justify-center rounded-full ${isTransparent ? "bg-white text-black" : "bg-black text-white"}`}
-                >
-                  <span className="font-(family-name:--font-jost) text-[8px] font-medium tracking-wide leading-none">
-                    {initials}
-                  </span>
-                </div>
-              </Link>
-            ) : (
-              <Link href="/login" aria-label="Sign in" className={iconCls}>
-                <User size={24} strokeWidth={1.25} />
-              </Link>
-            )}
+        {/* Mobile layout (<1115px) */}
+        <div className="flex min-[1115px]:hidden h-full items-center justify-between px-8">
+          <div
+            className={`-ml-[37px] ${
+              isTransparent ? "[&_img]:brightness-0 [&_img]:invert" : ""
+            }`}
+          >
+            <LogoComponent />
+          </div>
 
-            <Link
-              href="/wishlist"
-              aria-label="Wishlist"
-              className={`relative ${iconCls}`}
-            >
-              <Heart size={24} strokeWidth={1.25} />
-              {wishlistCount > 0 && (
-                <span
-                  className="absolute -top-2 -right-2 flex h-3.25 min-w-3.25 items-center justify-center rounded-full bg-[#7A2633] px-0.75 font-(family-name:--font-jost) text-[10px] font-normal leading-[1.3] text-white"
-                >
-                  <span className="">{wishlistCount}</span>
-                </span>
-              )}
-            </Link>
+          <div className="flex items-center gap-5">
+            {userIcon}
+            {wishlistIcon}
+            {cartButton}
+
             <button
               type="button"
-              onClick={() => setCartDrawerOpen(true)}
-              aria-label="Cart"
-              className={`relative ${iconCls}`}
+              className={`relative h-5.5 w-6 shrink-0 ${
+                isTransparent
+                  ? "text-white hover:opacity-70 transition-opacity"
+                  : "hover:text-[#7A2633] transition-colors"
+              }`}
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
             >
-              <CartIcon className="" />
-              {cartCount > 0 && (
-                <span
-                  className="absolute -top-2 -right-2 flex h-3.25 min-w-3.25 items-center justify-center rounded-full bg-[#7A2633] px-0.75 font-(family-name:--font-jost) text-[10px] font-normal leading-[1.3] text-white"
-                >
-                  <span className="">{cartCount}</span>
-                </span>
-              )}
+              <span
+                className={`absolute left-0 top-1/2 h-[1.25px] w-6 bg-current transition-transform duration-300 ease-in-out ${
+                  menuOpen ? "translate-y-0 rotate-45" : "-translate-y-2.25"
+                }`}
+              />
+              <span
+                className={`absolute left-0 top-1/2 h-[1.25px] w-6 bg-current transition-opacity duration-200 ease-in-out ${
+                  menuOpen ? "opacity-0" : "opacity-100"
+                }`}
+              />
+              <span
+                className={`absolute left-0 top-1/2 h-[1.25px] w-6 bg-current transition-transform duration-300 ease-in-out ${
+                  menuOpen ? "translate-y-0 -rotate-45" : "translate-y-2.25"
+                }`}
+              />
             </button>
           </div>
         </div>
@@ -367,23 +402,118 @@ export default function Header() {
       )}
 
       {/* Mobile menu */}
-      {menuOpen && (
-        <nav className="lg:hidden flex flex-col border-t border-[#EBEBEB] bg-white">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.nav
+            key="mobile-menu"
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="min-[1115px]:hidden flex flex-col border-t border-[#EBEBEB] bg-white"
+          >
+            {navItems.map((item) => {
+            const isOpen = openSections.has(item.label);
+            const hasMenu = !!item.menu;
+
+            if (!hasMenu) {
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="px-8 py-4 font-(family-name:--font-jost) text-[14px] font-light text-black border-b border-[#EBEBEB]"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              );
+            }
+
             return (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={`px-8 py-4 font-(family-name:--font-jost) text-[14px] font-light text-black border-b border-[#EBEBEB] relative after:absolute after:bottom-4 after:left-8 after:h-px after:w-[calc(100%-4rem)] after:bg-current after:origin-left after:transition-transform after:duration-300${isActive ? " after:scale-x-100" : " after:scale-x-0 hover:after:scale-x-100"}`}
-                onClick={() => setMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
+              <div key={item.label} className="border-b border-[#EBEBEB]">
+                <button
+                  type="button"
+                  onClick={() => toggleSection(item.label)}
+                  className="w-full flex items-center justify-between px-8 py-4 text-left"
+                >
+                  <span className="font-(family-name:--font-jost) text-[14px] font-light text-black">
+                    {item.label}
+                  </span>
+                  <ChevronDown
+                    size={24}
+                    strokeWidth={1.25}
+                    className={`shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      key="content"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-8 pb-6 flex flex-col gap-6">
+                        {item.menu!.categories && (
+                          <div className="flex flex-col gap-3">
+                            <p className="font-(family-name:--font-jost) text-[12px] uppercase tracking-widest text-[#7A7A7A]">
+                              {item.menu!.categoriesLabel ?? "Categories"}
+                            </p>
+                            {item.menu!.categories.map((link) => (
+                              <Link
+                                key={link.label}
+                                href={link.href}
+                                onClick={() => setMenuOpen(false)}
+                                className="font-(family-name:--font-jost) text-[14px] text-black"
+                              >
+                                {link.label}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                        {item.menu!.secondary && (
+                          <div className="flex flex-col gap-3">
+                            {item.menu!.secondary.map((link) => (
+                              <Link
+                                key={link.label}
+                                href={link.href}
+                                onClick={() => setMenuOpen(false)}
+                                className="font-(family-name:--font-jost) text-[14px] text-black"
+                              >
+                                {link.label}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                        {item.menu!.handpicked && (
+                          <div className="flex flex-col gap-3">
+                            <p className="font-(family-name:--font-jost) text-[12px] uppercase tracking-widest text-[#7A7A7A]">
+                              Handpicked
+                            </p>
+                            {item.menu!.handpicked.map((link) => (
+                              <Link
+                                key={link.label}
+                                href={link.href}
+                                onClick={() => setMenuOpen(false)}
+                                className="font-(family-name:--font-jost) text-[14px] text-black"
+                              >
+                                {link.label}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             );
           })}
-        </nav>
-      )}
+          </motion.nav>
+        )}
+      </AnimatePresence>
 
       <CartDrawer
         isOpen={cartDrawerOpen}

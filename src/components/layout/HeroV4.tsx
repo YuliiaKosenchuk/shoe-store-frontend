@@ -1,18 +1,36 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { Container } from "@/components/ui/Container";
+
+const MOBILE_QUERY = "(max-width: 767px)";
+
+function subscribeToMobileQuery(callback: () => void) {
+  const mql = window.matchMedia(MOBILE_QUERY);
+  mql.addEventListener("change", callback);
+  return () => mql.removeEventListener("change", callback);
+}
+
+function useIsMobile() {
+  return useSyncExternalStore(
+    subscribeToMobileQuery,
+    () => window.matchMedia(MOBILE_QUERY).matches,
+    () => false
+  );
+}
 
 export default function HeroV4() {
   const ref = useRef(null);
+  const isMobile = useIsMobile();
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const bgY    = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
-  const textY  = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
-  const modelY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 200, damping: 40, mass: 0.5 });
+  const bgY    = useTransform(smoothProgress, [0, 1], isMobile ? ["0%", "0%"] : ["0%", "20%"]);
+  const textY  = useTransform(smoothProgress, [0, 1], isMobile ? ["0%", "0%"] : ["0%", "40%"]);
+  const modelY = useTransform(smoothProgress, [0, 1], isMobile ? ["0%", "0%"] : ["0%", "15%"]);
 
   return (
     <section
@@ -60,6 +78,7 @@ export default function HeroV4() {
           alt="Model"
           fill
           priority
+          quality={100}
           className="object-cover object-bottom"
         />
       </motion.div>
@@ -85,14 +104,14 @@ export default function HeroV4() {
           </motion.div>
 
           <motion.div
-            className="absolute bottom-12 right-7 pointer-events-auto"
+            className="absolute top-[30%] right-7 max-[1114px]:top-auto max-[1114px]:right-auto max-[1114px]:bottom-0 max-[1114px]:left-1/2 max-[1114px]:-translate-x-1/2 pointer-events-auto"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "easeOut", delay: 0.55 }}
           >
             <Link
               href="/new-arrivals"
-              className="inline-flex items-center gap-6 font-(--font-jost) text-[#010101]/90 text-[24px] uppercase leading-normal tracking-widest hover:opacity-70 transition-opacity"
+              className="group inline-flex items-center gap-6 font-(--font-jost) text-[#010101]/90 text-[24px] uppercase leading-normal tracking-widest whitespace-nowrap hover:opacity-70 transition-opacity"
             >
               Discover Collection
               <Image
@@ -100,6 +119,7 @@ export default function HeroV4() {
                 alt="arrow right"
                 width={53}
                 height={53}
+                className="transition-transform duration-300 group-hover:translate-x-2"
               />
             </Link>
           </motion.div>
