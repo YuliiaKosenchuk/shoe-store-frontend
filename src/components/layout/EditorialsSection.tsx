@@ -33,40 +33,46 @@ export default function EditorialsSection() {
   return (
     <section className="py-16">
       <Container>
-        <div className="px-8 grid grid-cols-4 gap-6 items-start">
+        <div className="px-4 md:px-8 lg:grid lg:grid-cols-4 lg:gap-6 lg:items-start">
           <h2
-            className="text-[36px] leading-[1.1] font-semibold tracking-tight text-black"
+            className="text-[28px] md:text-[36px] leading-[1.1] font-semibold tracking-tight text-black mb-8 lg:mb-0"
             style={{ fontFamily: "var(--font-cormorant-garamond)" }}
           >
             Editorials
           </h2>
 
-          {editorials.map(({ slug, title, description, image, alt }) => (
-            <Link key={slug} href={`/editorials/${slug}`} className="group block">
-              <div className="overflow-hidden mb-4">
-                <Image
-                  src={image}
-                  alt={alt}
-                  width={432}
-                  height={560}
-                  className="w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, 25vw"
-                />
-              </div>
-              <p
-                className="text-[16px] leading-[1.3] tracking-widest uppercase font-medium text-black/90 mb-4"
-                style={{ fontFamily: "var(--font-jost)" }}
+          <div className="flex gap-6 overflow-x-auto lg:contents">
+            {editorials.map(({ slug, title, description, image, alt }) => (
+              <Link
+                key={slug}
+                href={`/editorials/${slug}`}
+                className="group block flex-none w-72 lg:w-auto"
               >
-                {title}
-              </p>
-              <p
-                className="text-[14px] leading-normal text-[#343434]/80"
-                style={{ fontFamily: "var(--font-jost)" }}
-              >
-                {description}
-              </p>
-            </Link>
-          ))}
+                <div className="overflow-hidden mb-4">
+                  <Image
+                    src={image}
+                    alt={alt}
+                    width={432}
+                    height={560}
+                    className="w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    sizes="(max-width: 1024px) 288px, 25vw"
+                  />
+                </div>
+                <p
+                  className="text-[16px] leading-[1.3] tracking-widest uppercase font-medium text-black/90 mb-4"
+                  style={{ fontFamily: "var(--font-jost)" }}
+                >
+                  {title}
+                </p>
+                <p
+                  className="text-[14px] leading-normal text-[#343434]/80"
+                  style={{ fontFamily: "var(--font-jost)" }}
+                >
+                  {description}
+                </p>
+              </Link>
+            ))}
+          </div>
         </div>
       </Container>
     </section>

@@ -38,11 +38,11 @@ export default function SocialSection() {
 
   return (
     <section className="pb-16">
-      <Container className="px-8">
+      <Container className="px-4 md:px-8">
         <div className="flex items-start justify-between mb-7">
           <div>
             <h2
-              className="text-[36px] leading-[1.1] tracking-tight text-black font-semibold"
+              className="text-[28px] md:text-[36px] leading-[1.1] tracking-tight text-black font-semibold"
               style={{ fontFamily: "var(--font-cormorant-garamond)" }}
             >
               Show how you style it
@@ -50,7 +50,7 @@ export default function SocialSection() {
           </div>
           <Link
             href="/community"
-            className="flex items-center gap-1.5 text-[26px] font-semibold leading-[1.2] text-black hover:text-[#7A2633] transition-colors"
+            className="flex items-center gap-1.5 text-[18px] md:text-[26px] font-semibold leading-[1.2] text-black hover:text-[#7A2633] transition-colors"
             style={{ fontFamily: "var(--font-cormorant-garamond)" }}
           >
             See all
@@ -72,7 +72,39 @@ export default function SocialSection() {
         </p>
       </Container>
 
-      <div className="flex overflow-hidden h-168.5">
+      {/* Mobile/tablet: plain horizontal scroll, fixed-width images, no gap */}
+      <div className="flex lg:hidden overflow-x-auto h-101.75 md:h-103.75">
+        {stylePhotos.map((photo) => (
+          <div
+            key={photo.id}
+            className="relative overflow-hidden w-62.5 shrink-0"
+          >
+            <Image
+              src={photo.src}
+              alt={`Style photo by ${photo.username}`}
+              fill
+              className="object-cover object-top"
+              sizes="250px"
+              quality={100}
+              priority={photo.id === 3}
+            />
+
+            {/* Username badge */}
+            <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-white px-3 py-1.5">
+              {InstagramIcon}
+              <span
+                className="text-[16px] text-black leading-[1.3] whitespace-nowrap"
+                style={{ fontFamily: "var(--font-jost)" }}
+              >
+                {photo.username}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop: accordion behavior on hover */}
+      <div className="hidden lg:flex overflow-hidden h-168.5">
         {stylePhotos.map((photo) => (
           <motion.div
             key={photo.id}
@@ -87,8 +119,8 @@ export default function SocialSection() {
               alt={`Style photo by ${photo.username}`}
               fill
               className="object-cover object-top"
-              sizes="(max-width: 768px) 90vw, 40vw"
-              quality={90}
+              sizes="40vw"
+              quality={100}
               priority={photo.id === 3}
             />
 

@@ -21,7 +21,7 @@ export default function CategoriesSection() {
   return (
     <section className="py-16">
       <Container>
-        <div className="px-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="sm:px-8 grid grid-cols-1 md:grid-cols-2 gap-6">
           {categories.map(({ label, href, src, alt }) => (
             <Link key={href} href={href} className="group relative block h-60 sm:h-80 lg:h-94.5 overflow-hidden">
               <Image
@@ -35,7 +35,7 @@ export default function CategoriesSection() {
               {/* Text overlay */}
               <div className="absolute inset-0 flex flex-col justify-center pl-8 md:pl-16">
                 <h2
-                  className="text-[#010101]/90 uppercase tracking-wide leading-none text-[28px] md:text-[3.5vw] lg:text-[36px] font-semibold"
+                  className="text-[#010101]/90 uppercase tracking-wide leading-none text-[28px] sm:text-[36px] font-semibold"
                   style={{ fontFamily: "var(--font-cormorant-garamond)" }}
                 >
                   {label}

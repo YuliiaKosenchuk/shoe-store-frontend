@@ -27,11 +27,17 @@ const features = [
 export default function FeatureBar() {
   return (
     <div className="bg-[#F4F3F2] py-4">
-      <Container className="px-8">
-        <div className="grid grid-cols-2 sm:grid-cols-4 justify-items-center">
+      <Container className="px-4 md:px-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 justify-items-start lg:justify-items-center items-start lg:items-center gap-x-4 gap-y-6">
           {features.map(({ icon, title, subtitle }) => (
-            <div key={title} className="flex items-center gap-4">
-              <Image src={icon} alt={title} width={36} height={36} className="shrink-0" />
+            <div key={title} className="flex items-start lg:items-center gap-4">
+              <Image
+                src={icon}
+                alt={title}
+                width={36}
+                height={36}
+                className="w-6 h-8 lg:w-9 lg:h-9 shrink-0"
+              />
               <div>
                 <h3
                   className="mb-1 text-[#010101]/90 text-[20px] leading-[1.3] font-semibold"

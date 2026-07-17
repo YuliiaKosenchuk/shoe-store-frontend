@@ -108,19 +108,19 @@ export default function DiscountsSection() {
 
   return (
     <section className="pb-16">
-      <div className="max-w-336 mx-auto px-8 flex items-baseline justify-between mb-8">
+      <div className="max-w-336 mx-auto px-4 md:px-8 flex items-baseline justify-between mb-8">
         <h2
-          className="text-[36px] leading-[1.1] tracking-tight text-black font-semibold"
+          className="text-[28px] md:text-[36px] leading-[1.1] tracking-tight text-black font-semibold"
           style={{ fontFamily: "var(--font-cormorant-garamond)" }}
         >
           Discounts for you
         </h2>
         <Link
           href="/sale"
-          className="flex items-center gap-1.5 text-[26px] font-semibold leading-[1.2] text-black hover:text-[#7A2633] transition-colors"
+          className="flex items-center gap-1.5 text-[18px] md:text-[26px] font-semibold leading-[1.2] text-black hover:text-[#7A2633] transition-colors"
           style={{ fontFamily: "var(--font-cormorant-garamond)" }}
         >
-          Show more
+          View all
           <Image src="/images/arrow-right-hero.svg" alt="" aria-hidden width={24} height={24} />
         </Link>
       </div>

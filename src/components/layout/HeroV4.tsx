@@ -35,7 +35,7 @@ export default function HeroV4() {
   return (
     <section
       ref={ref}
-      className="relative w-full h-screen -mt-18 z-0 overflow-hidden"
+      className="relative w-full h-screen -mt-24 z-0 overflow-hidden"
     >
       {/* Layer 1 — background: full viewport width */}
       <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>
@@ -85,9 +85,9 @@ export default function HeroV4() {
 
       {/* Layer 4 — UI overlays: constrained by Container, no parallax */}
       <div className="absolute top-18 inset-0 z-30 pointer-events-none">
-        <Container className="h-full relative px-8">
+        <Container className="h-full relative px-4 md:px-8">
           <motion.div
-            className="absolute top-14 left-8 flex gap-3 items-start pointer-events-auto"
+            className="absolute top-14 left-5.5 md:left-8 flex gap-3 items-start pointer-events-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.45 }}
