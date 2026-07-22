@@ -10,11 +10,12 @@ interface SizeSelectorProps {
   sizes: ProductSize[];
   selectedSize: number | null;
   onChange: (size: number) => void;
+  isOneSize?: boolean;
 }
 
 const ALL_SIZES = [35, 36, 37, 38, 39, 40, 41, 42];
 
-export function SizeSelector({ sizes, selectedSize, onChange }: SizeSelectorProps) {
+export function SizeSelector({ sizes, selectedSize, onChange, isOneSize = false }: SizeSelectorProps) {
   const [notifySize, setNotifySize] = useState<number | null>(null);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
 
@@ -22,6 +23,19 @@ export function SizeSelector({ sizes, selectedSize, onChange }: SizeSelectorProp
     const found = sizes.find((s) => Number(s.size) === size);
     return found ? { ...found, size } : { size, stock: 0, available: false };
   });
+
+  if (isOneSize) {
+    return (
+      <div>
+        <p className="font-(family-name:--font-jost) text-sm tracking-widest text-[#4E4E4E]">
+          Size:{" "}
+          <span className="font-medium text-[16px] text-[#010101] leading-[1.3]">
+            One size
+          </span>
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>

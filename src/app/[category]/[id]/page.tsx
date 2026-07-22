@@ -15,6 +15,7 @@ import { ProductImageGallery } from "./_components/ProductImageGallery";
 import { ColorSelector } from "./_components/ColorSelector";
 import { SizeSelector } from "./_components/SizeSelector";
 import { ProductAccordion } from "./_components/ProductAccordion";
+import { ProductPageSkeleton } from "./_components/ProductPageSkeleton";
 import { Container } from "@/components/ui/Container";
 import YouMayAlsoLikeSection from "@/components/layout/YouMayAlsoLikeSection";
 import SocialSection from "@/components/layout/SocialSection";
@@ -67,6 +68,8 @@ export default function ProductPage({ params }: ProductPageProps) {
     queryFn: () => ProductsService.getProduct(Number(id)),
   });
 
+  const isBag = category.toLowerCase() === "bags";
+
   // Compute effectiveColor and sizes here so the auto-select effect can reference them
   const effectiveColor = selectedColor || allImages[0]?.color || "";
   const sizes = variants
@@ -86,14 +89,17 @@ export default function ProductPage({ params }: ProductPageProps) {
 
   // Cart doesn't expose productVariantId on line items — match on (color, size),
   // safe here since this page is scoped to a single product.
-  const matchedVariant = variants.find(
-    (v) => v.color === effectiveColor && Number(v.size) === effectiveSelectedSize
-  );
+  // Bags only have one variant per color (no numeric size to match on).
+  const matchedVariant = isBag
+    ? colorVariants[0]
+    : variants.find(
+        (v) => v.color === effectiveColor && Number(v.size) === effectiveSelectedSize
+      );
   const inBag = matchedVariant
     ? (cart?.cartItems ?? []).some(
         (item) =>
           item.color === matchedVariant.color &&
-          Number(item.size) === Number(matchedVariant.size)
+          (isBag || Number(item.size) === Number(matchedVariant.size))
       )
     : false;
 
@@ -117,13 +123,7 @@ export default function ProductPage({ params }: ProductPageProps) {
         </div>
       );
     }
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="font-(family-name:--font-jost) text-[#818181] text-sm tracking-widest uppercase">
-          Loading...
-        </p>
-      </div>
-    );
+    return <ProductPageSkeleton />;
   }
 
   const wishlisted = hasHydrated && wishlistItems.some((p) => p.id === product.id);
@@ -176,13 +176,13 @@ export default function ProductPage({ params }: ProductPageProps) {
         <div className="min-w-0 space-y-6 pt-6 lg:pt-0">
           {/* Name & price */}
           <div className="">
-            <h1 className={`wrap-break-word font-(family-name:--font-cormorant-garamond) text-4xl font-semibold leading-[1.1] text-black ${nameExpanded ? "" : "line-clamp-2"}`}>
+            <h1 className={`wrap-break-word font-(family-name:--font-cormorant-garamond) text-4xl font-semibold leading-tight text-black ${nameExpanded ? "" : "line-clamp-2"}`}>
               {product.name}
             </h1>
-            {product.name.length > 30 && (
+            {product.name.length > 35 && (
               <button
                 onClick={() => setNameExpanded((v) => !v)}
-                className="mt-1 mb-6 font-(family-name:--font-jost) text-[14px] tracking-widest text-[#818181] hover:text-black transition-colors duration-200"
+                className="mt-1 mb-6 font-(family-name:--font-jost) text-[14px] leading-normal text-[#818181] hover:text-black transition-colors duration-200"
               >
                 {nameExpanded ? "Show less" : "Show more"}
               </button>
@@ -220,6 +220,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             sizes={sizes}
             selectedSize={effectiveSelectedSize}
             onChange={setSelectedSize}
+            isOneSize={isBag}
           />
 
           {/* Add to bag + wishlist */}

@@ -149,6 +149,8 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
       ).size
     : 0;
 
+  const showSizeSelector = product.category !== "BAGS" && product.category !== "ACCESSORIES";
+
   return (
     <div
       className="group flex flex-col cursor-pointer w-full"
@@ -229,28 +231,30 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
           </div>
         )}
 
-        <div className="absolute bottom-4 left-4 right-4 h-17 bg-[#DADADA]/35 px-4 pt-3 pb-4 translate-y-[calc(100%+16px)] group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
-          <p className="text-[14px] leading-normal tracking-widest text-[#343434] mb-2.5">Size</p>
-          <div className="flex gap-3 flex-wrap">
-            {allSizeNumbers.map((size) => {
-              const available = availableSizeSet.has(size);
-              return (
-                <button
-                  key={size}
-                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                  disabled={!available}
-                  className={`text-sm font-sans text-[14px] transition-colors ${
-                    available
-                      ? "font-light text-[#010101]/90 hover:text-[#7A2633] cursor-pointer"
-                      : "font-light text-[#818181] cursor-default pointer-events-none"
-                  }`}
-                >
-                  {size}
-                </button>
-              );
-            })}
+        {showSizeSelector && (
+          <div className="absolute bottom-4 left-4 right-4 h-17 bg-[#DADADA]/35 px-4 pt-3 pb-4 translate-y-[calc(100%+16px)] group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
+            <p className="text-[14px] leading-normal tracking-widest text-[#343434] mb-2.5">Size</p>
+            <div className="flex gap-3 flex-wrap">
+              {allSizeNumbers.map((size) => {
+                const available = availableSizeSet.has(size);
+                return (
+                  <button
+                    key={size}
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                    disabled={!available}
+                    className={`text-sm font-sans text-[14px] transition-colors ${
+                      available
+                        ? "font-light text-[#010101]/90 hover:text-[#7A2633] cursor-pointer"
+                        : "font-light text-[#818181] cursor-default pointer-events-none"
+                    }`}
+                  >
+                    {size}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
 

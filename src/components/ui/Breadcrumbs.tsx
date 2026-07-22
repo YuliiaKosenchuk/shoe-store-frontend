@@ -27,6 +27,7 @@ export function Breadcrumbs() {
   if (!isAllowed(pathname)) return null;
 
   const segments = pathname.split("/").filter(Boolean);
+  const isProductPage = segments.length === 2 && /^\d+$/.test(segments[1]);
 
   const crumbs = segments
     .map((seg, i) => {
@@ -49,7 +50,7 @@ export function Breadcrumbs() {
     .filter((c) => c !== null);
 
   return (
-    <nav aria-label="Breadcrumb">
+    <nav aria-label="Breadcrumb" className={isProductPage ? "hidden md:block" : undefined}>
       <Container className="px-8">
         <ol className="flex items-center gap-3 py-4.5 font-(family-name:--font-jost) text-[14px] leading-normal font-light">
           <li>

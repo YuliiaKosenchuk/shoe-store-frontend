@@ -10,6 +10,7 @@ interface CheckboxOptionListProps {
   selected: string[];
   onToggle: (value: string) => void;
   onClearAll?: () => void;
+  layout?: "grid" | "single";
 }
 
 export function CheckboxOptionList({
@@ -17,8 +18,41 @@ export function CheckboxOptionList({
   selected,
   onToggle,
   onClearAll,
+  layout = "grid",
 }: CheckboxOptionListProps) {
   const rowCount = Math.min(options.length, ROWS_PER_COLUMN) || 1;
+
+  if (layout === "single") {
+    return (
+      <div className="flex flex-col gap-4">
+        {options.map((option) => {
+          const checked = selected.includes(option.value);
+          return (
+            <button
+              key={option.value}
+              type="button"
+              role="checkbox"
+              aria-checked={checked}
+              onClick={() => onToggle(option.value)}
+              className="flex items-center gap-3 text-left w-fit"
+            >
+              <span
+                className={`flex-none w-4.5 h-4.5 border transition-colors ${checked ? "bg-black border-black" : "bg-white border-[#4E4E4E]"}`}
+              />
+              <span
+                className="text-[14px] text-[#010101] leading-normal"
+                style={{
+                  fontFamily: "var(--font-jost)",
+                }}
+              >
+                {option.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <div

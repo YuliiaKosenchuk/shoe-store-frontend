@@ -94,9 +94,9 @@ export default function YouMayAlsoLikeSection({ excludeId }: Props) {
 
   return (
     <section className="py-16">
-      <div className="max-w-336 mx-auto px-8 flex items-baseline justify-between mb-8">
+      <div className="max-w-336 mx-auto px-4 md:px-8 flex items-baseline justify-between mb-8">
         <h2
-          className="text-[36px] leading-[1.1] tracking-tight text-black font-semibold"
+          className="text-[28px] md:text-[36px] leading-[1.1] tracking-tight text-black font-semibold"
           style={{ fontFamily: "var(--font-cormorant-garamond)" }}
         >
           You may also like

@@ -41,14 +41,14 @@ export function CartDrawerItem({
 
   return (
     <li className="flex gap-4 py-4">
-      <div className="relative h-20 w-16 shrink-0 bg-[#F8F8F8] md:h-42 md:w-36">
+      <div className="relative min-h-42 w-36 shrink-0 bg-[#F8F8F8]">
         {outOfStock && <OutOfStockBadge />}
         {item.imageUrl && (
           <Image
             src={item.imageUrl}
             alt={item.name}
             fill
-            sizes="(min-width: 768px) 144px, 64px"
+            sizes="144px"
             className="object-cover"
           />
         )}

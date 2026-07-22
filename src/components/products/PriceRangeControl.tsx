@@ -66,7 +66,7 @@ export function PriceRangeControl({
   }
 
   return (
-    <div className="w-full max-w-102.75">
+    <div className="w-full min-[1110px]:max-w-102.75">
       <div
         className="flex items-center justify-between text-[16px] leading-[1.3] text-[#010101] mb-3"
         style={{

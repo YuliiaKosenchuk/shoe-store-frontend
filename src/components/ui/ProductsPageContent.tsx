@@ -1,5 +1,6 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ProductsService } from "@/servises/products.service";
 import { ProductsGrid } from "@/components/ui/ProductsGrid";
@@ -34,12 +35,23 @@ export function ProductsPageContent({ filter }: { filter: ProductPageFilter }) {
   const sizeFilterActive = filters.size.length > 0;
   const { variantsByProductId, isLoading: variantsLoading } = useProductVariantsMap(baseProducts, sizeFilterActive);
   const products = applyProductFilters(baseProducts, filters, sort, variantsByProductId);
-  const combinedLoading = isLoading || variantsLoading;
+
+  // These queries have no SSR prefetch, so isLoading only ever resolves
+  // client-side. Reporting the real value before hydration finishes lets the
+  // client's first render (loaded) diverge from the server's (loading) —
+  // hasMounted keeps both loading flags pinned to "loading" until past hydration.
+  const hasMounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+  const gridLoading = !hasMounted || isLoading;
+  const combinedLoading = !hasMounted || isLoading || variantsLoading;
 
   return (
     <>
       <ProductFilterBar baseProducts={baseProducts} filteredCount={products.length} isLoading={combinedLoading} category={filter} />
-      <ProductsGrid products={products} isLoading={isLoading} selectedColors={filters.colour} selectedSizes={filters.size} newestProductIds={newestProductIds} />
+      <ProductsGrid products={products} isLoading={gridLoading} selectedColors={filters.colour} selectedSizes={filters.size} newestProductIds={newestProductIds} />
     </>
   );
 }

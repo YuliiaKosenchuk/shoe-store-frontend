@@ -77,6 +77,23 @@ export function useProductFilters() {
     });
   }
 
+  function applyFilters(next: ProductFilterState) {
+    commit((params) => {
+      for (const key of MULTI_SELECT_KEYS) {
+        if (next[key].length > 0) {
+          params.set(key, next[key].join(","));
+        } else {
+          params.delete(key);
+        }
+      }
+      if (next.priceMin == null && next.priceMax == null) {
+        params.delete("price");
+      } else {
+        params.set("price", `${next.priceMin ?? ""}-${next.priceMax ?? ""}`);
+      }
+    });
+  }
+
   function setSort(next: SortOption) {
     commit((params) => {
       if (next === DEFAULT_SORT) {
@@ -131,5 +148,6 @@ export function useProductFilters() {
     setSort,
     removeValue,
     clearAll,
+    applyFilters,
   };
 }

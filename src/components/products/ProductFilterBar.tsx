@@ -13,6 +13,8 @@ import { SortByButton } from "./SortByButton";
 import { FilterPanel } from "./FilterPanel";
 import { FilterPinsRow, type FilterPin } from "./FilterPinsRow";
 import { ResultsCount } from "./ResultsCount";
+import { MobileFilterBar } from "./MobileFilterBar";
+import { MobileFilterModal } from "./MobileFilterModal";
 import type { FilterKey, MultiSelectFilterKey } from "./ProductFilters.types";
 
 type OpenKey = FilterKey | "sort" | null;
@@ -26,9 +28,10 @@ interface ProductFilterBarProps {
 
 export function ProductFilterBar({ baseProducts, filteredCount, isLoading, category }: ProductFilterBarProps) {
   const [openKey, setOpenKey] = useState<OpenKey>(null);
+  const [isMobileModalOpen, setMobileModalOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { filters, sort, activeCount, totalActiveCount, toggleValue, setPriceRange, setSort, removeValue, clearAll } =
+  const { filters, sort, activeCount, totalActiveCount, toggleValue, setPriceRange, setSort, removeValue, clearAll, applyFilters } =
     useProductFilters();
 
   const filterDefs = getFilterDefs(category);
@@ -90,7 +93,7 @@ export function ProductFilterBar({ baseProducts, filteredCount, isLoading, categ
     <div ref={containerRef} className="w-full bg-white">
       <div className="relative">
         <Container>
-          <div className="flex flex-wrap items-center gap-8 px-8 pt-6 pb-3.25">
+          <div className="hidden min-[1110px]:flex flex-wrap items-center gap-8 px-8 pt-6 pb-3.25">
             {filterDefs.map((def) => (
               <FilterDropdownButton
                 key={def.key}
@@ -101,6 +104,16 @@ export function ProductFilterBar({ baseProducts, filteredCount, isLoading, categ
               />
             ))}
             <SortByButton label={sortLabel} isOpen={openKey === "sort"} onClick={() => toggleOpen("sort")} />
+          </div>
+
+          <div className="min-[1110px]:hidden border-t border-b border-[#CDCDCD] px-8 py-3">
+            <MobileFilterBar
+              activeFilterCount={totalActiveCount}
+              onOpenFilters={() => setMobileModalOpen(true)}
+              sortLabel={sortLabel}
+              isSortOpen={openKey === "sort"}
+              onToggleSort={() => toggleOpen("sort")}
+            />
           </div>
         </Container>
 
@@ -143,6 +156,17 @@ export function ProductFilterBar({ baseProducts, filteredCount, isLoading, categ
 
         {!isLoading && <ResultsCount filteredCount={filteredCount} totalCount={baseProducts.length} />}
       </Container>
+
+      <MobileFilterModal
+        isOpen={isMobileModalOpen}
+        onClose={() => setMobileModalOpen(false)}
+        filterDefs={filterDefs}
+        optionsByKey={optionsByKey}
+        priceBounds={priceBounds}
+        appliedFilters={filters}
+        onApply={applyFilters}
+        onClearAll={handleClearAll}
+      />
     </div>
   );
 }

@@ -27,6 +27,15 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [isOpen, onClose]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
+
   // Sort by id (= order added to cart) — the backend doesn't guarantee stable
   // ordering across mutations, which would otherwise shift rows under the
   // user's cursor mid-click and risk bumping the wrong item's quantity.
@@ -46,15 +55,15 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         aria-hidden="true"
       />
       <aside
-        className={`fixed p-12 right-0 top-0 z-50 flex h-full w-full flex-col bg-white transition-transform duration-300 ease-out md:max-w-132.25 ${
+        className={`fixed px-4 md:p-12 right-0 top-0 z-50 flex h-full w-full flex-col bg-white transition-transform duration-300 ease-out md:max-w-132.25 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
         aria-label="Cart"
         aria-hidden={!isOpen}
       >
         <div className="mx-auto flex h-full w-full flex-col">
-          <div className="flex items-end justify-between px-6 py-6">
-            <h2 className="font-(family-name:--font-cormorant-garamond) text-[36px] leading-[1.1] font-semibold text-black">
+          <div className="flex items-end justify-between px-4 md:px-6 py-6">
+            <h2 className="font-(family-name:--font-cormorant-garamond) text-[28px] md:text-[36px] leading-[1.1] font-semibold text-black">
               Your cart
             </h2>
             <button
@@ -66,7 +75,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-6">
+          <div className="flex-1 overflow-y-auto md:px-6">
             {items.length === 0 ? (
               <div className="flex flex-col items-center gap-4 py-24 text-center">
                 <p className="font-(family-name:--font-jost) text-sm font-light text-gray-500">
@@ -127,7 +136,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           </div>
 
           {items.length > 0 && (
-            <div className="px-6">
+            <div className="md:px-6">
               <div className="flex justify-between pb-4 font-(family-name:--font-jost) text-[20px] leading-[1.3] font-medium text-[#010101]">
                 <span>Total</span>
                 <span className="" >€ {cartSubtotal.toLocaleString()}</span>
