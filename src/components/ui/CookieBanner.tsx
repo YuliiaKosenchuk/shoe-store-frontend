@@ -50,13 +50,13 @@ export function CookieBanner() {
               <div className="flex gap-3 shrink-0">
                 <button
                   onClick={handleDecline}
-                  className="px-5 py-2.5 text-xs tracking-widest  border border-black text-black hover:bg-gray-100 transition-colors [font-family:var(--font-jost)]"
+                  className="px-5 py-2.5 text-xs tracking-widest  border border-black text-black hover:bg-[#F8F8F8] transition-colors [font-family:var(--font-jost)]"
                 >
                   Decline
                 </button>
                 <button
                   onClick={handleAccept}
-                  className="px-5 py-2.5 text-xs tracking-widest bg-black text-white hover:bg-gray-900 transition-colors [font-family:var(--font-jost)]"
+                  className="px-5 py-2.5 text-xs tracking-widest bg-[#010101] text-white hover:bg-[#2C2C2C] transition-colors [font-family:var(--font-jost)]"
                 >
                   Accept
                 </button>

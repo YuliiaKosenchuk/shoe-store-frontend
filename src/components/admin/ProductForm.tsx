@@ -134,7 +134,7 @@ export function ProductForm({
       <button
         type="submit"
         disabled={loading}
-        className="bg-black text-white text-xs tracking-widest uppercase px-8 py-3 hover:bg-gray-800 transition-colors disabled:opacity-50"
+        className="bg-[#010101] text-white text-xs tracking-widest uppercase px-8 py-3 hover:bg-[#2C2C2C] transition-colors disabled:bg-[#DADADA] disabled:text-[#818181]"
       >
         {loading ? "Saving…" : submitLabel}
       </button>

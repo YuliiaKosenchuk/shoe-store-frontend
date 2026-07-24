@@ -105,7 +105,7 @@ export function CartDrawerItem({
             <button
               type="button"
               onClick={() => setShowNotify(true)}
-              className="flex w-full items-center justify-center gap-2 border border-black bg-white py-2.5 font-(family-name:--font-jost) text-sm text-black transition-colors hover:bg-gray-50"
+              className="flex w-full items-center justify-center gap-2 border border-black bg-white py-2.5 font-(family-name:--font-jost) text-sm text-black transition-colors hover:bg-[#F8F8F8]"
             >
               {/* <BellRing size={15} strokeWidth={1.25} /> */}
               Notify me

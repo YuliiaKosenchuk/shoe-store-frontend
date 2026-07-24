@@ -11,7 +11,8 @@ export default function WishlistPage() {
   return (
     <main>
       <Container className="px-8 py-12">
-      <h1 className="font-(family-name:--font-cormorant-garamond) text-4xl font-light tracking-widest uppercase mb-10">
+      <h1 className="text-[28px] md:text-[36px] leading-[1.1] tracking-tight text-black font-semibold"
+          style={{ fontFamily: "var(--font-cormorant-garamond)" }}>
         Wishlist
       </h1>
 

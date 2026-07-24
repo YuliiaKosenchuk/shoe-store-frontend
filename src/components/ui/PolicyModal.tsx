@@ -213,7 +213,7 @@ export function PolicyModal({ type, onClose }: PolicyModalProps) {
             <div className="px-8 pb-8 pt-4 shrink-0 border-t border-gray-100">
               <button
                 onClick={onClose}
-                className="w-full py-3 text-xs tracking-widest uppercase bg-black text-white hover:bg-gray-900 transition-colors"
+                className="w-full py-3 text-xs tracking-widest uppercase bg-[#010101] text-white hover:bg-[#2C2C2C] transition-colors"
               >
                 Close
               </button>

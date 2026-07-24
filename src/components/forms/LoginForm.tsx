@@ -109,7 +109,7 @@ export default function LoginForm() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full mb-4 py-3.75 text-[14px] font-medium tracking-wide leading-[1.4] uppercase transition-colors bg-black text-white hover:bg-gray-900 disabled:cursor-not-allowed disabled:opacity-70"
+              className="w-full mb-4 py-3.75 text-[14px] font-medium tracking-wide leading-[1.4] uppercase transition-colors bg-[#010101] text-white hover:bg-[#2C2C2C] disabled:cursor-not-allowed disabled:bg-[#DADADA] disabled:text-[#818181]"
             >
               {isSubmitting ? "Signing in…" : "Sign In"}
             </button>
@@ -120,7 +120,7 @@ export default function LoginForm() {
                 console.log("[LoginForm] User initiated Google OAuth login");
                 AuthService.loginWithGoogle();
               }}
-              className="w-full mb-8 flex items-center justify-center gap-2.5 border border-gray-300 py-3.5 text-[14px] font-normal leading-normal text-[#010101] hover:bg-gray-50 transition-colors"
+              className="w-full mb-8 flex items-center justify-center gap-2.5 border border-gray-300 py-3.5 text-[14px] font-normal leading-normal text-[#010101] hover:bg-[#F8F8F8] transition-colors"
             >
               <GoogleIcon />
               Log in with Google
@@ -133,7 +133,7 @@ export default function LoginForm() {
             </p>
             <Link
               href="/register"
-              className="block w-full border border-gray-300 py-3.5 text-center text-[14px] font-normal leading-normal text-[#010101] hover:bg-gray-50 transition-colors"
+              className="block w-full border border-gray-300 py-3.5 text-center text-[14px] font-normal leading-normal text-[#010101] hover:bg-[#F8F8F8] transition-colors"
             >
               Register Now
             </Link>

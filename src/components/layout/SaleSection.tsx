@@ -37,7 +37,7 @@ export default function SaleSection() {
 
               <Link
                 href="/sale"
-                className="md:mt-4 w-full py-3.75 md:py-2 lg:py-3.75 text-[14px] md:text-[7px] lg:text-[14px] font-medium tracking-wide uppercase bg-black text-white hover:bg-gray-900 transition-colors text-center"
+                className="md:mt-4 w-full py-3.75 md:py-2 lg:py-3.75 text-[14px] md:text-[7px] lg:text-[14px] font-medium tracking-wide uppercase bg-[#010101] text-white hover:bg-[#2C2C2C] transition-colors text-center"
                 style={{ fontFamily: "var(--font-jost)" }}
               >
                 Shop Now

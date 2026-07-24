@@ -92,7 +92,7 @@ export default function ForgotPasswordForm() {
                   setSent(false);
                   setResendMessage(null);
                 }}
-                className="w-full py-3.75 bg-black text-white text-[14px] font-medium tracking-wide uppercase hover:bg-gray-900 transition-colors"
+                className="w-full py-3.75 bg-[#010101] text-white text-[14px] font-medium tracking-wide uppercase hover:bg-[#2C2C2C] transition-colors"
               >
                 Change Email
               </button>
@@ -100,7 +100,7 @@ export default function ForgotPasswordForm() {
                 type="button"
                 onClick={handleResend}
                 disabled={isResending}
-                className="w-full py-3.75 border border-gray-300 text-[14px] font-normal leading-normal text-[#010101] hover:bg-gray-50 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full py-3.75 border border-gray-300 text-[14px] font-normal leading-normal text-[#010101] hover:bg-[#F8F8F8] transition-colors disabled:cursor-not-allowed disabled:bg-[#F0EDED] disabled:border-[#B3B3B3] disabled:text-[#818181]"
               >
                 {isResending ? "Sending…" : "Resend email"}
               </button>
@@ -147,8 +147,8 @@ export default function ForgotPasswordForm() {
               disabled={isSubmitting}
               className={`mt-3.25 w-full py-3.75 text-[14px] font-medium tracking-wide uppercase transition-colors disabled:cursor-not-allowed ${
                 isValid
-                  ? "bg-black text-white hover:bg-gray-900"
-                  : "bg-black/30 text-white cursor-default"
+                  ? "bg-[#010101] text-white hover:bg-[#2C2C2C]"
+                  : "bg-[#DADADA] text-[#818181] cursor-default"
               }`}
             >
               {isSubmitting ? "Sending…" : "Reset"}
@@ -157,7 +157,7 @@ export default function ForgotPasswordForm() {
             {userNotFound && (
               <Link
                 href="/register"
-                className="block w-full border border-gray-300 py-3.75 text-center text-[14px] font-medium uppercase text-[#010101] hover:bg-gray-50 transition-colors"
+                className="block w-full border border-gray-300 py-3.75 text-center text-[14px] font-medium uppercase text-[#010101] hover:bg-[#F8F8F8] transition-colors"
               >
                 Create an account
               </Link>

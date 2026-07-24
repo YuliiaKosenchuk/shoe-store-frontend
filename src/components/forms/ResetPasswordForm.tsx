@@ -115,8 +115,8 @@ export default function ResetPasswordForm() {
                 disabled={isSubmitting}
                 className={`w-full py-3.75 text-[14px] font-medium tracking-wide uppercase transition-colors disabled:cursor-not-allowed ${
                   isValid
-                    ? "bg-black text-white hover:bg-gray-900"
-                    : "bg-black/30 text-white cursor-default"
+                    ? "bg-[#010101] text-white hover:bg-[#2C2C2C]"
+                    : "bg-[#DADADA] text-[#818181] cursor-default"
                 }`}
               >
                 {isSubmitting ? "Resetting…" : "Reset Password"}
@@ -125,7 +125,7 @@ export default function ResetPasswordForm() {
               {userNotFound && (
                 <Link
                   href="/register"
-                  className="block w-full border border-gray-300 py-3.75 text-center text-[14px] font-normal leading-normal text-[#010101] hover:bg-gray-50 transition-colors"
+                  className="block w-full border border-gray-300 py-3.75 text-center text-[14px] font-normal leading-normal text-[#010101] hover:bg-[#F8F8F8] transition-colors"
                 >
                   Create an account
                 </Link>
@@ -133,7 +133,7 @@ export default function ResetPasswordForm() {
 
               <Link
                 href="/login"
-                className="block w-full border border-gray-300 py-3.75 text-center text-[14px] font-normal leading-normal text-[#010101] hover:bg-gray-50 transition-colors"
+                className="block w-full border border-gray-300 py-3.75 text-center text-[14px] font-normal leading-normal text-[#010101] hover:bg-[#F8F8F8] transition-colors"
               >
                 Back to sign in
               </Link>

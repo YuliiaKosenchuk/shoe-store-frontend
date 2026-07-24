@@ -105,7 +105,7 @@ export default function CartPage() {
               <button
                 onClick={() => router.push("/checkout/delivery")}
                 disabled={items.length === 0 || hasOutOfStockItem}
-                className="mt-6 w-full bg-black py-3.75 font-(family-name:--font-jost) text-sm font-medium leading-[1.3] uppercase text-white transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-black/30"
+                className="mt-6 w-full bg-[#010101] py-3.75 font-(family-name:--font-jost) text-sm font-medium leading-[1.3] uppercase text-white transition-colors hover:bg-[#2C2C2C] disabled:cursor-not-allowed disabled:bg-[#DADADA] disabled:text-[#818181]"
               >
                 Place order
               </button>

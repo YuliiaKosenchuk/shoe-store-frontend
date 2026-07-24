@@ -140,8 +140,8 @@ export default function RegistrationForm() {
               disabled={isSubmitting}
               className={`w-full mt-5.75 py-3.75 text-[14px] font-medium tracking-wide uppercase transition-colors disabled:cursor-not-allowed ${
                 isValid
-                  ? "bg-black text-white hover:bg-gray-900"
-                  : "bg-black/30 text-white cursor-default"
+                  ? "bg-[#010101] text-white hover:bg-[#2C2C2C]"
+                  : "bg-[#DADADA] text-[#818181] cursor-default"
               }`}
             >
               {isSubmitting ? "Signing up…" : "Sign Up"}

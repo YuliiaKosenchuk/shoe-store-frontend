@@ -58,14 +58,14 @@ export function RemoveItemModal({
               <button
                 onClick={onCancel}
                 disabled={loading}
-                className="flex-1 cursor-pointer bg-black py-3.75 font-(family-name:--font-jost) text-sm uppercase leading-[1.3] text-white transition-colors hover:bg-black/80 disabled:cursor-not-allowed"
+                className="flex-1 cursor-pointer bg-[#010101] py-3.75 font-(family-name:--font-jost) text-sm uppercase leading-[1.3] text-white transition-colors hover:bg-[#2C2C2C] disabled:cursor-not-allowed disabled:bg-[#DADADA] disabled:text-[#818181]"
               >
                 Cancel
               </button>
               <button
                 onClick={onConfirm}
                 disabled={loading}
-                className="flex-1 cursor-pointer border border-black py-3.75 font-(family-name:--font-jost) text-sm leading-[1.3] text-black transition-colors hover:bg-black hover:text-white disabled:cursor-not-allowed"
+                className="flex-1 cursor-pointer border border-black py-3.75 font-(family-name:--font-jost) text-sm leading-[1.3] text-black transition-colors hover:bg-[#F8F8F8] disabled:cursor-not-allowed disabled:bg-[#F0EDED] disabled:border-[#B3B3B3] disabled:text-[#818181]"
               >
                 {loading ? "Removing…" : "Remove"}
               </button>

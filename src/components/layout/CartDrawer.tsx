@@ -145,14 +145,14 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               <Link
                 href="/cart"
                 onClick={onClose}
-                className="mb-4 block w-full bg-[#010101] py-3.75 text-center font-(family-name:--font-jost) text-sm font-medium leading-normal uppercase text-white transition-colors hover:bg-gray-900"
+                className="mb-4 block w-full bg-[#010101] py-3.75 text-center font-(family-name:--font-jost) text-sm font-medium leading-normal uppercase text-white transition-colors hover:bg-[#2C2C2C]"
               >
                 Checkout
               </Link>
               <Link
                 href="/cart"
                 onClick={onClose}
-                className="block w-full border border-[#010101] py-3.75 text-center font-(family-name:--font-jost) text-sm leading-normal text-[#010101] transition-colors hover:bg-gray-50"
+                className="block w-full border border-[#010101] py-3.75 text-center font-(family-name:--font-jost) text-sm leading-normal text-[#010101] transition-colors hover:bg-[#F8F8F8]"
               >
                 View bag ({productsCount})
               </Link>

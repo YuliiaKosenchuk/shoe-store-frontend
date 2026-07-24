@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Trash2, ImagePlus, Plus } from "lucide-react";
 import type { ProductImageDto } from "@/shemas/product.shema";
+import { createImageSchema } from "@/shemas/admin-product.shema";
 import { AdminService } from "@/servises/admin.service";
+import { getErrorMessage } from "@/lib/apiClient";
 import { ConfirmModal } from "./ConfirmModal";
 import { AdminSelect } from "./AdminSelect";
 
@@ -102,18 +104,23 @@ export function ImageManager({ productId, images, onImagesChange, onRefresh }: I
   }
 
   async function saveImage() {
-    if (!pending?.color) {
-      setImageError("Please select a color");
+    if (!pending) return;
+
+    const parsed = createImageSchema.safeParse({
+      color: pending.color,
+      mainUrl: pending.mainUrl,
+      urls: pending.additionalUrls,
+    });
+    if (!parsed.success) {
+      const fieldError = parsed.error.issues[0];
+      setImageError(fieldError?.message ?? "Please check the photo set and try again.");
       return;
     }
+
     setImageError(null);
     setSavingImage(true);
     try {
-      const saved = await AdminService.createImage(productId, {
-        color: pending.color,
-        mainUrl: pending.mainUrl,
-        urls: pending.additionalUrls,
-      });
+      const saved = await AdminService.createImage(productId, parsed.data);
       if (onRefresh) {
         await onRefresh();
       } else {
@@ -122,7 +129,7 @@ export function ImageManager({ productId, images, onImagesChange, onRefresh }: I
       setPending(null);
     } catch (err) {
       console.error("[Admin] image save error:", err);
-      setImageError("Failed to save image");
+      setImageError(getErrorMessage(err, "Failed to save image. Please try again."));
     } finally {
       setSavingImage(false);
     }
@@ -142,7 +149,7 @@ export function ImageManager({ productId, images, onImagesChange, onRefresh }: I
       setDeleteTarget(null);
     } catch (err) {
       console.error("[Admin] image delete error:", err);
-      setDeleteError("Failed to delete photo set. Please try again.");
+      setDeleteError(getErrorMessage(err, "Failed to delete photo set. Please try again."));
     } finally {
       setDeleting(false);
     }
@@ -219,7 +226,7 @@ export function ImageManager({ productId, images, onImagesChange, onRefresh }: I
                 type="button"
                 onClick={saveImage}
                 disabled={savingImage}
-                className="bg-black text-white text-xs tracking-widest uppercase px-5 py-2 hover:bg-gray-800 transition-colors disabled:opacity-50"
+                className="bg-[#010101] text-white text-xs tracking-widest uppercase px-5 py-2 hover:bg-[#2C2C2C] transition-colors disabled:bg-[#DADADA] disabled:text-[#818181]"
               >
                 {savingImage ? "Saving…" : "Save"}
               </button>
@@ -277,18 +284,13 @@ export function ImageManager({ productId, images, onImagesChange, onRefresh }: I
         <p className="text-xs text-gray-400">No images yet.</p>
       )}
 
-      {deleteError && (
-        <p className="mt-3 text-[11px] text-red-500 border border-red-200 bg-red-50 px-3 py-2">
-          {deleteError}
-        </p>
-      )}
-
       <ConfirmModal
         open={!!deleteTarget}
         title="Delete photo set?"
         description={`This will delete all ${deleteCount} photo${deleteCount !== 1 ? "s" : ""} for color "${deleteTarget?.color}".`}
         confirmLabel="Delete"
         loading={deleting}
+        error={deleteError}
         onConfirm={handleDelete}
         onCancel={() => { setDeleteTarget(null); setDeleteError(null); }}
       />

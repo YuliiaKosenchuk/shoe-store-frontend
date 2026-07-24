@@ -155,14 +155,14 @@ function OrderDetails({ order }: { order: OrderResponseDto }) {
       <div className="mt-8 space-y-3">
         <Link
           href="/"
-          className="block w-full bg-black py-3.75 text-center font-(family-name:--font-jost) text-[14px] font-medium tracking-wide leading-[1.4] uppercase text-white transition-colors hover:bg-gray-900"
+          className="block w-full bg-[#010101] py-3.75 text-center font-(family-name:--font-jost) text-[14px] font-medium tracking-wide leading-[1.4] uppercase text-white transition-colors hover:bg-[#2C2C2C]"
         >
           Continue shopping
         </Link>
         {/* Not wired up yet — no customer-facing order history page exists */}
         <button
           type="button"
-          className="block w-full border border-black py-3.75 text-center font-(family-name:--font-jost) text-[14px] font-medium tracking-wide leading-[1.4] uppercase text-black transition-colors hover:bg-black/5"
+          className="block w-full border border-black py-3.75 text-center font-(family-name:--font-jost) text-[14px] font-medium tracking-wide leading-[1.4] uppercase text-black transition-colors hover:bg-[#F8F8F8]"
         >
           View shopping
         </button>
@@ -227,7 +227,7 @@ function CheckoutCompleteContent() {
             </p>
             <Link
               href="/"
-              className="mt-2 inline-block bg-black px-8 py-3.75 text-center font-(family-name:--font-jost) text-[14px] font-medium tracking-wide leading-[1.4] uppercase text-white transition-colors hover:bg-gray-900"
+              className="mt-2 inline-block bg-[#010101] px-8 py-3.75 text-center font-(family-name:--font-jost) text-[14px] font-medium tracking-wide leading-[1.4] uppercase text-white transition-colors hover:bg-[#2C2C2C]"
             >
               Back to home
             </Link>

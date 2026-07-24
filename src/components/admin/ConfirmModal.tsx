@@ -9,6 +9,7 @@ interface ConfirmModalProps {
   description?: ReactNode;
   confirmLabel?: string;
   loading?: boolean;
+  error?: string | null;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -19,6 +20,7 @@ export function ConfirmModal({
   description,
   confirmLabel = "Delete",
   loading = false,
+  error,
   onConfirm,
   onCancel,
 }: ConfirmModalProps) {
@@ -42,6 +44,10 @@ export function ConfirmModal({
             <h2 className="font-serif text-xl text-gray-900">{title}</h2>
             {description && (
               <p className="mt-2 text-sm text-gray-500">{description}</p>
+            )}
+
+            {error && (
+              <p className="mt-4 text-xs text-red-600 border border-red-200 bg-red-50 px-3 py-2">{error}</p>
             )}
 
             <div className="mt-8 flex gap-3">

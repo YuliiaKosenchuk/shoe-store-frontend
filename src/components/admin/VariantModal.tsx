@@ -152,7 +152,7 @@ export function VariantModal({ open, editing, loading, serverError, productName 
 
               <Field label="SKU (optional)" error={errors.sku?.message}>
                 <div className="flex gap-2">
-                  <input {...register("sku")} className={`${inp(false)} flex-1`} placeholder="AIR-BLK-38-A3F2" />
+                  <input {...register("sku")} className={`${inp(!!errors.sku)} flex-1`} placeholder="AIR-BLK-38-A3F2" />
                   <button
                     type="button"
                     onClick={handleGenerateSku}
@@ -168,7 +168,7 @@ export function VariantModal({ open, editing, loading, serverError, productName 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-black text-white text-xs tracking-widest uppercase py-3 hover:bg-gray-800 transition-colors disabled:opacity-50 mt-2"
+                className="w-full bg-[#010101] text-white text-xs tracking-widest uppercase py-3 hover:bg-[#2C2C2C] transition-colors disabled:bg-[#DADADA] disabled:text-[#818181] mt-2"
               >
                 {loading ? "Saving…" : editing ? "Update" : "Add"}
               </button>

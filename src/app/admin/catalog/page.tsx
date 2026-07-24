@@ -77,7 +77,7 @@ export default function CatalogPage() {
         </div>
         <Link
           href="/admin/catalog/new"
-          className="flex items-center gap-2 bg-black text-white text-xs tracking-widest uppercase px-5 py-3 hover:bg-gray-800 transition-colors"
+          className="flex items-center gap-2 bg-[#010101] text-white text-xs tracking-widest uppercase px-5 py-3 hover:bg-[#2C2C2C] transition-colors"
         >
           <Plus size={14} strokeWidth={1.25} />
           New Product

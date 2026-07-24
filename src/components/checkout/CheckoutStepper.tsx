@@ -43,7 +43,7 @@ export function CheckoutStepper({ activeStep }: CheckoutStepperProps) {
 
         const stepLabel = (
           <span
-            className={`hidden font-(family-name:--font-cormorant-garamond) text-[20px] font-semibold sm:inline ${
+            className={`hidden font-(family-name:--font-cormorant-garamond) text-[20px] font-semibold min-[1130px]:inline ${
               isActive || isDone ? "text-black" : "text-[#B3B3B3]"
             }`}
           >
@@ -56,21 +56,21 @@ export function CheckoutStepper({ activeStep }: CheckoutStepperProps) {
             {isClickable ? (
               <Link
                 href={href}
-                className="flex shrink-0 items-center gap-1.5 sm:gap-2"
+                className="flex shrink-0 items-center gap-1.5 min-[1130px]:gap-2"
                 aria-label={label}
               >
                 {dot}
                 {stepLabel}
               </Link>
             ) : (
-              <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+              <div className="flex shrink-0 items-center gap-1.5 min-[1130px]:gap-2">
                 {dot}
                 {stepLabel}
               </div>
             )}
             {i < STEPS.length - 1 && (
               <span
-                className={`mx-1.5 h-px flex-1 sm:mx-3 ${
+                className={`mx-1.5 h-px flex-1 min-[1130px]:mx-3 ${
                   isDone ? "bg-black" : "bg-[#B3B3B3]"
                 }`}
               />

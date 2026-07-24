@@ -202,7 +202,7 @@ function PaymentPageContent() {
             <button
               onClick={() => retryPayment.mutate()}
               disabled={retryPayment.isPending}
-              className="w-full bg-black py-3.75 font-(family-name:--font-jost) text-sm font-medium tracking-widest uppercase text-white transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-black/30"
+              className="w-full bg-[#010101] py-3.75 font-(family-name:--font-jost) text-sm font-medium tracking-widest uppercase text-white transition-colors hover:bg-[#2C2C2C] disabled:cursor-not-allowed disabled:bg-[#DADADA] disabled:text-[#818181]"
             >
               {retryPayment.isPending ? "Starting payment…" : "Try payment again"}
             </button>
@@ -288,7 +288,7 @@ function PaymentPageContent() {
                     placeOrder.mutate();
                   }}
                   disabled={placeOrder.isPending || isCheckingStock || !cartId || hasOutOfStockItem}
-                  className="w-full bg-black py-3.75 font-(family-name:--font-jost) text-sm font-medium tracking-widest uppercase text-white transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-black/30"
+                  className="w-full bg-[#010101] py-3.75 font-(family-name:--font-jost) text-sm font-medium tracking-widest uppercase text-white transition-colors hover:bg-[#2C2C2C] disabled:cursor-not-allowed disabled:bg-[#DADADA] disabled:text-[#818181]"
                 >
                   {placeOrder.isPending
                     ? "Placing order…"

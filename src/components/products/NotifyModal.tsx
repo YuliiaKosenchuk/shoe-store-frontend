@@ -99,7 +99,7 @@ export function NotifyModal({ size, color, onClose }: NotifyModalProps) {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-11 bg-[#010101] text-white font-(family-name:--font-jost) text-sm tracking-widest uppercase hover:bg-[#7A2633] transition-colors duration-200 disabled:opacity-60"
+                className="w-full h-11 bg-[#010101] text-white font-(family-name:--font-jost) text-sm tracking-widest uppercase hover:bg-[#2C2C2C] transition-colors duration-200 disabled:bg-[#DADADA] disabled:text-[#818181]"
               >
                 {isSubmitting ? "Sending..." : "Notify Me"}
               </button>

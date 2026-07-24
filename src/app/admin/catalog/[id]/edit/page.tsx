@@ -9,6 +9,7 @@ import { VariantModal } from "@/components/admin/VariantModal";
 import { ImageManager } from "@/components/admin/ImageManager";
 import { ConfirmModal } from "@/components/admin/ConfirmModal";
 import { AdminService } from "@/servises/admin.service";
+import { getErrorMessage } from "@/lib/apiClient";
 import { ProductsService } from "@/servises/products.service";
 import type { CreateProductFormValues, CreateVariantFormValues } from "@/shemas/admin-product.shema";
 import type { Product, ProductVariantDto, ProductImageDto } from "@/shemas/product.shema";
@@ -35,6 +36,7 @@ export default function EditProductPage() {
 
   const [deleteVariantTarget, setDeleteVariantTarget] = useState<ProductVariantDto | null>(null);
   const [deletingVariant, setDeletingVariant] = useState(false);
+  const [deleteVariantError, setDeleteVariantError] = useState<string | null>(null);
 
   async function refreshImages() {
     const imageList = await AdminService.getImages(productId);
@@ -70,7 +72,7 @@ export default function EditProductPage() {
       setSaveSuccess(true);
     } catch (err) {
       console.error("[Admin] update product error:", err);
-      setSaveError("Failed to update product");
+      setSaveError(getErrorMessage(err, "Failed to update product. Please check the fields and try again."));
     } finally {
       setSaveLoading(false);
     }
@@ -91,7 +93,7 @@ export default function EditProductPage() {
       setEditingVariant(null);
     } catch (err) {
       console.error("[Admin] variant save error:", err);
-      setVariantError("Failed to save variant");
+      setVariantError(getErrorMessage(err, "Failed to save variant. Please check the fields and try again."));
     } finally {
       setVariantLoading(false);
     }
@@ -100,12 +102,14 @@ export default function EditProductPage() {
   async function handleDeleteVariant() {
     if (!deleteVariantTarget) return;
     setDeletingVariant(true);
+    setDeleteVariantError(null);
     try {
       await AdminService.deleteVariant(deleteVariantTarget.id);
       setVariants((prev) => prev.filter((v) => v.id !== deleteVariantTarget.id));
       setDeleteVariantTarget(null);
     } catch (err) {
       console.error("[Admin] variant delete error:", err);
+      setDeleteVariantError(getErrorMessage(err, "Failed to delete variant. Please try again."));
     } finally {
       setDeletingVariant(false);
     }
@@ -252,8 +256,9 @@ export default function EditProductPage() {
         description={`Size ${deleteVariantTarget?.size}, color ${deleteVariantTarget?.color}`}
         confirmLabel="Delete"
         loading={deletingVariant}
+        error={deleteVariantError}
         onConfirm={handleDeleteVariant}
-        onCancel={() => setDeleteVariantTarget(null)}
+        onCancel={() => { setDeleteVariantTarget(null); setDeleteVariantError(null); }}
       />
     </>
   );

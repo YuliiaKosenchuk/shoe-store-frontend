@@ -8,6 +8,7 @@ import { VariantModal } from "@/components/admin/VariantModal";
 import { ImageManager } from "@/components/admin/ImageManager";
 import { ConfirmModal } from "@/components/admin/ConfirmModal";
 import { AdminService } from "@/servises/admin.service";
+import { getErrorMessage } from "@/lib/apiClient";
 import type { CreateProductFormValues, CreateVariantFormValues } from "@/shemas/admin-product.shema";
 import type { ProductDto, ProductVariantDto, ProductImageDto } from "@/shemas/product.shema";
 import { Trash2, Pencil } from "lucide-react";
@@ -30,6 +31,7 @@ export default function NewProductPage() {
 
   const [deleteVariantTarget, setDeleteVariantTarget] = useState<ProductVariantDto | null>(null);
   const [deletingVariant, setDeletingVariant] = useState(false);
+  const [deleteVariantError, setDeleteVariantError] = useState<string | null>(null);
 
   async function handleCreateProduct(data: CreateProductFormValues) {
     setStep1Error(null);
@@ -40,7 +42,7 @@ export default function NewProductPage() {
       setStep(2);
     } catch (err) {
       console.error("[Admin] create product error:", err);
-      setStep1Error("Failed to create product. Please try again.");
+      setStep1Error(getErrorMessage(err, "Failed to create product. Please try again."));
     } finally {
       setStep1Loading(false);
     }
@@ -62,7 +64,7 @@ export default function NewProductPage() {
       setEditingVariant(null);
     } catch (err) {
       console.error("[Admin] variant save error:", err);
-      setVariantError("Failed to save variant");
+      setVariantError(getErrorMessage(err, "Failed to save variant. Please check the fields and try again."));
     } finally {
       setVariantLoading(false);
     }
@@ -71,12 +73,14 @@ export default function NewProductPage() {
   async function handleDeleteVariant() {
     if (!deleteVariantTarget) return;
     setDeletingVariant(true);
+    setDeleteVariantError(null);
     try {
       await AdminService.deleteVariant(deleteVariantTarget.id);
       setVariants((prev) => prev.filter((v) => v.id !== deleteVariantTarget.id));
       setDeleteVariantTarget(null);
     } catch (err) {
       console.error("[Admin] variant delete error:", err);
+      setDeleteVariantError(getErrorMessage(err, "Failed to delete variant. Please try again."));
     } finally {
       setDeletingVariant(false);
     }
@@ -188,7 +192,7 @@ export default function NewProductPage() {
 
           <button
             onClick={() => setStep(3)}
-            className="bg-black text-white text-xs tracking-widest uppercase px-8 py-3 hover:bg-gray-800 transition-colors"
+            className="bg-[#010101] text-white text-xs tracking-widest uppercase px-8 py-3 hover:bg-[#2C2C2C] transition-colors"
           >
             Continue to Images →
           </button>
@@ -206,7 +210,7 @@ export default function NewProductPage() {
           <div className="mt-8">
             <Link
               href="/admin/catalog"
-              className="bg-black text-white text-xs tracking-widest uppercase px-8 py-3 hover:bg-gray-800 transition-colors"
+              className="bg-[#010101] text-white text-xs tracking-widest uppercase px-8 py-3 hover:bg-[#2C2C2C] transition-colors"
             >
               Done → Back to Catalog
             </Link>
@@ -232,8 +236,9 @@ export default function NewProductPage() {
         description={`Size ${deleteVariantTarget?.size}, color ${deleteVariantTarget?.color}`}
         confirmLabel="Delete"
         loading={deletingVariant}
+        error={deleteVariantError}
         onConfirm={handleDeleteVariant}
-        onCancel={() => setDeleteVariantTarget(null)}
+        onCancel={() => { setDeleteVariantTarget(null); setDeleteVariantError(null); }}
       />
     </>
   );

@@ -199,7 +199,7 @@ export function MobileFilterModal({
             type="button"
             onClick={handleApply}
             disabled={!hasChanges}
-            className="flex-1 bg-black py-3.75 text-center text-sm font-medium uppercase leading-[1.3] text-white  hover:bg-[#2C2C2C] transition-opacity disabled:bg-[#DADADA] disabled:text-[#B3B3B3] disabled:cursor-not-allowed"
+            className="flex-1 bg-[#010101] py-3.75 text-center text-sm font-medium uppercase leading-[1.3] text-white  hover:bg-[#2C2C2C] transition-opacity disabled:bg-[#DADADA] disabled:text-[#818181] disabled:cursor-not-allowed"
           >
             Apply filters
           </button>

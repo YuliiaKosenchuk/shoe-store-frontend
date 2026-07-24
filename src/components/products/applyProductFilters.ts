@@ -8,9 +8,8 @@ function discountPercent(product: Product): number {
 }
 
 function matchesFilters(product: Product, filters: ProductFilterState, variantsByProductId: Map<number, ProductVariantDto[]>): boolean {
-  // Product has no "style" field from the backend yet; any style selection
-  // intentionally yields zero matches until backend support lands.
-  if (filters.style.length > 0) return false;
+  // Product has no "style" field from the backend yet, so the style filter
+  // is ignored — other selected filters still apply normally.
 
   if (filters.size.length > 0) {
     // The list endpoint doesn't return sizes/stock — only variants (fetched

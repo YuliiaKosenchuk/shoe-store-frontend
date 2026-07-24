@@ -114,7 +114,7 @@ export function CartPageItem({
               <button
                 type="button"
                 onClick={() => setShowNotify(true)}
-                className="border border-black bg-white px-7 py-3.25 font-(family-name:--font-jost) text-sm text-black transition-colors hover:bg-gray-50"
+                className="border border-black bg-white px-7 py-3.25 font-(family-name:--font-jost) text-sm text-black transition-colors hover:bg-[#F8F8F8]"
               >
                 Notify me
               </button>

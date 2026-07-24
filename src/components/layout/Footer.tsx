@@ -141,7 +141,7 @@ export default function Footer() {
           </p>
           <button
             onClick={() => setShowModal(false)}
-            className="mt-2 bg-black text-white px-8 py-3 text-[13px] uppercase tracking-widest hover:bg-black/80 transition-colors"
+            className="mt-2 bg-[#010101] text-white px-8 py-3 text-[13px] uppercase tracking-widest hover:bg-[#2C2C2C] transition-colors"
             style={jost}
           >
             Close
@@ -260,7 +260,7 @@ export default function Footer() {
               />
               <button
                 type="submit"
-                className="w-full lg:w-[700px] xl:w-47.25 bg-black text-white py-3.75 text-[14px] leading-[1.3] font-medium uppercase tracking-widest whitespace-nowrap hover:bg-black/80 transition-colors"
+                className="w-full lg:w-[700px] xl:w-47.25 bg-[#010101] text-white py-3.75 text-[14px] leading-[1.3] font-medium uppercase tracking-widest whitespace-nowrap hover:bg-[#2C2C2C] transition-colors"
                 style={jost}
               >
                 Subscribe

@@ -57,7 +57,6 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
   const cardId = useId();
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
   const [activeColor, setActiveColor] = useState<string>(() => pickInitialColor(product, selectedColors));
 
   const selectedColorsKey = selectedColors?.join(",") ?? "";
@@ -76,7 +75,6 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
   const { data: variants } = useQuery({
     queryKey: ["product-variants", product.id],
     queryFn: () => ProductsService.getVariants(product.id),
-    enabled: isHovered,
     staleTime: 5 * 60 * 1000,
   });
 
@@ -151,11 +149,10 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
 
   const showSizeSelector = product.category !== "BAGS" && product.category !== "ACCESSORIES";
 
+  const isOutOfStock = variants !== undefined && (variants.length === 0 || variants.every((v) => v.stockQty <= 0));
+
   return (
-    <div
-      className="group flex flex-col cursor-pointer w-full"
-      onMouseEnter={() => setIsHovered(true)}
-    >
+    <div className="group flex flex-col cursor-pointer w-full">
       <div
         className="relative w-full aspect-302/404 overflow-hidden bg-[#F8F8F8] cursor-pointer"
         onClick={() => router.push(`/${product.category.toLowerCase()}/${product.id}?color=${encodeURIComponent(activeColor)}`)}
@@ -174,7 +171,7 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
                     alt={`${product.name} — view ${i + 1}`}
                     fill
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    className="object-cover"
+                    className={`object-cover ${isOutOfStock ? "grayscale" : ""}`}
                     priority={priority && i === 0}
                     loading={priority && i === 0 ? "eager" : "lazy"}
                   />
@@ -183,9 +180,15 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
             </div>
           </div>
         )}
-        {(isNew || matchedColorCount > 1 || matchedSizeCount > 1) && (
+        {isOutOfStock && <div className="absolute inset-0 z-6 bg-white/50 pointer-events-none" />}
+        {(isOutOfStock || isNew || matchedColorCount > 1 || matchedSizeCount > 1) && (
           <div className="absolute top-4 left-4 z-10 flex flex-col items-start gap-2">
-            {isNew && (
+            {isOutOfStock && (
+              <span className="bg-white px-2.5 py-1 text-[14px] font-(family-name:--font-jost) text-[#DF4441]">
+                Out of stock
+              </span>
+            )}
+            {isNew && !isOutOfStock && (
               <span className="bg-[#010101] px-2.5 py-1 text-[14px] font-(family-name:--font-jost) text-white">
                 New
               </span>
@@ -203,21 +206,26 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
           </div>
         )}
         <WishlistButton product={product} className="absolute top-3 right-3 z-10" hideWhenInactive />
-        <button
-          onClick={scrollPrev}
-          className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-          aria-label="Previous image"
-        >
-          <ChevronLeft size={24} strokeWidth={1.25} />
-        </button>
+        {carouselImages.length > 1 && (
+          <>
+            {/* md and below: arrows always visible (no hover on touchscreens); lg and up: reveal on hover */}
+            <button
+              onClick={scrollPrev}
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200"
+              aria-label="Previous image"
+            >
+              <ChevronLeft size={24} strokeWidth={1.25} />
+            </button>
 
-        <button
-          onClick={scrollNext}
-          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-          aria-label="Next image"
-        >
-          <ChevronRight size={24} strokeWidth={1.25} />
-        </button>
+            <button
+              onClick={scrollNext}
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200"
+              aria-label="Next image"
+            >
+              <ChevronRight size={24} strokeWidth={1.25} />
+            </button>
+          </>
+        )}
 
         {carouselImages.length > 1 && (
           <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black/10 z-5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">

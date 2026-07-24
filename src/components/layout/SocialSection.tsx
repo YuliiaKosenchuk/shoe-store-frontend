@@ -108,8 +108,8 @@ export default function SocialSection() {
         {stylePhotos.map((photo) => (
           <motion.div
             key={photo.id}
-            className="relative overflow-hidden cursor-pointer shrink-0"
-            animate={{ flex: hovered === photo.id ? 2.6 : 1 }}
+            className="relative overflow-hidden cursor-pointer shrink-0 basis-0"
+            animate={{ flexGrow: hovered === photo.id ? 2.6 : 1 }}
             transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
             onMouseEnter={() => setHovered(photo.id)}
             onMouseLeave={() => setHovered(3)}

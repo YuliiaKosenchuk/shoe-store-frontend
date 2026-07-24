@@ -110,6 +110,12 @@ export default function ProductPage({ params }: ProductPageProps) {
     }
   }, [product?.name, setPageTitle, clearPageTitle]);
 
+  // Next.js doesn't always reset scroll when router.push() is fired from a
+  // non-<Link> click handler (e.g. ProductCard's image click) — force it here.
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
   // --- Mock (comment in if backend is unavailable) ---
   // const product = getMockProduct(Number(id));
 
@@ -227,7 +233,7 @@ export default function ProductPage({ params }: ProductPageProps) {
           <div className="mb-2 flex gap-px">
             {isSelectedColorOOS ? (
               <button
-                className="flex-1 flex items-center justify-center gap-2 h-13 bg-[#010101] text-white font-(family-name:--font-jost) text-sm tracking-widest uppercase transition-colors duration-200 hover:bg-[#7A2633]"
+                className="flex-1 flex items-center justify-center gap-2 h-13 bg-[#010101] text-white font-(family-name:--font-jost) text-sm tracking-widest uppercase transition-colors duration-200 hover:bg-[#2C2C2C]"
                 onClick={() => setNotifyColorModal(effectiveColor)}
               >
                 <BellRing size={15} strokeWidth={1.25} />
@@ -235,8 +241,8 @@ export default function ProductPage({ params }: ProductPageProps) {
               </button>
             ) : (
               <button
-                className={`flex-1 flex items-center justify-center gap-3 h-13 text-white font-(family-name:--font-jost) text-sm tracking-widest uppercase transition-colors duration-200 disabled:cursor-not-allowed ${
-                  inBag ? "bg-[#7A2633]" : "bg-[#010101] hover:bg-[#7A2633]"
+                className={`flex-1 flex items-center justify-center gap-3 h-13 text-white font-(family-name:--font-jost) text-sm tracking-widest uppercase transition-colors duration-200 disabled:cursor-not-allowed disabled:bg-[#DADADA] disabled:text-[#818181] ${
+                  inBag ? "bg-[#7A2633]" : "bg-[#010101] hover:bg-[#2C2C2C]"
                 }`}
                 disabled={!matchedVariant || addItem.isPending}
                 onClick={() => {
@@ -251,7 +257,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               className={`w-13 h-13 flex items-center justify-center border transition-colors duration-200 ${
                 wishlisted
                   ? "bg-[#7A2633]"
-                  : "bg-[#010101] hover:bg-[#7A2633]"
+                  : "bg-[#010101] hover:bg-[#2C2C2C]"
               }`}
             >
               <WishlistButton
