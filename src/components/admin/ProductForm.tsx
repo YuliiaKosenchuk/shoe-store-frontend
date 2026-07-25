@@ -57,7 +57,10 @@ export function ProductForm({
               <AdminSelect
                 value={field.value ?? ""}
                 onChange={field.onChange}
-                options={CATEGORIES.map((c) => ({ value: c, label: c }))}
+                options={CATEGORIES.map((c) => ({
+                  value: c,
+                  label: c.charAt(0) + c.slice(1).toLowerCase(),
+                }))}
                 placeholder="Select category"
                 error={!!errors.category}
               />

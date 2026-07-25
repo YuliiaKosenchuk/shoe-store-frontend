@@ -1,12 +1,14 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { ProductsService } from "@/servises/products.service";
 import { ProductsGrid } from "@/components/ui/ProductsGrid";
 import { ProductFilterBar } from "@/components/products/ProductFilterBar";
 import { applyProductFilters } from "@/components/products/applyProductFilters";
 import { getNewestProductIds } from "@/components/products/getNewestProductIds";
+import { getPageItemCount, parsePageParam } from "@/components/products/pagination";
 import { useProductFilters } from "@/hooks/useProductFilters";
 import { useProductVariantsMap } from "@/hooks/useProductVariantsMap";
 import type { Product } from "@/shemas/product.shema";
@@ -36,6 +38,10 @@ export function ProductsPageContent({ filter }: { filter: ProductPageFilter }) {
   const { variantsByProductId, isLoading: variantsLoading } = useProductVariantsMap(baseProducts, sizeFilterActive);
   const products = applyProductFilters(baseProducts, filters, sort, variantsByProductId);
 
+  const searchParams = useSearchParams();
+  const page = parsePageParam(searchParams);
+  const shownCount = getPageItemCount(products.length, page);
+
   // These queries have no SSR prefetch, so isLoading only ever resolves
   // client-side. Reporting the real value before hydration finishes lets the
   // client's first render (loaded) diverge from the server's (loading) —
@@ -50,7 +56,7 @@ export function ProductsPageContent({ filter }: { filter: ProductPageFilter }) {
 
   return (
     <>
-      <ProductFilterBar baseProducts={baseProducts} filteredCount={products.length} isLoading={combinedLoading} category={filter} />
+      <ProductFilterBar baseProducts={baseProducts} totalFilteredCount={products.length} shownCount={shownCount} isLoading={combinedLoading} category={filter} />
       <ProductsGrid products={products} isLoading={gridLoading} selectedColors={filters.colour} selectedSizes={filters.size} newestProductIds={newestProductIds} />
     </>
   );

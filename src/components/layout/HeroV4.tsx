@@ -104,7 +104,7 @@ export default function HeroV4() {
           </motion.div>
 
           <motion.div
-            className="absolute top-[30%] right-7 max-[1114px]:top-auto max-[1114px]:right-auto max-[1114px]:bottom-0 max-[1114px]:left-1/2 max-[1114px]:-translate-x-1/2 pointer-events-auto"
+            className="absolute top-[20%] right-7 max-[1114px]:top-auto max-[1114px]:right-auto max-[1114px]:bottom-0 max-[1114px]:left-1/2 max-[1114px]:-translate-x-1/2 pointer-events-auto"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "easeOut", delay: 0.55 }}

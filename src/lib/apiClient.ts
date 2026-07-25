@@ -47,7 +47,8 @@ apiClient.interceptors.response.use(
         error.response.data
       );
       if (error.response.status === 401) {
-        if (typeof window !== 'undefined') {
+        const hadAuthHeader = Boolean(error.config?.headers?.Authorization);
+        if (hadAuthHeader && typeof window !== 'undefined') {
           localStorage.removeItem('token');
           window.location.href = '/login';
         }

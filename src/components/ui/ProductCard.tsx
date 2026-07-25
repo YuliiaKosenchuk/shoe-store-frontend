@@ -11,27 +11,10 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import type { Product } from "@/shemas/product.shema";
 import { ProductsService } from "@/servises/products.service";
+import { toSwatchBackground } from "@/lib/productColors";
 
 
 const FALLBACK_IMAGES: string[] = [];
-
-const COLOR_HEX: Record<string, string> = {
-  BLACK: "#111111",
-  WHITE: "#F5F0EB",
-  BROWN: "#7B5B3A",
-  GREEN: "#8B9B7A",
-  SAGE: "#A3B18A",
-  BEIGE: "#D4B896",
-  GRAY: "#9E9E9E",
-  RED: "#8B2520",
-  BLUE: "#2C4A6E",
-  CREAM: "#F0EAD6",
-};
-
-function toHex(color: string): string {
-  if (color.startsWith("#")) return color;
-  return COLOR_HEX[color.toUpperCase()] ?? "#C8C0B8";
-}
 
 interface ProductCardProps {
   product: Product;
@@ -300,7 +283,7 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
             >
               <div
                 className="w-10 h-3"
-                style={{ backgroundColor: toHex(color) }}
+                style={{ background: toSwatchBackground(color) }}
               />
               <div className="w-10 h-px">
                 {color === activeColor && (

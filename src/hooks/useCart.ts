@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CartService } from "@/servises/cart.service";
@@ -27,15 +28,39 @@ export function getCartErrorMessage(error: unknown): string {
   return "Something went wrong. Please try again.";
 }
 
+// A cart lookup that fails with 404/500 means the cart is gone for good
+// (deleted from storage or already merged into an account) — retrying won't
+// help, it'll just repeat the same failing request. Everything else (network
+// blips, other 5xxs) still gets react-query's normal 3-retry backoff.
+function isStaleCartError(error: unknown): boolean {
+  return (
+    axios.isAxiosError(error) &&
+    (error.response?.status === 404 || error.response?.status === 500)
+  );
+}
+
 export function useCart() {
   const cartId = useCartStore((s) => s.cartId);
   const hasHydrated = useCartStore((s) => s.hasHydrated);
+  const clearCartId = useCartStore((s) => s.clearCartId);
 
   const query = useQuery({
     queryKey: cartQueryKey(cartId),
     queryFn: () => CartService.getCart(cartId as number),
     enabled: hasHydrated && !!cartId,
+    retry: (failureCount, error) => {
+      if (isStaleCartError(error)) return false;
+      return failureCount < 3;
+    },
   });
+
+  // Stop pointing at a cart that no longer exists so it isn't refetched on
+  // every subsequent page load / remount.
+  useEffect(() => {
+    if (query.error && isStaleCartError(query.error)) {
+      clearCartId();
+    }
+  }, [query.error, clearCartId]);
 
   return {
     cart: query.data,

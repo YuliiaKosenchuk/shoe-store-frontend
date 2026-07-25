@@ -8,8 +8,8 @@ import { X, RefreshCw } from "lucide-react";
 import { createVariantSchema, CreateVariantFormValues } from "@/shemas/admin-product.shema";
 import type { ProductVariantDto } from "@/shemas/product.shema";
 import { AdminSelect } from "@/components/admin/AdminSelect";
+import { PRODUCT_COLORS } from "@/lib/productColors";
 
-const COLORS = ["blue", "white", "brown", "red", "grey", "beige", "black"];
 const SIZES = ["35", "36", "37", "38", "39", "40", "41", "42"];
 
 function buildSku(productName: string, color: string, size: string | undefined, existingSkus: string[]): string {
@@ -133,7 +133,7 @@ export function VariantModal({ open, editing, loading, serverError, productName 
                     <AdminSelect
                       value={field.value ?? ""}
                       onChange={field.onChange}
-                      options={COLORS.map((c) => ({ value: c, label: c.charAt(0).toUpperCase() + c.slice(1) }))}
+                      options={PRODUCT_COLORS.map((c) => ({ value: c, label: c }))}
                       placeholder="Select color"
                       error={!!errors.color}
                     />

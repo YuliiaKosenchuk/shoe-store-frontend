@@ -57,7 +57,7 @@ export function AdminSelect({
         />
       </button>
       {open && (
-        <div className="absolute top-full left-0 z-10 mt-px w-full bg-white border border-gray-200 shadow-sm">
+        <div className="absolute top-full left-0 z-10 mt-px w-full max-h-50 overflow-y-auto overscroll-contain bg-white border border-gray-200 shadow-sm">
           {options.map((opt) => (
             <button
               key={opt.value}

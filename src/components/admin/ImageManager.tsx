@@ -9,8 +9,7 @@ import { AdminService } from "@/servises/admin.service";
 import { getErrorMessage } from "@/lib/apiClient";
 import { ConfirmModal } from "./ConfirmModal";
 import { AdminSelect } from "./AdminSelect";
-
-const COLORS = ["blue", "white", "brown", "red", "grey", "beige", "black"];
+import { PRODUCT_COLORS } from "@/lib/productColors";
 
 declare global {
   interface Window {
@@ -216,7 +215,7 @@ export function ImageManager({ productId, images, onImagesChange, onRefresh }: I
             <AdminSelect
               value={pending.color}
               onChange={(color) => setPending({ ...pending, color })}
-              options={COLORS.map((c) => ({ value: c, label: c.charAt(0).toUpperCase() + c.slice(1) }))}
+              options={PRODUCT_COLORS.map((c) => ({ value: c, label: c }))}
               placeholder="Select color"
               error={!!imageError}
             />

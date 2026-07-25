@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 // import { MOCK_PRODUCTS } from "@/servises/products.mock";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { ProductCardSkeleton } from "@/components/ui/ProductCardSkeleton";
 import { Pagination } from "@/components/ui/Pagination";
+import { PRODUCTS_PAGE_SIZE, parsePageParam } from "@/components/products/pagination";
 import type { Product } from "@/shemas/product.shema";
 import { Container } from "./Container";
 
@@ -19,15 +21,36 @@ interface ProductsGridProps {
 // Two rows at every breakpoint: 1 col on mobile (2 cards), 2 cols on sm (4 cards), 4 cols on lg (8 cards).
 const SKELETON_VISIBILITY = ["", "", "hidden sm:block", "hidden sm:block", "hidden lg:block", "hidden lg:block", "hidden lg:block", "hidden lg:block"];
 
-const PAGE_SIZE = 12;
-
 export function ProductsGrid({ products = [], isLoading, selectedColors, selectedSizes, newestProductIds }: ProductsGridProps) {
-  const [page, setPage] = useState(1);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const page = parsePageParam(searchParams);
+
   const idsKey = products.map((product) => product.id).join(",");
-  const [prevIdsKey, setPrevIdsKey] = useState(idsKey);
-  if (idsKey !== prevIdsKey) {
-    setPrevIdsKey(idsKey);
-    setPage(1);
+  const prevIdsKeyRef = useRef(idsKey);
+
+  useEffect(() => {
+    if (prevIdsKeyRef.current === idsKey) return;
+    prevIdsKeyRef.current = idsKey;
+    if (page !== 1) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("page");
+      const query = params.toString();
+      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    }
+  }, [idsKey, page, pathname, router, searchParams]);
+
+  function goToPage(next: number) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (next <= 1) {
+      params.delete("page");
+    } else {
+      params.set("page", String(next));
+    }
+    const query = params.toString();
+    router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
   }
 
   if (isLoading) {
@@ -42,8 +65,8 @@ export function ProductsGrid({ products = [], isLoading, selectedColors, selecte
     );
   }
 
-  const totalPages = Math.ceil(products.length / PAGE_SIZE);
-  const pageProducts = products.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const totalPages = Math.ceil(products.length / PRODUCTS_PAGE_SIZE);
+  const pageProducts = products.slice((page - 1) * PRODUCTS_PAGE_SIZE, page * PRODUCTS_PAGE_SIZE);
 
   return (
     <Container>
@@ -52,7 +75,7 @@ export function ProductsGrid({ products = [], isLoading, selectedColors, selecte
           <ProductCard key={product.id} product={product} priority={i < 4} selectedColors={selectedColors} selectedSizes={selectedSizes} isNew={newestProductIds?.has(product.id)} />
         ))}
       </div>
-      <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+      <Pagination currentPage={page} totalPages={totalPages} onPageChange={goToPage} />
     </Container>
   );
 }

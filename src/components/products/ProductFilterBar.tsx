@@ -21,12 +21,13 @@ type OpenKey = FilterKey | "sort" | null;
 
 interface ProductFilterBarProps {
   baseProducts: Product[];
-  filteredCount: number;
+  totalFilteredCount: number;
+  shownCount: number;
   isLoading?: boolean;
   category: ProductPageFilter;
 }
 
-export function ProductFilterBar({ baseProducts, filteredCount, isLoading, category }: ProductFilterBarProps) {
+export function ProductFilterBar({ baseProducts, totalFilteredCount, shownCount, isLoading, category }: ProductFilterBarProps) {
   const [openKey, setOpenKey] = useState<OpenKey>(null);
   const [isMobileModalOpen, setMobileModalOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -154,7 +155,7 @@ export function ProductFilterBar({ baseProducts, filteredCount, isLoading, categ
       <Container>
         {!isLoading && totalActiveCount > 0 && <FilterPinsRow pins={pins} onRemove={handleRemoveValue} onClearAll={handleClearAll} />}
 
-        {!isLoading && <ResultsCount filteredCount={filteredCount} totalCount={baseProducts.length} />}
+        {!isLoading && <ResultsCount shownCount={shownCount} totalCount={totalFilteredCount} />}
       </Container>
 
       <MobileFilterModal

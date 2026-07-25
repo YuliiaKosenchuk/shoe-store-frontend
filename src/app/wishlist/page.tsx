@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
 import { useWishlistStore } from "@/store/wishlist.store";
 import { ProductsGrid } from "@/components/ui/ProductsGrid";
@@ -29,7 +30,9 @@ export default function WishlistPage() {
           </Link>
         </div>
       ) : (
-        <ProductsGrid products={items} />
+        <Suspense>
+          <ProductsGrid products={items} />
+        </Suspense>
       )}
       </Container>
     </main>

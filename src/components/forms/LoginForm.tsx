@@ -51,7 +51,7 @@ export default function LoginForm() {
         setServerError(
           isNotFound
             ? "This user does not exist. Please register."
-            : "Enter your username and password to continue.",
+            : "Invalid email or password. Please try again.",
         );
       } else {
         console.error("[LoginForm.onSubmit] Unexpected error:", error);

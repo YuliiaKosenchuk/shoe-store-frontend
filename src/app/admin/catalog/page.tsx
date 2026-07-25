@@ -50,7 +50,7 @@ export default function CatalogPage() {
 
   const filtered = products.filter((p) => {
     const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = !category || p.category === category;
+    const matchesCategory = !category || p.category.toLowerCase() === category.toLowerCase();
     return matchesSearch && matchesCategory;
   });
 
@@ -100,7 +100,10 @@ export default function CatalogPage() {
             onChange={setCategory}
             options={[
               { value: "", label: "All categories" },
-              ...CATEGORIES.map((c) => ({ value: c, label: c })),
+              ...CATEGORIES.map((c) => ({
+                value: c,
+                label: c.charAt(0) + c.slice(1).toLowerCase(),
+              })),
             ]}
           />
         </div>

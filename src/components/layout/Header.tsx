@@ -13,6 +13,7 @@ import LogoComponent from "../ui/LogoComponent";
 import { Container } from "../ui/Container";
 import MegaMenu, { MegaMenuData } from "./MegaMenu";
 import { CartDrawer } from "./CartDrawer";
+import { SearchPanel } from "./SearchPanel";
 
 type NavItem = {
   label: string;
@@ -178,11 +179,13 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>(null);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [initials, setInitials] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const [menuTop, setMenuTop] = useState(0);
   const headerRef = useRef<HTMLElement>(null);
+  const searchButtonRef = useRef<HTMLButtonElement>(null);
   const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const wishlistCount = useWishlistStore((state) =>
@@ -196,6 +199,7 @@ export default function Header() {
   const openDropdown = (label: string) => {
     if (closeTimeout.current) clearTimeout(closeTimeout.current);
     setHoveredNav(label);
+    setSearchOpen(false);
   };
 
   const scheduleClose = () => {
@@ -258,6 +262,12 @@ export default function Header() {
       cancelled = true;
     };
   }, [pathname]);
+
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    if (searchOpen) setSearchOpen(false);
+  }
 
   const isHome = pathname === "/";
 
@@ -373,12 +383,29 @@ export default function Header() {
           {/* Right — icons */}
           <div
             onMouseEnter={scheduleClose}
-            className="flex items-center justify-end gap-5"
+            className="relative flex items-center justify-end gap-5"
           >
-            <Search size={24} strokeWidth={1.25} className={iconCls} />
+            <button
+              ref={searchButtonRef}
+              type="button"
+              onClick={() => {
+                setSearchOpen((prev) => !prev);
+                setHoveredNav(null);
+              }}
+              aria-label={searchOpen ? "Close search" : "Search"}
+              className={iconCls}
+            >
+              <Search size={24} strokeWidth={1.25} />
+            </button>
             {userIcon}
             {wishlistIcon}
             {cartButton}
+            <SearchPanel
+              isOpen={searchOpen}
+              onClose={() => setSearchOpen(false)}
+              triggerRef={searchButtonRef}
+              isTransparent={isTransparent}
+            />
           </div>
         </div>
 
