@@ -217,7 +217,7 @@ function PaymentPageContent() {
         ) : (
           <>
             <div className="grid grid-cols-1 gap-8 md:gap-10 lg:grid-cols-[519px_410px] lg:justify-between">
-              <div className="space-y-4">
+              <div className="order-2 space-y-4 lg:order-1">
                 <h1 className="font-(family-name:--font-cormorant-garamond) text-[36px] font-semibold text-black leading-[1.1]">
                   Payment
                 </h1>
@@ -300,7 +300,9 @@ function PaymentPageContent() {
                 </button>
               </div>
 
-              <OrderSummaryPanel />
+              <div className="order-1 lg:order-2">
+                <OrderSummaryPanel />
+              </div>
             </div>
           </>
         )}

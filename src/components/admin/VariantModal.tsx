@@ -101,7 +101,7 @@ export function VariantModal({ open, editing, loading, serverError, productName 
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <Field label="Size" error={errors.size?.message}>
-                {productCategory === "SHOES" ? (
+                {productCategory.toUpperCase() === "SHOES" ? (
                   <Controller
                     control={control}
                     name="size"

@@ -29,9 +29,16 @@ export function deriveMaterialOptions(baseProducts: Product[]): FilterOption[] {
 }
 
 export function deriveSeasonOptions(baseProducts: Product[]): FilterOption[] {
-  const present = new Set(baseProducts.map((p) => p.season));
-  return SEASONS.filter((season) => present.has(season)).map((season) => ({
-    value: season,
+  // Backend returns season as Title Case (e.g. "Spring"), not matching the
+  // uppercase SEASONS enum used elsewhere — compare case-insensitively but
+  // keep the original casing from the data as the filter value, so it still
+  // matches product.season exactly in applyProductFilters.
+  const bySeason = new Map<string, string>();
+  for (const product of baseProducts) {
+    bySeason.set(product.season.toUpperCase(), product.season);
+  }
+  return SEASONS.filter((season) => bySeason.has(season)).map((season) => ({
+    value: bySeason.get(season)!,
     label: titleCase(season.replace("_", " ")),
   }));
 }

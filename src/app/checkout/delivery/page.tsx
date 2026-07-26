@@ -94,7 +94,7 @@ export default function DeliveryDetailsPage() {
         <CheckoutStepper activeStep={2} />
 
         <div className="grid grid-cols-1 gap-8 md:gap-10 lg:grid-cols-[519px_410px] lg:justify-between">
-          <div>
+          <div className="order-2 lg:order-1">
             <h1 className="mb-4 font-(family-name:--font-cormorant-garamond) text-[36px] font-semibold text-black leading-[1.1]">
               Delivery details
             </h1>
@@ -220,7 +220,9 @@ export default function DeliveryDetailsPage() {
             </form>
           </div>
 
-          <OrderSummaryPanel />
+          <div className="order-1 lg:order-2">
+            <OrderSummaryPanel />
+          </div>
         </div>
       </CheckoutContainer>
     </main>

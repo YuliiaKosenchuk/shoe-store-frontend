@@ -37,8 +37,8 @@ function OAuthCallbackContent() {
     localStorage.setItem("token", token);
     console.log("[OAuthCallback] Token saved to localStorage, syncing cart");
     syncCartOnAuth().finally(() => {
-      console.log("[OAuthCallback] Navigating to /cabinet");
-      router.replace("/cabinet");
+      console.log("[OAuthCallback] Navigating to /");
+      router.replace("/");
     });
   }, [token, router, syncCartOnAuth]);
 
@@ -58,7 +58,7 @@ function OAuthCallbackContent() {
 
   if (errorMessage) {
     return (
-      <div className="min-h-screen bg-[#F2EDE6] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-white flex items-center justify-center px-4">
         <div className="text-center space-y-4">
           <p className="text-sm text-red-600">{errorMessage}</p>
           <button
@@ -73,7 +73,7 @@ function OAuthCallbackContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F2EDE6] flex items-center justify-center">
+    <div className="min-h-screen bg-white flex items-center justify-center">
       <p className="text-sm text-gray-400 tracking-widest uppercase">
         Signing you in…
       </p>
@@ -85,7 +85,7 @@ export default function OAuthCallbackPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#F2EDE6] flex items-center justify-center">
+        <div className="min-h-screen bg-white flex items-center justify-center">
           <p className="text-sm text-gray-400 tracking-widest uppercase">
             Signing you in…
           </p>

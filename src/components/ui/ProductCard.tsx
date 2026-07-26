@@ -130,7 +130,7 @@ export function ProductCard({ product, priority = false, selectedColors, selecte
       ).size
     : 0;
 
-  const showSizeSelector = product.category !== "BAGS" && product.category !== "ACCESSORIES";
+  const showSizeSelector = product.category.toLowerCase() !== "bags" && product.category.toLowerCase() !== "accessories";
 
   const isOutOfStock = variants !== undefined && (variants.length === 0 || variants.every((v) => v.stockQty <= 0));
 

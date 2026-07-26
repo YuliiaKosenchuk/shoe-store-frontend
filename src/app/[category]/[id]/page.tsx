@@ -68,7 +68,7 @@ export default function ProductPage({ params }: ProductPageProps) {
     queryFn: () => ProductsService.getProduct(Number(id)),
   });
 
-  const isBag = category.toLowerCase() === "bags";
+  const isBag = ["bags", "accessories"].includes(category.toLowerCase());
 
   // Compute effectiveColor and sizes here so the auto-select effect can reference them
   const effectiveColor = selectedColor || allImages[0]?.color || "";
@@ -89,7 +89,7 @@ export default function ProductPage({ params }: ProductPageProps) {
 
   // Cart doesn't expose productVariantId on line items — match on (color, size),
   // safe here since this page is scoped to a single product.
-  // Bags only have one variant per color (no numeric size to match on).
+  // Bags/accessories only have one variant per color (no numeric size to match on).
   const matchedVariant = isBag
     ? colorVariants[0]
     : variants.find(
@@ -185,7 +185,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             <h1 className={`wrap-break-word font-(family-name:--font-cormorant-garamond) text-4xl font-semibold leading-tight text-black ${nameExpanded ? "" : "line-clamp-2"}`}>
               {product.name}
             </h1>
-            {product.name.length > 35 && (
+            {product.name.length > 45 && (
               <button
                 onClick={() => setNameExpanded((v) => !v)}
                 className="mt-1 mb-6 font-(family-name:--font-jost) text-[14px] leading-normal text-[#818181] hover:text-black transition-colors duration-200"
