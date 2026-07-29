@@ -57,7 +57,7 @@ export function CheckboxOptionList({
   return (
     <div className="flex flex-col gap-4">
       <div
-        className="grid gap-x-12.5 gap-y-4 grid-flow-col auto-cols-[132px]"
+        className="grid gap-x-10 gap-y-4 grid-flow-col auto-cols-[160px]"
         style={{
           gridTemplateRows: `repeat(${rowCount}, auto)`,
         }}

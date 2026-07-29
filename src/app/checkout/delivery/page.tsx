@@ -99,22 +99,24 @@ export default function DeliveryDetailsPage() {
               Delivery details
             </h1>
 
-            <p className="mb-8 font-(family-name:--font-jost) text-base text-[#343434] font-normal leading-[1.3]">
-              <Link
-                href="/login"
-                className="text-[#7A2633] underline hover:opacity-70 transition-opacity"
-              >
-                Sign in
-              </Link>{" "}
-              or{" "}
-              <Link
-                href="/register"
-                className="text-[#7A2633] underline hover:opacity-70 transition-opacity"
-              >
-                Sign up
-              </Link>{" "}
-              to save favorites, track orders, and check out faster.
-            </p>
+            {!hasToken && (
+              <p className="mb-8 font-(family-name:--font-jost) text-base text-[#343434] font-normal leading-[1.3]">
+                <Link
+                  href="/login"
+                  className="text-[#7A2633] underline hover:opacity-70 transition-opacity"
+                >
+                  Sign in
+                </Link>{" "}
+                or{" "}
+                <Link
+                  href="/register"
+                  className="text-[#7A2633] underline hover:opacity-70 transition-opacity"
+                >
+                  Sign up
+                </Link>{" "}
+                to save favorites, track orders, and check out faster.
+              </p>
+            )}
 
             <form
               onSubmit={handleSubmit(onSubmit)}

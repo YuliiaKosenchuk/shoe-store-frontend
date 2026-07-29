@@ -8,7 +8,6 @@ import { ProductsService } from "@/servises/products.service";
 import { NotifyModal } from "@/components/products/NotifyModal";
 // import { getMockProduct } from "@/servises/products.mock";
 import { WishlistButton } from "@/components/ui/WishlistButton";
-import { useWishlistStore } from "@/store/wishlist.store";
 import { useBreadcrumbStore } from "@/store/breadcrumb.store";
 import { useCart, useAddCartItem } from "@/hooks/useCart";
 import { ProductImageGallery } from "./_components/ProductImageGallery";
@@ -42,7 +41,6 @@ export default function ProductPage({ params }: ProductPageProps) {
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [notifyColorModal, setNotifyColorModal] = useState<string | null>(null);
   const [nameExpanded, setNameExpanded] = useState(false);
-  const { hasHydrated, items: wishlistItems } = useWishlistStore();
   const { setPageTitle, clearPageTitle } = useBreadcrumbStore();
   const { cart } = useCart();
   const addItem = useAddCartItem();
@@ -131,8 +129,6 @@ export default function ProductPage({ params }: ProductPageProps) {
     }
     return <ProductPageSkeleton />;
   }
-
-  const wishlisted = hasHydrated && wishlistItems.some((p) => p.id === product.id);
 
   // Deduplicate images by color (guards against duplicate DB entries)
   const uniqueImages = allImages.filter(
@@ -241,9 +237,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               </button>
             ) : (
               <button
-                className={`flex-1 flex items-center justify-center gap-3 h-13 text-white font-(family-name:--font-jost) text-sm tracking-widest uppercase transition-colors duration-200 disabled:cursor-not-allowed disabled:bg-[#DADADA] disabled:text-[#818181] ${
-                  inBag ? "bg-[#7A2633]" : "bg-[#010101] hover:bg-[#2C2C2C]"
-                }`}
+                className="flex-1 flex items-center justify-center gap-3 h-13 bg-[#010101] text-white font-(family-name:--font-jost) text-sm tracking-widest uppercase transition-colors duration-200 hover:bg-[#2C2C2C] disabled:cursor-not-allowed disabled:bg-[#DADADA] disabled:text-[#818181]"
                 disabled={!matchedVariant || addItem.isPending}
                 onClick={() => {
                   if (!matchedVariant) return;
@@ -253,13 +247,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                 {addItem.isPending ? "Adding…" : inBag ? "In Bag" : "Add to Bag"}
               </button>
             )}
-            <div
-              className={`w-13 h-13 flex items-center justify-center border transition-colors duration-200 ${
-                wishlisted
-                  ? "bg-[#7A2633]"
-                  : "bg-[#010101] hover:bg-[#2C2C2C]"
-              }`}
-            >
+            <div className="w-13 h-13 flex items-center justify-center border bg-[#010101] transition-colors duration-200 hover:bg-[#2C2C2C]">
               <WishlistButton
                 product={product}
                 activeIconClass="text-white fill-white"

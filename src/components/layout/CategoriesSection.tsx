@@ -41,7 +41,7 @@ export default function CategoriesSection() {
                   {label}
                 </h2>
                 <span
-                  className="mt-1.5 inline-block text-[#010101]/90 text-[16px] leading-[1.3] underline underline-offset-4 transition-opacity group-hover:opacity-60"
+                  className="mt-1.5 inline-block relative w-fit text-[#010101]/90 text-[16px] leading-[1.3] after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 group-hover:after:scale-x-100"
                   style={{ fontFamily: "var(--font-jost)" }}
                 >
                   Shop now

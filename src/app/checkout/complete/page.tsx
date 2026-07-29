@@ -52,31 +52,31 @@ function OrderDetails({ order }: { order: OrderResponseDto }) {
 
       <div className="grid grid-cols-2 gap-x-6 gap-y-6 border-t border-gray-200 py-6 text-left">
         <div>
-          <p className="mb-1 font-(family-name:--font-jost) text-[13px] tracking-widest uppercase text-[#343434]">
+          <p className="mb-1 font-(family-name:--font-jost) text-[13px] tracking-widest text-[#343434]">
             Contact info
           </p>
           <p className="font-(family-name:--font-jost) text-sm text-black">{order.customerEmail}</p>
         </div>
         <div>
-          <p className="mb-1 font-(family-name:--font-jost) text-[13px] tracking-widest uppercase text-[#343434]">
+          <p className="mb-1 font-(family-name:--font-jost) text-[13px] tracking-widest text-[#343434]">
             Shipping address
           </p>
           <p className="font-(family-name:--font-jost) text-sm text-black">{order.deliveryAddress}</p>
         </div>
         <div>
-          <p className="mb-1 font-(family-name:--font-jost) text-[13px] tracking-widest uppercase text-[#343434]">
+          <p className="mb-1 font-(family-name:--font-jost) text-[13px] tracking-widest text-[#343434]">
             Payment method
           </p>
           <p className="font-(family-name:--font-jost) text-sm text-black">{paymentMethodLabel}</p>
         </div>
         <div>
-          <p className="mb-1 font-(family-name:--font-jost) text-[13px] tracking-widest uppercase text-[#343434]">
+          <p className="mb-1 font-(family-name:--font-jost) text-[13px] tracking-widest text-[#343434]">
             Billing address
           </p>
           <p className="font-(family-name:--font-jost) text-sm text-black">Same as shipping address</p>
         </div>
         <div>
-          <p className="mb-1 font-(family-name:--font-jost) text-[13px] tracking-widest uppercase text-[#343434]">
+          <p className="mb-1 font-(family-name:--font-jost) text-[13px] tracking-widest text-[#343434]">
             Shipping method
           </p>
           <p className="font-(family-name:--font-jost) text-sm text-black">
@@ -155,14 +155,14 @@ function OrderDetails({ order }: { order: OrderResponseDto }) {
       <div className="mt-8 space-y-3">
         <Link
           href="/"
-          className="block w-full bg-[#010101] py-3.75 text-center font-(family-name:--font-jost) text-[14px] font-medium tracking-wide leading-[1.4] uppercase text-white transition-colors hover:bg-[#2C2C2C]"
+          className="block w-full bg-[#010101] py-3.75 text-center font-(family-name:--font-jost) text-[14px] font-medium tracking-wide leading-[1.4] text-white transition-colors hover:bg-[#2C2C2C]"
         >
           Continue shopping
         </Link>
         {/* Not wired up yet — no customer-facing order history page exists */}
         <button
           type="button"
-          className="block w-full border border-black py-3.75 text-center font-(family-name:--font-jost) text-[14px] font-medium tracking-wide leading-[1.4] uppercase text-black transition-colors hover:bg-[#F8F8F8]"
+          className="block w-full border border-black py-3.75 text-center font-(family-name:--font-jost) text-[14px] font-medium tracking-wide leading-[1.4] text-black transition-colors hover:bg-[#F8F8F8]"
         >
           View shopping
         </button>
@@ -208,7 +208,7 @@ function CheckoutCompleteContent() {
 
   return (
     <main>
-      <CheckoutContainer className="px-4 py-6 sm:px-6 md:px-8 lg:px-8 lg:py-10">
+      <CheckoutContainer className="px-4 py-6 md:px-8 lg:py-10">
         <CheckoutStepper activeStep={4} />
 
         {!order && orderQuery.isLoading ? (
@@ -227,7 +227,7 @@ function CheckoutCompleteContent() {
             </p>
             <Link
               href="/"
-              className="mt-2 inline-block bg-[#010101] px-8 py-3.75 text-center font-(family-name:--font-jost) text-[14px] font-medium tracking-wide leading-[1.4] uppercase text-white transition-colors hover:bg-[#2C2C2C]"
+              className="mt-2 inline-block bg-[#010101] px-8 py-3.75 text-center font-(family-name:--font-jost) text-[14px] font-medium tracking-wide leading-[1.4] text-white transition-colors hover:bg-[#2C2C2C]"
             >
               Back to home
             </Link>

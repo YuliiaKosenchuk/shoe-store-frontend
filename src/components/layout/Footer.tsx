@@ -149,7 +149,7 @@ export default function Footer() {
         </div>
       </div>
     )}
-    <footer className="mb-6.5 w-full bg-[#F8F8F8]">
+    <footer className="w-full bg-[#F8F8F8]">
       <Container className="px-4 md:px-8">
         {/* Nav columns — desktop grid */}
         <div className="hidden pt-8 pb-6 lg:grid lg:grid-cols-4 lg:gap-8 xl:pt-12 xl:pb-8 xl:pl-19.25">
