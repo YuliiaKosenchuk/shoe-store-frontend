@@ -74,19 +74,14 @@ export default function HeroV4() {
       {/* Layer 3 — foreground model: full viewport width */}
       <motion.div
         className="absolute inset-0 z-20 pointer-events-none"
-        style={{
-          y: modelY,
-          maskImage: "linear-gradient(to bottom, transparent 0px, transparent 56px, black 96px)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0px, transparent 56px, black 96px)",
-        }}
       >
         <Image
-          src="/images/hero-51.png"
+          src="/images/hero-511.png"
           alt="Model"
           fill
           priority
           quality={100}
-          className="object-cover object-bottom"
+          className="object-contain object-bottom"
         />
       </motion.div>
 
@@ -111,7 +106,7 @@ export default function HeroV4() {
           </motion.div>
 
           <motion.div
-            className="absolute top-[88%] left-0 max-[1114px]:top-auto max-[1114px]:bottom-0 max-[1114px]:left-1/2 max-[1114px]:-translate-x-1/2 pointer-events-auto"
+            className="absolute top-[89%] left-0 max-[1114px]:top-auto max-[1114px]:bottom-0 max-[1114px]:left-1/2 max-[1114px]:-translate-x-1/2 pointer-events-auto"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "easeOut", delay: 0.55 }}

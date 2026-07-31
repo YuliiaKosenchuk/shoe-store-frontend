@@ -41,7 +41,7 @@ export default function RootLayout({
             <Header />
           </div>
           <Breadcrumbs />
-          <div className="flex flex-col">{children}</div>
+          <div className="flex flex-1 flex-col">{children}</div>
           <Footer />
           <CookieBanner />
           <AnalyticsBootstrap />
