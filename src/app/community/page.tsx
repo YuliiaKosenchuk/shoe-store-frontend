@@ -69,7 +69,7 @@ export default function CommunityPage() {
   return (
     <main className="py-16">
       <Container>
-        <div className="px-8">
+        <div className="px-4 md:px-8">
           {/* Header */}
           <div className="mb-12">
             <h1

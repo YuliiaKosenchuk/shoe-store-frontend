@@ -74,6 +74,9 @@ export default function HeroV4() {
       {/* Layer 3 — foreground model: full viewport width */}
       <motion.div
         className="absolute inset-0 z-20 pointer-events-none"
+        style={{
+          y: modelY,
+        }}
       >
         <Image
           src="/images/hero-511.png"

@@ -117,13 +117,13 @@ const navItems: NavItem[] = [
     label: "About us",
     href: "/about-us",
     menu: {
-      categoriesLabel: "Customer Service",
+      categoriesLabel: "Service",
       categories: [
-        { label: "Our philosophy", href: "/about-us" },
-        { label: "Natural materials", href: "#" },
+        { label: "Our team", href: "/about-us" },
         { label: "Craftsmanship", href: "#" },
-        { label: "Sustainability", href: "#" },
         { label: "Editorials", href: "#" },
+        { label: "Sustainability", href: "#" },
+        { label: "Natural materials", href: "#" },
       ],
       handpicked: [
         { label: "New collection", href: "#" },
