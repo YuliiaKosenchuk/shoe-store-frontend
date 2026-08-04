@@ -84,7 +84,7 @@ export default function HeroV4() {
           fill
           priority
           quality={100}
-          className="object-contain object-bottom"
+          className="object-cover object-center md:object-contain md:object-bottom"
         />
       </motion.div>
 
