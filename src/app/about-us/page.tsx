@@ -350,14 +350,14 @@ export default function AboutUsPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 min-[881px]:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-7">
+          <div className="grid grid-cols-1 min-[881px]:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-7">
             {team.map((member, i) => (
               <article
                 key={i}
                 className="grid grid-rows-subgrid row-span-4 border border-[#E8E8E8] p-4"
               >
-                <div className="flex gap-4 items-start justify-between">
-                  <div className="relative flex  h-37.25 w-37.25 items-center justify-center overflow-hidden rounded-full bg-[#F8F8F8] shrink-0">
+                <div className="grid grid-cols-[96px_1fr] sm:grid-cols-[149px_1fr] gap-4 items-start">
+                  <div className="relative flex h-24 w-24 sm:h-37.25 sm:w-37.25 items-center justify-center overflow-hidden rounded-full bg-[#F8F8F8] shrink-0">
                     {member.photo ? (
                       <Image
                         src={member.photo}
@@ -368,7 +368,7 @@ export default function AboutUsPage() {
                       />
                     ) : (
                       <span
-                        className="text-6xl uppercase text-black"
+                        className="text-4xl sm:text-6xl uppercase text-black"
                         style={{ fontFamily: "var(--font-cormorant-garamond)" }}
                       >
                         {initials(member.name)}
@@ -388,6 +388,24 @@ export default function AboutUsPage() {
                     >
                       {member.name}
                     </h3>
+                    <p
+                      className="hidden sm:block text-[14px] leading-normal text-[#4E4E4E] mb-4"
+                      style={{ fontFamily: "var(--font-jost)" }}
+                    >
+                      &ldquo;{member.quote}&rdquo;
+                    </p>
+                    <p
+                      className="hidden sm:block text-[14px] leading-normal text-[#4E4E4E]"
+                      style={{ fontFamily: "var(--font-jost)" }}
+                    >
+                      Location:{" "}
+                      <span className="font-medium text-black">
+                        {member.location}
+                      </span>
+                    </p>
+                  </div>
+
+                  <div className="col-span-2 min-w-0 sm:hidden">
                     <p
                       className="text-[14px] leading-normal text-[#4E4E4E] mb-4"
                       style={{ fontFamily: "var(--font-jost)" }}
