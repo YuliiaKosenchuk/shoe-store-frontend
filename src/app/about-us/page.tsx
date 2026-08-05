@@ -238,9 +238,10 @@ const team: TeamMember[] = [
       "Performed manual testing of web, mobile, and API applications",
       "Prepared test documentation, including test plans, checklists, bug reports, RTMs, and decision tables",
     ],
-    skills: ["Cypress", "Jest", "Postman"],
+    skills: ["Jira", "TestRail", "Postman", "DevTools", "Git", "REST API", "Manual Testing", "Test Cases", "Bug Reporting", "SQL", "HTML", "CSS"],
     socials: [
-      { type: "linkedin", url: "www.linkedin.com/in/łucja-chmist-b204672b9" },
+      { type: "linkedin", url: "https://www.linkedin.com/in/%C5%82ucja-chmist-b204672b9/" },
+      { type: "github", url: "https://github.com/lchmist" },
       {
         type: "email",
         url: "mailto:chmistlucja@gmail.com",

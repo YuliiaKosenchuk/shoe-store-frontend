@@ -38,7 +38,13 @@ function pickInitialColor(product: Product, selectedColors?: string[]): string {
 export function ProductCard({ product, priority = false, selectedColors, selectedSizes, isNew = false }: ProductCardProps) {
   const router = useRouter();
   const cardId = useId();
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    // touch swipe is disabled here because arrows are always visible on touchscreens for manual
+    // paging, and letting embla also handle touchstart makes this gallery fight the outer product
+    // carousel for the same swipe gesture; mouse drag stays enabled for desktop.
+    watchDrag: (_, evt) => evt.type !== "touchstart",
+  });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [activeColor, setActiveColor] = useState<string>(() => pickInitialColor(product, selectedColors));
 
