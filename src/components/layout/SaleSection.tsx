@@ -48,7 +48,7 @@ export default function SaleSection() {
           {/* Right — image */}
           <div className="relative w-full h-110.5 md:h-auto md:flex-1">
             <Image
-              src="/images/sale1.png"
+              src="/images/sale2.png"
               alt="Summer Sale"
               fill
               className="object-cover"

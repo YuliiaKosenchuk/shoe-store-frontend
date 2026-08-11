@@ -280,7 +280,7 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [isHome]);
 
-  const isTransparent = isHome && !scrolled && !hoveredNav && !menuOpen;
+  const isTransparent = isHome && !scrolled && !hoveredNav && !menuOpen && !searchOpen;
 
   const iconCls = isTransparent
     ? "cursor-pointer text-white hover:opacity-70 transition-opacity"
@@ -400,12 +400,6 @@ export default function Header() {
             {userIcon}
             {wishlistIcon}
             {cartButton}
-            <SearchPanel
-              isOpen={searchOpen}
-              onClose={() => setSearchOpen(false)}
-              triggerRef={searchButtonRef}
-              isTransparent={isTransparent}
-            />
           </div>
         </div>
 
@@ -464,6 +458,13 @@ export default function Header() {
           />
         ) : null,
       )}
+
+      {/* Search panel */}
+      <SearchPanel
+        isOpen={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        triggerRef={searchButtonRef}
+      />
 
       {/* Mobile menu */}
       <AnimatePresence>
