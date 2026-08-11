@@ -57,10 +57,7 @@ export function ProductForm({
               <AdminSelect
                 value={field.value ?? ""}
                 onChange={field.onChange}
-                options={CATEGORIES.map((c) => ({
-                  value: c,
-                  label: c.charAt(0) + c.slice(1).toLowerCase(),
-                }))}
+                options={CATEGORIES.map((c) => ({ value: c, label: toLabel(c) }))}
                 placeholder="Select category"
                 error={!!errors.category}
               />
@@ -76,7 +73,7 @@ export function ProductForm({
               <AdminSelect
                 value={field.value ?? ""}
                 onChange={field.onChange}
-                options={GENDERS.map((g) => ({ value: g, label: g }))}
+                options={GENDERS.map((g) => ({ value: g, label: toLabel(g) }))}
                 placeholder="Select gender"
                 error={!!errors.gender}
               />
@@ -92,7 +89,7 @@ export function ProductForm({
               <AdminSelect
                 value={field.value ?? ""}
                 onChange={field.onChange}
-                options={SEASONS.map((s) => ({ value: s, label: s }))}
+                options={SEASONS.map((s) => ({ value: s, label: toLabel(s) }))}
                 placeholder="Select season"
                 error={!!errors.season}
               />
@@ -163,6 +160,11 @@ function FormField({
       {error && <p className="text-[11px] text-red-500">{error}</p>}
     </div>
   );
+}
+
+function toLabel(value: string) {
+  const normalized = value.replace(/_/g, " ").toLowerCase();
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
 }
 
 function inputCls(hasError: boolean) {

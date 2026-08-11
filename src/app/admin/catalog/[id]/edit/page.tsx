@@ -11,8 +11,29 @@ import { ConfirmModal } from "@/components/admin/ConfirmModal";
 import { AdminService } from "@/servises/admin.service";
 import { getErrorMessage } from "@/lib/apiClient";
 import { ProductsService } from "@/servises/products.service";
+import { CATEGORIES, SEASONS, MATERIALS } from "@/shemas/admin-product.shema";
 import type { CreateProductFormValues, CreateVariantFormValues } from "@/shemas/admin-product.shema";
 import type { Product, ProductVariantDto, ProductImageDto } from "@/shemas/product.shema";
+
+const GENDER_ALIASES: Record<string, CreateProductFormValues["gender"]> = {
+  women: "FEMALE",
+  woman: "FEMALE",
+  female: "FEMALE",
+  men: "MALE",
+  man: "MALE",
+  male: "MALE",
+  unisex: "UNISEX",
+};
+
+function matchEnum<T extends string>(value: string | undefined | null, options: readonly T[]): T | undefined {
+  if (!value) return undefined;
+  return options.find((opt) => opt.toLowerCase() === value.toLowerCase());
+}
+
+function matchGender(value: string | undefined | null): CreateProductFormValues["gender"] | undefined {
+  if (!value) return undefined;
+  return GENDER_ALIASES[value.toLowerCase()];
+}
 
 export default function EditProductPage() {
   const { id } = useParams<{ id: string }>();
@@ -133,13 +154,13 @@ export default function EditProductPage() {
 
   const defaultValues: Partial<CreateProductFormValues> = {
     name: product.name,
-    category: product.category as CreateProductFormValues["category"],
+    category: matchEnum(product.category, CATEGORIES),
     description: product.description,
     price: product.price,
     priceOld: product.priceOld || undefined,
-    gender: product.gender as CreateProductFormValues["gender"],
-    season: product.season as CreateProductFormValues["season"],
-    material: product.material as CreateProductFormValues["material"],
+    gender: matchGender(product.gender),
+    season: matchEnum(product.season, SEASONS),
+    material: matchEnum(product.material, MATERIALS),
   };
 
   return (
@@ -168,7 +189,7 @@ export default function EditProductPage() {
           onSubmit={handleUpdate}
           loading={saveLoading}
           serverError={saveError}
-          submitLabel="Save Changes"
+          submitLabel="Save Basic Info"
         />
       </section>
 

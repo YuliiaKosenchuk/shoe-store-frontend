@@ -19,14 +19,14 @@ const SHIPPING_METHODS: {
     value: "DHL",
     title: "Pickup at a DHL branch",
     subtitle: "1-3 business days",
-    price: "€5",
+    price: "Free",
     logo: "/images/dhl-logo.svg",
   },
   {
     value: "DPD",
     title: "Pickup at a DPD branch",
     subtitle: "1-3 business days",
-    price: "€5",
+    price: "Free",
     logo: "/images/dpd-logo.svg",
   },
   {
@@ -43,6 +43,7 @@ interface ShippingMethodSectionProps {
   postalCode: string;
   street: string;
   houseNumber: string;
+  error?: boolean;
 }
 
 export function ShippingMethodSection({
@@ -51,6 +52,7 @@ export function ShippingMethodSection({
   postalCode,
   street,
   houseNumber,
+  error,
 }: ShippingMethodSectionProps) {
   const shipping = useCheckoutStore((s) => s.shipping);
   const setShipping = useCheckoutStore((s) => s.setShipping);
@@ -72,6 +74,11 @@ export function ShippingMethodSection({
         <legend className="mb-3 font-(family-name:--font-cormorant-garamond) text-[26px] text-black leading-[1.2] font-semibold">
           Shipping method
         </legend>
+        {error && (
+          <p className="mb-3 font-(family-name:--font-jost) text-[14px] text-[#DF4441]">
+            Please select a shipping method to continue.
+          </p>
+        )}
         {!resolveCountryCode(countryInput) ? (
           <p className="font-(family-name:--font-jost) text-sm text-[#4E4E4E]">
             Enter your shipping address to see available shipping options.

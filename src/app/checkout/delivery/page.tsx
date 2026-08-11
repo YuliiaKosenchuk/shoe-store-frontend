@@ -44,7 +44,7 @@ export default function DeliveryDetailsPage() {
     watch,
     reset,
     getValues,
-    formState: { errors, isValid, touchedFields },
+    formState: { errors, isValid, touchedFields, isSubmitted },
   } = useForm<DeliveryDetailsFormValues>({
     resolver: zodResolver(deliveryDetailsSchema),
     mode: "onChange",
@@ -82,11 +82,13 @@ export default function DeliveryDetailsPage() {
   const houseNumber = watch("houseNumber");
 
   const onSubmit = (data: DeliveryDetailsFormValues) => {
+    if (!shipping) return;
     setDeliveryDetails(data);
     router.push("/checkout/payment");
   };
 
   const canContinue = isValid && shipping !== null;
+  const shippingError = isSubmitted && !shipping;
 
   return (
     <main>
@@ -186,7 +188,9 @@ export default function DeliveryDetailsPage() {
                     onChange={(v) => onChange(v ?? "")}
                     onBlur={onBlur}
                     error={
-                      touchedFields.phone ? errors.phone?.message : undefined
+                      touchedFields.phone || isSubmitted
+                        ? errors.phone?.message
+                        : undefined
                     }
                   />
                 )}
@@ -206,11 +210,11 @@ export default function DeliveryDetailsPage() {
                 postalCode={postalCode}
                 street={address}
                 houseNumber={houseNumber}
+                error={shippingError}
               />
 
               <button
                 type="submit"
-                disabled={!canContinue}
                 className={`mt-5.75 w-full py-3.75 text-[14px] font-medium tracking-widest uppercase transition-colors ${
                   canContinue
                     ? "bg-[#010101] text-white hover:bg-[#2C2C2C]"

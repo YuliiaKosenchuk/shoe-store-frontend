@@ -262,7 +262,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               <span className="inline-block w-2.5 h-2.5 rounded-full bg-amber-400" />
               Low stock
             </span>
-            <span>Free delivery on orders over 150 EUR</span>
+            {/* <span>Free delivery</span> */}
           </div>
 
           {/* Accordion */}

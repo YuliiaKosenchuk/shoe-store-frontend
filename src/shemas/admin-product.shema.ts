@@ -3,14 +3,53 @@ import { z } from "zod";
 export const CATEGORIES = ["SHOES", "BAGS", "ACCESSORIES"] as const;
 export const GENDERS = ["MALE", "FEMALE", "UNISEX"] as const;
 export const SEASONS = ["SPRING", "SUMMER", "AUTUMN", "WINTER", "ALL_SEASON"] as const;
-export const MATERIALS = ["leather", "natural pu", "mesh", "printed fabric"] as const;
+export const MATERIALS = [
+  "Nappa Calf Leather",
+  "Natural Pu",
+  "Mesh",
+  "Printed Fabric",
+  "Patent Pu",
+  "Embroidered Mesh",
+  "Tweed",
+  "Recycled Polyester",
+  "Satin",
+  "Lace",
+  "Crochet",
+  "Woven Fabric",
+  "Raffia",
+  "Mirror Metallic Pu",
+  "Box Pu",
+  "Linen",
+  "Faux Suede",
+  "Faux Leather",
+  "Calf Pu",
+  "Canvas",
+  "Recycled Leather",
+  "Nappa Pu",
+  "Wrinkled Pu",
+  "Polypropylene Fiber",
+  "Nappa Sheep Leather",
+  "Recycled Acetate",
+  "Brass",
+  "Stainless Steel",
+  "Saffiano Pu",
+  "Caviar Pu",
+  "Tumble Pu",
+] as const;
 
 export const createProductSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  name: z.string().min(1, "Name is required").max(255, "Product name must be less than 255 characters"),
   category: z.enum(CATEGORIES, { message: "Category is required" }),
   description: z.string().min(1, "Description is required"),
-  price: z.number({ error: "Price must be a number" }).positive("Price must be positive"),
-  priceOld: z.number({ error: "Old price must be a number" }).positive("Old price must be positive").optional(),
+  price: z
+    .number({ error: "Price must be a number" })
+    .positive("Price must be positive")
+    .max(999999.99, "Price must be less than 1,000,000"),
+  priceOld: z
+    .number({ error: "Old price must be a number" })
+    .positive("Old price must be positive")
+    .max(999999.99, "Old price must be less than 1,000,000")
+    .optional(),
   gender: z.enum(GENDERS, { message: "Gender is required" }),
   season: z.enum(SEASONS, { message: "Season is required" }),
   material: z.enum(MATERIALS, { message: "Material is required" }),

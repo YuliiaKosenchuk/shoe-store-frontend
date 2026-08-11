@@ -44,6 +44,9 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const productByCartItemId = useCartItemsProducts(items);
   const productsCount = cart?.productsCount ?? 0;
   const cartSubtotal = cart?.cartSubtotal ?? 0;
+  const hasOutOfStockItem = items.some((item) =>
+    isCartItemOutOfStock(stockByCartItemId.get(item.id), item.quantity, isStockLoading)
+  );
 
   return (
     <>
@@ -128,7 +131,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   </div>
                   <div className="flex justify-between font-(family-name:--font-jost) text-[16px] text-[#343434] leading-[1.3]">
                     <span className="font-(family-name:--font-jost) text-[16px] text-[#343434] leading-[1.3]">Shipping</span>
-                    <span className="font-(family-name:--font-jost) text-[16px] font-medium text-[#010101] leading-[1.3]" >€ 5</span>
+                    <span className="font-(family-name:--font-jost) text-[16px] font-medium text-[#010101] leading-[1.3]" >Free</span>
                   </div>
                 </div>
               </>
@@ -142,13 +145,23 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 <span className="" >€ {cartSubtotal.toLocaleString()}</span>
               </div>
 
-              <Link
-                href="/cart"
-                onClick={onClose}
-                className="mb-4 block w-full bg-[#010101] py-3.75 text-center font-(family-name:--font-jost) text-sm font-medium leading-normal uppercase text-white transition-colors hover:bg-[#2C2C2C]"
-              >
-                Checkout
-              </Link>
+              {hasOutOfStockItem ? (
+                <button
+                  type="button"
+                  disabled
+                  className="mb-4 block w-full cursor-not-allowed bg-[#DADADA] py-3.75 text-center font-(family-name:--font-jost) text-sm font-medium leading-normal uppercase text-[#818181]"
+                >
+                  Checkout
+                </button>
+              ) : (
+                <Link
+                  href="/checkout/delivery"
+                  onClick={onClose}
+                  className="mb-4 block w-full bg-[#010101] py-3.75 text-center font-(family-name:--font-jost) text-sm font-medium leading-normal uppercase text-white transition-colors hover:bg-[#2C2C2C]"
+                >
+                  Checkout
+                </Link>
+              )}
               <Link
                 href="/cart"
                 onClick={onClose}

@@ -23,10 +23,10 @@ export default function WishlistPage() {
             Your wishlist is empty.
           </p>
           <Link
-            href="/shoes"
-            className="font-(family-name:--font-jost) text-sm font-light tracking-widest uppercase underline underline-offset-4 text-[#7A2633] hover:opacity-70 transition-opacity"
+            href="/bestsellers"
+            className="font-(family-name:--font-jost) text-[16px] font-light tracking-widest underline underline-offset-4 text-[#010101] hover:opacity-70 transition-opacity"
           >
-            Browse shoes
+            Browse something new
           </Link>
         </div>
       ) : (

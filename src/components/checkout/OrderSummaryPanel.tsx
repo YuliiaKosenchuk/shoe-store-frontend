@@ -28,7 +28,7 @@ export function OrderSummaryPanel({ children, showItems = true }: OrderSummaryPa
   const { stockByCartItemId, isLoading: isStockLoading } = useCartItemsStock(items);
   const productsCount = cart?.productsCount ?? 0;
   const cartSubtotal = cart?.cartSubtotal ?? 0;
-  const shippingCost = 5;
+  const shippingCost = 0;
   const discountAmount = discountPercent
     ? Math.round(((cartSubtotal * discountPercent) / 100) * 100) / 100
     : 0;
@@ -174,7 +174,7 @@ export function OrderSummaryPanel({ children, showItems = true }: OrderSummaryPa
         </div>
         <div className="mb-4 flex justify-between">
           <span>Shipping</span>
-          <span className="text-base text-black font-medium">€ {shippingCost}</span>
+          <span className="text-base text-black font-medium">Free</span>
         </div>
         {discountCode && (
           <div className="mb-4 flex justify-between">

@@ -66,7 +66,7 @@ export default function CartPage() {
               </p>
               <Link
                 href="/"
-                className="font-(family-name:--font-jost) text-sm font-light tracking-widest uppercase underline underline-offset-4 text-[#7A2633] hover:opacity-70 transition-opacity"
+                className="font-(family-name:--font-jost) text-[16px] font-light tracking-widest underline underline-offset-4 text-[#010101] hover:opacity-70 transition-opacity"
               >
                 Browse something new
               </Link>

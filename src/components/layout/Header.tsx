@@ -42,7 +42,7 @@ const navItems: NavItem[] = [
       ],
       handpicked: [
         { label: "New collection", href: "#" },
-        { label: "Gift card", href: "#" },
+        { label: "Gift card", href: "/gift-card" },
       ],
       featured: [
         { name: "Dorri chocolate", image: "/images/dori.png", href: "#" },
@@ -71,7 +71,7 @@ const navItems: NavItem[] = [
       ],
       handpicked: [
         { label: "New collection", href: "#" },
-        { label: "Gift card", href: "#" },
+        { label: "Gift card", href: "/gift-card" },
       ],
       featured: [
         {
@@ -101,7 +101,7 @@ const navItems: NavItem[] = [
       ],
       handpicked: [
         { label: "New collection", href: "#" },
-        { label: "Gift card", href: "#" },
+        { label: "Gift card", href: "/gift-card" },
       ],
       featured: [
         { name: "Opaline", image: "/images/opaline.png", href: "/accessories" },
@@ -127,7 +127,7 @@ const navItems: NavItem[] = [
       ],
       handpicked: [
         { label: "New collection", href: "#" },
-        { label: "Gift card", href: "#" },
+        { label: "Gift card", href: "/gift-card" },
       ],
       featured: [
         {
@@ -153,9 +153,9 @@ const navItems: NavItem[] = [
       ],
       handpicked: [
         { label: "New collection", href: "#" },
-        { label: "Gift card", href: "#" },
+        { label: "Gift card", href: "/gift-card" },
       ],
-      featured: [{ name: "Gift cards", image: "/images/gift.png", href: "#" }],
+      featured: [{ name: "Gift cards", image: "/images/gift.png", href: "/gift-card" }],
     },
   },
 ];
@@ -166,7 +166,7 @@ const handpickedNavItem: NavItem = {
   menu: {
     secondary: [
       { label: "New collection", href: "#" },
-      { label: "Gift card", href: "#" },
+      { label: "Gift card", href: "/gift-card" },
     ],
   },
 };
