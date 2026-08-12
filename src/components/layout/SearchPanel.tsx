@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";
 import { Search, X } from "lucide-react";
-import { ProductsService } from "@/servises/products.service";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { Container } from "@/components/ui/Container";
 import { useSearchStore } from "@/store/search.store";
+import { useProductSearch } from "@/hooks/useProductSearch";
 
 const MAX_RESULTS = 3;
 
@@ -20,33 +19,22 @@ interface SearchPanelProps {
 }
 
 export function SearchPanel({ isOpen, onClose, triggerRef }: SearchPanelProps) {
-  const [query, setQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
   const panelRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const history = useSearchStore((state) => state.history);
   const addQuery = useSearchStore((state) => state.addQuery);
 
-  const { data: products, isLoading } = useQuery({
-    queryKey: ["products"],
-    queryFn: () => ProductsService.getProducts(),
-    enabled: isOpen,
-  });
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setDebouncedQuery(query), 300);
-    return () => clearTimeout(timeout);
-  }, [query]);
-
-  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
-  if (isOpen !== prevIsOpen) {
-    setPrevIsOpen(isOpen);
-    if (!isOpen) {
-      setQuery("");
-      setDebouncedQuery("");
-    }
-  }
+  const {
+    query,
+    setQuery,
+    trimmed,
+    isLoading,
+    results,
+    isEmpty,
+    hasMoreResults,
+    submitSearch,
+  } = useProductSearch({ isOpen, maxResults: MAX_RESULTS });
 
   useEffect(() => {
     if (isOpen) inputRef.current?.focus();
@@ -73,20 +61,6 @@ export function SearchPanel({ isOpen, onClose, triggerRef }: SearchPanelProps) {
       document.removeEventListener("mousedown", onMouseDown);
     };
   }, [isOpen, onClose, triggerRef]);
-
-  const trimmed = debouncedQuery.trim();
-  const allResults =
-    trimmed.length === 0 || !products
-      ? []
-      : products.filter((p) =>
-          p.name.toLowerCase().includes(trimmed.toLowerCase()),
-        );
-  const results = allResults.slice(0, MAX_RESULTS);
-
-  const isEmpty = !isLoading && trimmed.length > 0 && results.length === 0;
-  const hasMoreResults = allResults.length > MAX_RESULTS;
-
-  const submitSearch = () => addQuery(query);
 
   const handleHistoryClick = (entry: string) => {
     setQuery(entry);
@@ -131,8 +105,8 @@ export function SearchPanel({ isOpen, onClose, triggerRef }: SearchPanelProps) {
                 </div>
                 <button
                   type="button"
-                  onClick={onClose}
-                  aria-label="Close search"
+                  onClick={() => setQuery("")}
+                  aria-label="Clear search"
                   className="text-[#4E4E4E] hover:text-black transition-colors p-2.5"
                 >
                   <X size={20} strokeWidth={1.25} />

@@ -6,5 +6,5 @@ export function parsePageParam(searchParams: { get(key: string): string | null }
 }
 
 export function getPageItemCount(total: number, page: number, pageSize = PRODUCTS_PAGE_SIZE): number {
-  return Math.max(0, Math.min(page * pageSize, total) - (page - 1) * pageSize);
+  return Math.max(0, Math.min(page * pageSize, total));
 }

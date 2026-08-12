@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Search, User, Heart } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
 import { CartIcon } from "@/components/ui/CartIcon";
 import { UsersService } from "@/servises/users.service";
 import { useWishlistStore } from "@/store/wishlist.store";
@@ -14,8 +13,9 @@ import { Container } from "../ui/Container";
 import MegaMenu, { MegaMenuData } from "./MegaMenu";
 import { CartDrawer } from "./CartDrawer";
 import { SearchPanel } from "./SearchPanel";
+import { MobileMenu } from "./MobileMenu";
 
-type NavItem = {
+export type NavItem = {
   label: string;
   href: string;
   menu?: MegaMenuData;
@@ -267,6 +267,7 @@ export default function Header() {
   if (pathname !== prevPathname) {
     setPrevPathname(pathname);
     if (searchOpen) setSearchOpen(false);
+    if (menuOpen) setMenuOpen(false);
   }
 
   const isHome = pathname === "/";
@@ -467,95 +468,14 @@ export default function Header() {
       />
 
       {/* Mobile menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.nav
-            key="mobile-menu"
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="min-[1115px]:hidden fixed inset-x-0 bottom-0 z-40 flex flex-col overflow-y-auto border-t border-[#B3B3B3] bg-white"
-            style={{ top: menuTop }}
-          >
-            {mobileNavItems.map((item) => {
-            const isOpen = openSection === item.label;
-            const hasMenu = !!item.menu;
-
-            if (!hasMenu) {
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="px-4 md:px-8 py-4 font-(family-name:--font-jost) text-[16px] leading-[1.3] font-normal text-[#010101]"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              );
-            }
-
-            return (
-              <div key={item.label}>
-                <button
-                  type="button"
-                  onClick={() => toggleSection(item.label)}
-                  className="w-full flex items-center justify-between px-4 md:px-8 py-4 text-left"
-                >
-                  <span className="font-(family-name:--font-jost) text-[16px] leading-[1.3] font-normal text-[#010101]">
-                    {item.label}
-                  </span>
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={`shrink-0 text-[#010101] transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-                  >
-                    <path
-                      d="M19 12L12 19L5 12M12 19V5"
-                      stroke="currentColor"
-                      strokeWidth="1.25"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      key="content"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-8 pb-6 flex flex-col gap-4">
-                        {[
-                          ...(item.menu!.categories ?? []),
-                          ...(item.menu!.secondary ?? []),
-                        ].map((link) => (
-                          <Link
-                            key={link.label}
-                            href={link.href}
-                            onClick={() => setMenuOpen(false)}
-                            className="font-(family-name:--font-jost) text-[14px] leading-normal font-normal text-[#010101]"
-                          >
-                            {link.label}
-                          </Link>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
-          </motion.nav>
-        )}
-      </AnimatePresence>
+      <MobileMenu
+        isOpen={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        menuTop={menuTop}
+        openSection={openSection}
+        toggleSection={toggleSection}
+        mobileNavItems={mobileNavItems}
+      />
 
       <CartDrawer
         isOpen={cartDrawerOpen}

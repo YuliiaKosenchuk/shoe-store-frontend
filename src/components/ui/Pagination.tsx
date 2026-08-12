@@ -22,7 +22,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
         >
           Previous
         </button>
-        <span className="h-px w-[21px] bg-transparent" />
+        <span className="h-px w-5.25 bg-transparent" />
       </div>
 
       <ul className="flex items-center gap-4">
@@ -38,7 +38,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
               >
                 {p}
               </button>
-              <span className={`h-px w-[21px] ${active ? "bg-[#000000]" : "bg-transparent"}`} />
+              <span className={`h-px w-5.25 ${active ? "bg-[#000000]" : "bg-transparent"}`} />
             </li>
           );
         })}
@@ -53,7 +53,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
         >
           Next
         </button>
-        <span className="h-px w-[21px] bg-transparent" />
+        <span className="h-px w-5.25 bg-transparent" />
       </div>
     </nav>
   );
