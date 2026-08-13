@@ -139,17 +139,14 @@ const navItems: NavItem[] = [
     },
   },
   {
-    label: "Help",
-    href: "/help",
+    label: "Customer Service",
+    href: "/customer-service",
     menu: {
       categoriesLabel: "Customer Service",
       categories: [
-        { label: "Track my order", href: "#" },
-        { label: "Contact us", href: "#" },
         { label: "Cookies", href: "#" },
         { label: "Care instructions", href: "#" },
-        { label: "FAQ", href: "/help" },
-        { label: "Size guide", href: "#" },
+        { label: "Size guide", href: "/size-guide" },
       ],
       handpicked: [
         { label: "New collection", href: "#" },
@@ -174,6 +171,9 @@ const handpickedNavItem: NavItem = {
 const mobileNavItems: NavItem[] = navItems.flatMap((item) =>
   item.label === "Accessories" ? [item, handpickedNavItem] : [item],
 );
+
+/** Routes whose hero image sits behind the header, so the header starts transparent. */
+const TRANSPARENT_HERO_PATHS = ["/", "/editorials/between-sea-and-silence"];
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -270,18 +270,19 @@ export default function Header() {
     if (menuOpen) setMenuOpen(false);
   }
 
-  const isHome = pathname === "/";
+  const hasTransparentHero = TRANSPARENT_HERO_PATHS.includes(pathname);
 
   useEffect(() => {
-    if (!isHome) return;
+    if (!hasTransparentHero) return;
 
     const onScroll = () => setScrolled(window.scrollY > 0);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
-  }, [isHome]);
+  }, [hasTransparentHero]);
 
-  const isTransparent = isHome && !scrolled && !hoveredNav && !menuOpen && !searchOpen;
+  const isTransparent =
+    hasTransparentHero && !scrolled && !hoveredNav && !menuOpen && !searchOpen;
 
   const iconCls = isTransparent
     ? "cursor-pointer text-white hover:opacity-70 transition-opacity"
@@ -316,8 +317,8 @@ export default function Header() {
     <Link href="/wishlist" aria-label="Wishlist" className={`relative ${iconCls}`}>
       <Heart size={24} strokeWidth={1.25} />
       {wishlistCount > 0 && (
-        <span className="absolute -top-2 -right-2 flex h-3.25 min-w-3.25 items-center justify-center rounded-full bg-[#7A2633] px-0.75 font-(family-name:--font-jost) text-[10px] font-normal leading-[1.3] text-white">
-          <span className="">{wishlistCount}</span>
+        <span className="absolute -top-2.5 -right-2.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#7A2633] font-(family-name:--font-jost) text-[10px] font-normal leading-none text-white">
+          <span className="-translate-x-px">{wishlistCount}</span>
         </span>
       )}
     </Link>
@@ -332,8 +333,8 @@ export default function Header() {
     >
       <CartIcon className="" />
       {cartCount > 0 && (
-        <span className="absolute -top-2 -right-2 flex h-3.25 min-w-3.25 items-center justify-center rounded-full bg-[#7A2633] px-0.75 font-(family-name:--font-jost) text-[10px] font-normal leading-[1.3] text-white">
-          <span className="">{cartCount}</span>
+        <span className="absolute -top-2.5 -right-2.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#7A2633] font-(family-name:--font-jost) text-[10px] font-normal leading-none text-white">
+          <span className="-translate-x-px">{cartCount}</span>
         </span>
       )}
     </button>
@@ -354,6 +355,7 @@ export default function Header() {
               return (
                 <div
                   key={item.label}
+                  className="whitespace-nowrap"
                   onMouseEnter={() =>
                     item.menu ? openDropdown(item.label) : setHoveredNav(null)
                   }

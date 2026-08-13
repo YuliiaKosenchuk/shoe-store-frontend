@@ -4,12 +4,13 @@ import { Container } from "@/components/ui/Container";
 
 const editorials = [
   {
-    slug: "the-modern-icon",
-    title: "The Modern Icon",
+    slug: "between-sea-and-silence",
+    title: "Between Sea & Silence",
     description:
-      "Spring emerges with quiet confidence, marking a graceful transition into a season of lightness, movement, and renewed elegance.",
-    image: "/images/editorials-1.jpg",
-    alt: "The Modern Icon editorial",
+      "There is a certain freedom in slowing down. Bare skin, warm stone, the sound of the ocean — and nothing more.",
+    image: "/images/editorials/sea-6.png",
+    alt: "Between Sea & Silence editorial",
+    badge: "Season Edit",
   },
   {
     slug: "atelier-evora",
@@ -41,22 +42,29 @@ export default function EditorialsSection() {
             Editorials
           </h2>
 
-          <div className="flex gap-6 overflow-x-auto lg:contents">
-            {editorials.map(({ slug, title, description, image, alt }) => (
+          <div className="flex gap-6 overflow-x-auto overscroll-x-contain lg:contents">
+            {editorials.map(({ slug, title, description, image, alt, badge }) => (
               <Link
                 key={slug}
                 href={`/editorials/${slug}`}
                 className="group block flex-none w-72 lg:w-auto"
               >
-                <div className="overflow-hidden mb-4">
+                <div className="relative overflow-hidden mb-4 aspect-302/407">
                   <Image
                     src={image}
                     alt={alt}
-                    width={432}
-                    height={560}
-                    className="w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    fill
+                    className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
                     sizes="(max-width: 1024px) 288px, 25vw"
                   />
+                  {badge && (
+                    <span
+                      className="absolute top-4 left-4 flex w-[86px] h-[37px] items-center justify-center bg-[#010101] text-[14px] font-normal leading-[150%] text-white"
+                      style={{ fontFamily: "var(--font-jost)" }}
+                    >
+                      {badge}
+                    </span>
+                  )}
                 </div>
                 <p
                   className="text-[16px] leading-[1.3] tracking-widest uppercase font-medium text-black/90 mb-4"

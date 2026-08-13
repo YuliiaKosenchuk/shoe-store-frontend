@@ -30,7 +30,7 @@ const customerServiceLinks = [
   { label: "Contact us", href: "/contact" },
   { label: "Cookies", href: "/cookies" },
   { label: "Care Instructions", href: "/care-instructions" },
-  { label: "FAQ", href: "/faq" },
+  { label: "Size Guide", href: "/size-guide" },
 ];
 
 const companyLinks = [

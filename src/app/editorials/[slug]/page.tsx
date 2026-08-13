@@ -13,31 +13,6 @@ const articles: Record<
     body: { heading?: string; text: string }[];
   }
 > = {
-  "the-modern-icon": {
-    title: "The Modern Icon",
-    subtitle: "On quiet confidence and the season of lightness",
-    date: "March 2025",
-    image: "/images/editorials-1.jpg",
-    body: [
-      {
-        text: "Spring emerges with quiet confidence, marking a graceful transition into a season of lightness, movement, and renewed elegance. It is a moment that does not announce itself loudly — instead it arrives through the subtle shift of a hem, the choice of a natural fibre, the way a shoe meets the ground.",
-      },
-      {
-        heading: "The Shape of Now",
-        text: "This season, the modern icon does not seek attention. She has already found it. Her wardrobe is built on considered essentials — a column silhouette, a shoulder bag with clean hardware, sandals that carry the memory of warm stone. Each piece is chosen for how it feels as much as how it looks.",
-      },
-      {
-        text: "The palette borrows from the landscape: undyed linen, warm sand, the muted blush of adobe walls in afternoon light. Texture takes precedence over colour, and proportion is everything.",
-      },
-      {
-        heading: "A Study in Restraint",
-        text: "There is discipline in simplicity. The modern icon understands this intuitively. She is not minimal for its own sake, but because excess distracts from what is essential. Her shoes are the punctuation of an outfit — a considered pause, a quiet exclamation.",
-      },
-      {
-        text: "This is dressing as an act of care. For the self, for the craft, for the environment from which these materials came.",
-      },
-    ],
-  },
   "atelier-evora": {
     title: "Atelier & Évora",
     subtitle: "Heritage craft meets the modern wardrobe",

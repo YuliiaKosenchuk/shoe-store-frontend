@@ -73,7 +73,7 @@ export default function SocialSection() {
       </Container>
 
       {/* Mobile/tablet: plain horizontal scroll, fixed-width images, no gap */}
-      <div className="flex lg:hidden overflow-x-auto h-101.75 md:h-103.75">
+      <div className="flex lg:hidden overflow-x-auto overscroll-x-contain h-101.75 md:h-103.75">
         {stylePhotos.map((photo) => (
           <div
             key={photo.id}

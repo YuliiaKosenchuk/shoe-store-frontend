@@ -116,7 +116,7 @@ const team: TeamMember[] = [
     location: "United Kingdom, remote",
     photo: "/images/members/yana.png",
     achievements: [
-      "Delivered data analysis that shaped key product decisions — from audience hypotheses to backlog priorities",
+      "Delivered data analysis that shaped key product decisions from audience hypotheses to backlog priorities",
       "Built 5 interactive Tableau dashboards covering sales, traffic, products and delivery",
       "Designed the database architecture from scratch — 11 tables — alongside the backend developer",
       "Ran 4 statistically significant A/B tests on checkout and authentication flows",
