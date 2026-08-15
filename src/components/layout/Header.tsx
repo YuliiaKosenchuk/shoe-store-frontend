@@ -173,7 +173,11 @@ const mobileNavItems: NavItem[] = navItems.flatMap((item) =>
 );
 
 /** Routes whose hero image sits behind the header, so the header starts transparent. */
-const TRANSPARENT_HERO_PATHS = ["/", "/editorials/between-sea-and-silence"];
+const TRANSPARENT_HERO_PATHS = [
+  "/",
+  "/editorials/between-sea-and-silence",
+  "/editorials/atelier-evora",
+];
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);

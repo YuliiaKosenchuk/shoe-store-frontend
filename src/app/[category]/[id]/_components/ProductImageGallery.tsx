@@ -3,7 +3,8 @@
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { ProductImageLightbox } from "./ProductImageLightbox";
 
 interface ProductImageGalleryProps {
   images: string[];
@@ -13,6 +14,7 @@ interface ProductImageGalleryProps {
 export function ProductImageGallery({ images, productName }: ProductImageGalleryProps) {
   const displayImages = images.length > 0 ? images : [];
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
@@ -79,7 +81,13 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
       {/* lg and up: static grid */}
       <div className="hidden lg:grid grid-cols-2 gap-6">
         {displayImages.map((url, i) => (
-          <div key={i} className="relative aspect-3/4 bg-[#F8F8F8]">
+          <button
+            key={i}
+            type="button"
+            onClick={() => setLightboxIndex(i)}
+            aria-label={`Enlarge image ${i + 1}`}
+            className="relative aspect-3/4 bg-[#F8F8F8] cursor-zoom-in"
+          >
             <Image
               src={url}
               alt={`${productName} — view ${i + 1}`}
@@ -88,9 +96,16 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
               priority={i === 0}
               sizes="28vw"
             />
-          </div>
+          </button>
         ))}
       </div>
+
+      <ProductImageLightbox
+        images={displayImages}
+        productName={productName}
+        startIndex={lightboxIndex}
+        onClose={() => setLightboxIndex(null)}
+      />
     </>
   );
 }

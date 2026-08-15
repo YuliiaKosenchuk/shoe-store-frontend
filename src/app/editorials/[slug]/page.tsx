@@ -13,31 +13,6 @@ const articles: Record<
     body: { heading?: string; text: string }[];
   }
 > = {
-  "atelier-evora": {
-    title: "Atelier & Évora",
-    subtitle: "Heritage craft meets the modern wardrobe",
-    date: "February 2025",
-    image: "/images/editorials-2.jpg",
-    body: [
-      {
-        text: "Évora sits inland, away from the coast, where the light is harder and the shadows more precise. It is a city that has been making shoes since the sixteenth century, and the craft here carries that weight with ease, not burden.",
-      },
-      {
-        heading: "The Workshop",
-        text: "Inside a low whitewashed building on the edge of the old quarter, a small team works without hurry. The last is selected by hand. The leather is vegetable-tanned, arriving in hides that smell of oak bark and time. Nothing here is accelerated.",
-      },
-      {
-        text: "The stitching is done by a woman whose grandmother worked the same machines. She does not romanticise this. It is simply what she knows how to do, and she does it with a precision that cannot be replicated by any other means.",
-      },
-      {
-        heading: "What Endures",
-        text: "The collection that emerged from this collaboration is small — six styles, each made in limited quantities. They are not designed to be seasonal. They are designed to last, to improve with wear, to carry the mark of the person who wears them.",
-      },
-      {
-        text: "That is the promise of the atelier: not novelty, but permanence. Not trend, but truth.",
-      },
-    ],
-  },
   "silent-steps": {
     title: "Silent Steps",
     subtitle: "Moving through the world with intention",
