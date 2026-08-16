@@ -144,9 +144,9 @@ const navItems: NavItem[] = [
     menu: {
       categoriesLabel: "Customer Service",
       categories: [
-        { label: "Cookies", href: "#" },
-        { label: "Care instructions", href: "#" },
-        { label: "Size guide", href: "/size-guide" },
+        { label: "Cookies", href: "/customer-service?tab=cookies" },
+        { label: "Care instructions", href: "/customer-service?tab=care-instructions" },
+        { label: "Size guide", href: "/customer-service?tab=size-guide" },
       ],
       handpicked: [
         { label: "New collection", href: "#" },
@@ -177,6 +177,7 @@ const TRANSPARENT_HERO_PATHS = [
   "/",
   "/editorials/between-sea-and-silence",
   "/editorials/atelier-evora",
+  "/customer-service",
 ];
 
 export default function Header() {

@@ -28,9 +28,9 @@ const shopLinks = [
 const customerServiceLinks = [
   { label: "Track my order", href: "/track-order" },
   { label: "Contact us", href: "/contact" },
-  { label: "Cookies", href: "/cookies" },
-  { label: "Care Instructions", href: "/care-instructions" },
-  { label: "Size Guide", href: "/size-guide" },
+  { label: "Cookies", href: "/customer-service?tab=cookies" },
+  { label: "Care Instructions", href: "/customer-service?tab=care-instructions" },
+  { label: "Size Guide", href: "/customer-service?tab=size-guide" },
 ];
 
 const companyLinks = [
@@ -40,9 +40,9 @@ const companyLinks = [
 ];
 
 const legalLinks = [
-  { label: "Privacy Policy", href: "/privacy-policy" },
-  { label: "Shipping Policy", href: "/shipping-policy" },
-  { label: "Returns Policy", href: "/returns-policy" },
+  { label: "Privacy Policy", href: "/customer-service?tab=privacy-policy" },
+  { label: "Shipping Policy", href: "/customer-service?tab=shipping-policy" },
+  { label: "Returns Policy", href: "/customer-service?tab=returns-policy" },
 ];
 
 const navColumns = [

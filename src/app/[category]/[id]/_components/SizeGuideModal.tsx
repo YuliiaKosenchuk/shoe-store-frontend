@@ -1,21 +1,11 @@
 "use client";
 
 import { X } from "lucide-react";
+import { sizeGuideSteps, sizeGuideTable } from "@/app/customer-service/_data/content";
 
 interface SizeGuideModalProps {
   onClose: () => void;
 }
-
-const SIZE_TABLE = [
-  { eu: 35, uk: 2, us: 5, cm: "22.3 – 22.9", inch: "8.8 – 9" },
-  { eu: 36, uk: 3, us: 6, cm: "23.0 – 23.5", inch: "9.1 – 9.3" },
-  { eu: 37, uk: 4, us: 7, cm: "23.6 – 24.2", inch: "9.3 – 9.5" },
-  { eu: 38, uk: 5, us: 8, cm: "24.3 – 24.5", inch: "9.6 – 9.8" },
-  { eu: 39, uk: 6, us: 9, cm: "25.0 – 25.5", inch: "9.8 – 10" },
-  { eu: 40, uk: 7, us: 10, cm: "25.6 – 26.2", inch: "10.1 – 10.3" },
-  { eu: 41, uk: 8, us: 11, cm: "26.3 – 26.9", inch: "10.4 – 10.6" },
-  { eu: 42, uk: 9, us: 12, cm: "27.0 – 27.6", inch: "10.6 – 10.8" },
-];
 
 export function SizeGuideModal({ onClose }: SizeGuideModalProps) {
   return (
@@ -47,7 +37,7 @@ export function SizeGuideModal({ onClose }: SizeGuideModalProps) {
           </p>
         </div>
 
-        <div className="mb-6 bg-[#F9F6F2] p-5">
+        <div className="mb-6 bg-[#F8F8F8] p-5">
           <p className="font-(family-name:--font-jost) text-xs tracking-widest uppercase text-[#4E4E4E] mb-4">
             How to measure your foot
           </p>
@@ -80,7 +70,7 @@ export function SizeGuideModal({ onClose }: SizeGuideModalProps) {
                  C 228 111, 272 113, 300 111
                  C 320 109, 328 113, 326 118
                  Z"
-              fill="#EDE7DE"
+              fill="#F8F8F8"
               stroke="#010101"
               strokeWidth="1.25"
             />
@@ -154,38 +144,39 @@ export function SizeGuideModal({ onClose }: SizeGuideModalProps) {
           </svg>
 
           <ol className="mt-4 space-y-1.5 font-(family-name:--font-jost) text-xs text-[#4E4E4E] leading-relaxed list-decimal list-inside">
-            <li>Stand on a flat surface with your heel against a wall.</li>
-            <li>Place a ruler or measuring tape along the floor beside your foot.</li>
-            <li>Measure the distance from your heel to your longest toe.</li>
-            <li>Compare your measurement with the size chart below.</li>
+            {sizeGuideSteps.map((step, i) => (
+              <li key={i}>{step}</li>
+            ))}
           </ol>
         </div>
 
-        <table className="w-full font-(family-name:--font-jost) text-sm text-[#010101] border-collapse">
-          <thead>
-            <tr className="border-b border-[#EBEBEB]">
-              {["EU", "UK", "US", "Foot Length (cm)", "Foot Length (inch)"].map((h) => (
-                <th
-                  key={h}
-                  className="py-2.5 text-center text-xs text-[#4E4E4E] font-normal tracking-wide"
-                >
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {SIZE_TABLE.map((row) => (
-              <tr key={row.eu} className="border-b border-[#EBEBEB] last:border-0">
-                <td className="py-2.5 text-center font-medium">{row.eu}</td>
-                <td className="py-2.5 text-center text-[#4E4E4E]">{row.uk}</td>
-                <td className="py-2.5 text-center text-[#4E4E4E]">{row.us}</td>
-                <td className="py-2.5 text-center text-[#4E4E4E]">{row.cm}</td>
-                <td className="py-2.5 text-center text-[#4E4E4E]">{row.inch}</td>
+        <div className="overflow-x-auto">
+          <table className="w-full font-(family-name:--font-jost) border-collapse border border-[#CDCDCD] text-center">
+            <thead>
+              <tr>
+                {sizeGuideTable.headers.map((header) => (
+                  <th
+                    key={header}
+                    className="whitespace-pre-line border border-[#EBEBEB] py-2.5 px-3 text-sm font-medium text-black"
+                  >
+                    {header}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {sizeGuideTable.rows.map((row) => (
+                <tr key={row[0]}>
+                  {row.map((cell, i) => (
+                    <td key={i} className="border border-[#EBEBEB] py-2.5 px-3 text-sm text-[#343434]">
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
