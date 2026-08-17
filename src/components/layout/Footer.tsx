@@ -34,7 +34,7 @@ const customerServiceLinks = [
 ];
 
 const companyLinks = [
-  { label: "About us", href: "/about" },
+  { label: "About us", href: "/about-us" },
   { label: "Careers", href: "/careers" },
   { label: "Stores", href: "/stores" },
 ];

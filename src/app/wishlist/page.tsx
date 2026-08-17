@@ -8,6 +8,7 @@ import { Container } from "@/components/ui/Container";
 
 export default function WishlistPage() {
   const items = useWishlistStore((state) => state.items);
+  const orderedItems = items.slice().sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   return (
     <main>
@@ -31,7 +32,7 @@ export default function WishlistPage() {
         </div>
       ) : (
         <Suspense>
-          <ProductsGrid products={items} />
+          <ProductsGrid products={orderedItems} />
         </Suspense>
       )}
       </Container>

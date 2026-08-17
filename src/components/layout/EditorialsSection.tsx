@@ -25,7 +25,7 @@ const editorials = [
     title: "Silent Steps",
     description:
       "Minimal forms, considered materials, and an unhurried pace — a meditation on what it means to move through the world with intention.",
-    image: "/images/editorials-3.jpg",
+    image: "/images/editorials-3.png",
     alt: "Silent Steps editorial",
   },
 ];

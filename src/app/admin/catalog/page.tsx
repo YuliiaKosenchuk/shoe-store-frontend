@@ -25,7 +25,7 @@ export default function CatalogPage() {
     ProductsService.getProducts()
       .then((data) => {
         console.log(`[Admin] products loaded: ${data.length} items`);
-        setProducts(data);
+        setProducts([...data].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
       })
       .catch((err) => {
         console.error("[Admin] failed to fetch products:", err);

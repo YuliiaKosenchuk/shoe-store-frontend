@@ -414,12 +414,12 @@ export const faqSections: FaqSection[] = [
 ];
 
 export const lastUpdatedBySection: Record<string, string> = {
-  cookies: "10.08.2026",
-  "care-instructions": "10.08.2026",
-  "size-guide": "10.08.2026",
-  "privacy-policy": "10.08.2026",
-  "shipping-policy": "10.08.2026",
-  "returns-policy": "10.08.2026",
+  cookies: "17.08.2026",
+  "care-instructions": "17.08.2026",
+  "size-guide": "17.08.2026",
+  "privacy-policy": "17.08.2026",
+  "shipping-policy": "17.08.2026",
+  "returns-policy": "17.08.2026",
 };
 
 export const sizeGuideTable = {

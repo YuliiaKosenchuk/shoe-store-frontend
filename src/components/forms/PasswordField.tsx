@@ -32,7 +32,7 @@ export function PasswordField({
     className="cursor-default text-gray-400 hover:text-gray-600"
   />
   <div className="pointer-events-none absolute top-full left-0 mt-1 w-46 bg-white p-4 text-[14px] leading-normal text-[#323236] shadow-[0_0_15px_rgba(0,0,0,0.1)] opacity-0 transition-opacity group-hover:opacity-100 z-10">
-    Use at least 8 characters, including a letter and a number
+    Use at least 9 characters, including a letter and a number
   </div>
 </div>
         )}

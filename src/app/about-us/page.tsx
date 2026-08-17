@@ -113,7 +113,7 @@ const team: TeamMember[] = [
     name: "Yana Antoniuk",
     role: "Data Analyst",
     quote: "Data tells the story behind every business decision.",
-    location: "United Kingdom, remote",
+    location: "United Kingdom, London",
     photo: "/images/members/yana.png",
     achievements: [
       "Delivered data analysis that shaped key product decisions from audience hypotheses to backlog priorities",
@@ -193,7 +193,7 @@ const team: TeamMember[] = [
     name: "Yuliia Kosenchuk",
     role: "Frontend Developer",
     quote: "Making complex interfaces feel simple.",
-    location: "Europe, remote",
+    location: "Croatia, Rijeka",
     photo: "/images/members/yuliia.png",
     achievements: [
       "Engineered a mobile-first responsive storefront UI.",

@@ -57,11 +57,10 @@ function sortProducts(products: Product[], sort: SortOption): Product[] {
       return sorted.sort((a, b) => a.price - b.price);
     case "newest":
     case "featured":
-      return sorted.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     case "most-popular":
-      // No popularity signal from the backend yet; keep fetched order
-      // until that data exists.
-      return sorted;
+      // No popularity signal from the backend yet, so "most popular" falls
+      // back to newest-first — newly created products lead the list.
+      return sorted.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 }
 

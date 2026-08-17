@@ -64,10 +64,11 @@ export function VariantModal({ open, editing, loading, serverError, productName 
       if (editing) {
         reset({ size: editing.size, color: editing.color, stockQty: editing.stockQty, sku: editing.sku });
       } else {
-        reset({ size: "", color: "", stockQty: 0, sku: "" });
+        const defaultSize = productCategory.toUpperCase() === "SHOES" ? "" : "One Size";
+        reset({ size: defaultSize, color: "", stockQty: 0, sku: "" });
       }
     }
-  }, [open, editing, reset]);
+  }, [open, editing, productCategory, reset]);
 
   return (
     <AnimatePresence>

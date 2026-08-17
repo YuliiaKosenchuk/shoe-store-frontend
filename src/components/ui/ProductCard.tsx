@@ -28,11 +28,7 @@ function pickInitialColor(product: Product, selectedColors?: string[]): string {
   const filterMatch = selectedColors?.find((c) => product.colors.includes(c));
   if (filterMatch) return filterMatch;
 
-  const firstImageColor = product.images[0]?.color;
-  if (firstImageColor && product.colors.includes(firstImageColor)) {
-    return firstImageColor;
-  }
-  return product.colors[0] ?? firstImageColor ?? "";
+  return product.colors[0] ?? "";
 }
 
 export function ProductCard({ product, priority = false, selectedColors, selectedSizes, isNew = false }: ProductCardProps) {
