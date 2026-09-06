@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import { UnoptimizedImage as Image } from "@/components/ui/UnoptimizedImage";
 import { ServicePointPicker } from "@/components/checkout/ServicePointPicker";
 import { StorePickupList } from "@/components/checkout/StorePickupList";
 import { useCheckoutStore } from "@/store/checkout.store";

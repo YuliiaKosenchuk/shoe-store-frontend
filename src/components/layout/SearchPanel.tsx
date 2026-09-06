@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, type RefObject } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { UnoptimizedImage as Image } from "@/components/ui/UnoptimizedImage";
 import { AnimatePresence, motion } from "motion/react";
 import { Search, X } from "lucide-react";
 import { ProductCard } from "@/components/ui/ProductCard";

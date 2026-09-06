@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { UnoptimizedImage as Image } from "@/components/ui/UnoptimizedImage";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { useState, type ReactNode } from "react";
 import { Check } from "lucide-react";

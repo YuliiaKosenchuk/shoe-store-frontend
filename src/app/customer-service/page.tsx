@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import Image from "next/image";
+import { UnoptimizedImage as Image } from "@/components/ui/UnoptimizedImage";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { CustomerServiceContent } from "./_components/CustomerServiceContent";

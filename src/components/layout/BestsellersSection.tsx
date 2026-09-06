@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { UnoptimizedImage as Image } from "@/components/ui/UnoptimizedImage";
 import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useRef } from "react";

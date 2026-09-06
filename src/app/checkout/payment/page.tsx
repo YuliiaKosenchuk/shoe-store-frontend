@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState, type ReactNode } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import Image from "next/image";
+import { UnoptimizedImage as Image } from "@/components/ui/UnoptimizedImage";
 import { OrderService } from "@/servises/order.service";
 import { PaymentService } from "@/servises/payment.service";
 import { DeliveryType, PaymentType } from "@/shemas/checkout.shema";

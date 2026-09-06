@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { UnoptimizedImage as Image } from "@/components/ui/UnoptimizedImage";
 import { Container } from "@/components/ui/Container";
 
 const features = [

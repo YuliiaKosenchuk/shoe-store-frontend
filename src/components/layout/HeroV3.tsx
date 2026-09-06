@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { UnoptimizedImage as Image } from "@/components/ui/UnoptimizedImage";
 import { motion } from "framer-motion";
 
 export default function HeroV3() {

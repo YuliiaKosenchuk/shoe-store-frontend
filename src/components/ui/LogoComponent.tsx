@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { UnoptimizedImage as Image } from '@/components/ui/UnoptimizedImage';
 import Link from 'next/link';
 
 export default function LogoComponent() {

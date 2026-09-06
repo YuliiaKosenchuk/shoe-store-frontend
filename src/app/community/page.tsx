@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { UnoptimizedImage as Image } from "@/components/ui/UnoptimizedImage";
 import { Star } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 
