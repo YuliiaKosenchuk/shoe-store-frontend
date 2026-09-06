@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { CloudinaryImage as Image } from "@/components/ui/CloudinaryImage";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import { CloudinaryImage as Image } from "@/components/ui/CloudinaryImage";
 import { BellRing } from "lucide-react";
 import type { ProductImage, ProductVariantDto } from "@/shemas/product.shema";
 import { NotifyModal } from "@/components/products/NotifyModal";

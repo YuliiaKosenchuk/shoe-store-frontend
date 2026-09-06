@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { CloudinaryImage as Image } from "@/components/ui/CloudinaryImage";
 import { Plus, Pencil, Trash2, Search } from "lucide-react";
 import { ProductsService } from "@/servises/products.service";
 import { AdminService } from "@/servises/admin.service";

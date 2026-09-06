@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
@@ -69,7 +70,7 @@ export function OrderSummaryPanel({ children, showItems = true }: OrderSummaryPa
               <div className="relative h-21.5 w-21.5 shrink-0 bg-[#F8F8F8]">
                 {isCartItemOutOfStock(stockByCartItemId.get(item.id), item.quantity, isStockLoading) && <OutOfStockBadge />}
                 {item.imageUrl && (
-                  <Image
+                  <CloudinaryImage
                     src={item.imageUrl}
                     alt={item.name}
                     fill

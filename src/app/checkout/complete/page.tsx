@@ -2,7 +2,7 @@
 
 import { Suspense, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { CloudinaryImage as Image } from "@/components/ui/CloudinaryImage";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useCheckoutStore } from "@/store/checkout.store";

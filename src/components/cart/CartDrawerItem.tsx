@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Image from "next/image";
+import { CloudinaryImage as Image } from "@/components/ui/CloudinaryImage";
 import { BellRing, Heart, Minus, Plus, X } from "lucide-react";
 import type { CartItemDto } from "@/shemas/cart.shema";
 import type { Product } from "@/shemas/product.shema";
